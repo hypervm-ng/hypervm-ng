@@ -18,4 +18,3 @@ hypervm/src/lxxen
 # Ignore files from patches
 *.orig
 *.rej
-

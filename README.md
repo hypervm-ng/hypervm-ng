@@ -1,4 +1,4 @@
-# HyperVM-NG
+# HyperVM
 A complete virtualization manager. Some of the features:
 
 * OpenVZ and Xen virtualization support
@@ -17,19 +17,20 @@ and much, much more.
 
 Just follow this simple guide:
 
-https://hypervm-ng.atlassian.net/wiki/display/HYP/Installation
+http://lxcenter.org/software/hypervm/hypervm-installation
 
 # Contributing
 
-Please have a look at HyperVM-NG's mailing lists and bug tracker. There is forum as well available at: http://community.hypervm-ng.org
+Please have a look at LxCenter's [Coding Standards](http://project.lxcenter.org/projects/kloxo/wiki/Coding_Standards) and [Issue Tracker](http://project.lxcenter.org).
+
+And don't forget our [forums](http://forum.lxcenter.org)!
 
 # Licensing - AGPLv3
 
-    HyperVM-NG, Server Virtualization GUI for OpenVZ and Xen
+    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 
     Copyright (C) 2000-2009	LxLabs
-    Copyright (C) 2009-2013	LxCenter
-    Copyright (C) 2015		HyperVM-NG
+    Copyright (C) 2009-2011	LxCenter
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
