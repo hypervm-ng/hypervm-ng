@@ -1,4 +1,8 @@
 # HyperVM
+
+THIS IS LEGACY BRANCH OF OLD HYPERVM (http://lxncenter.org & https://github.com/lxcenter/hypervm) WITH SOME UPDATES
+LIKE SOURCES FOR DOWNLOADS AND SO ON.
+
 A complete virtualization manager. Some of the features:
 
 * OpenVZ and Xen virtualization support
@@ -17,13 +21,7 @@ and much, much more.
 
 Just follow this simple guide:
 
-http://lxcenter.org/software/hypervm/hypervm-installation
-
-# Contributing
-
-Please have a look at LxCenter's [Coding Standards](http://project.lxcenter.org/projects/kloxo/wiki/Coding_Standards) and [Issue Tracker](http://project.lxcenter.org).
-
-And don't forget our [forums](http://forum.lxcenter.org)!
+https://hypervm-ng.atlassian.net/wiki/display/HYP/Installation
 
 # Licensing - AGPLv3
 
