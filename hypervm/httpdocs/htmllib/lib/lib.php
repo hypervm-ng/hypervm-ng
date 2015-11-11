@@ -97,7 +97,7 @@ function download_thirdparty()
     global $sgbl;
     $prgm = $sgbl->__var_program_name;
     // Fixes #303 and #304
-    $string = file_get_contents("http://download.lxcenter.org/download/thirdparty/$prgm-version.list");
+    $string = file_get_contents("http://download.hypervm-ng.org/download/thirdparty/$prgm-version.list");
     if ($string != "") {
         $string = trim($string);
         $string = str_replace("\n", "", $string);
@@ -1966,8 +1966,7 @@ function fix_rhn_sources_file()
 	}
 
 	$outlist[] = "\n";
-	$outlist[] = "yum lxcenter-base http://download.lxcenter.org/download/update/$os/\$ARCH/";
-	$outlist[] = "yum lxcenter-extra http://download.lxcenter.org/download/update/lxgeneral/";
+	$outlist[] = "yum lxcenter-base http://download.hypervm-ng.org/update/$os/\$ARCH/";
 
 	lfile_put_contents("/etc/sysconfig/rhn/sources", implode("\n", $outlist) . "\n");
 	$cont = lfile_get_contents( "__path_program_htmlbase/htmllib/filecore/lxcenter.repo.template");
@@ -2553,7 +2552,7 @@ function getDownloadServer()
 	if (isOn($local)) {
 		$server = "http://192.168.1.100/download/$progname/$maj";
 	} else {
-		$server = "http://download.lxcenter.org/download/$progname/$maj";
+		$server = "http://download.hypervm-ng.org/download/$progname/$maj";
 	}
 
 	/*
@@ -4421,7 +4420,7 @@ include_once "htmllib/lib/lxguardincludelib.php";
 
 function getHIBversion()
 {
-   $string = file_get_contents("http://download.lxcenter.org/download/version/hib");
+   $string = file_get_contents("http://download.hypervm-ng.org/download/version/hib");
     if ($string != "") {
         $string = trim($string);
         $string = str_replace("\n", "", $string);

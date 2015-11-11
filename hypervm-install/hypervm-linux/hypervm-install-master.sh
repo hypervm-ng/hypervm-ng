@@ -19,9 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # HyperVM
-# Install Script Version 1.0.1
+# Install Script Version 1.0.2
 # More information at http://www.lxcenter.org/
 # Author dterweij
+#
+# Changelog:
+# - v1.0.2:
+# 	* switched from lxncenter to hypervm-ng
 #
 ######
 clear
@@ -34,7 +38,7 @@ start() {
 
 if ! [ -f /usr/bin/yum ] ; then
       	echo You at least need yum installed for this to work...
-	echo Please contact us or visit the forum at http://forum.lxcenter.org
+	echo Please contact us or visit the forum at http://community.hypervm-ng.org
 	echo "                                "
 	exit
 fi
@@ -60,8 +64,8 @@ fi
 
 if [ ! -d '../../.git' ]; then
 	pwd
-	echo Downloading installation package from LxCenter
-	wget http://download.lxcenter.org/download/hypervm-install.zip
+	echo Downloading installation package from HyperVM-NG
+	wget http://download.hypervm-ng.org/download/legacy/2.0.1/hypervm-install.zip
 else
 	echo 'Development GIT version found. Skipping download sources.'
 fi

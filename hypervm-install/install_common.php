@@ -179,7 +179,7 @@ function install_rhn_sources($osversion)
 
 	$data = our_file_get_contents("/etc/sysconfig/rhn/sources");
 	if(!preg_match('/lxcenter/i', $data)) {
-		$ndata = "yum lxcenter-base http://download.lxcenter.org/download/update/$osversion/\$ARCH/\nyum lxcenter-extra  http://download.lxcenter.org/download/update/lxgeneral";
+		$ndata = "yum lxcenter-base http://download.hypervm-ng.org/update/$osversion/\$ARCH/\n";
 		//append it to the file...
 		our_file_put_contents("/etc/sysconfig/rhn/sources","\n\n", true);
 		our_file_put_contents("/etc/sysconfig/rhn/sources", $ndata, true);
