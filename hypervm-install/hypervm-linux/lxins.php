@@ -147,7 +147,7 @@ function lxins_main()
 		echo 'Development GIT version found. Skipping download sources.';
 	}
 	else {
-		system("wget http://download.hypervm-ng.org/download/legacy/current/hypervm-current.zip")
+		system("wget http://download.hypervm-ng.org/download/legacy/production/hypervm-current.zip");
 	}
 	
     system("unzip -oq hypervm-current.zip", $return); 
