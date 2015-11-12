@@ -65,7 +65,7 @@ fi
 if [ ! -d '../../.git' ]; then
 	pwd
 	echo Downloading installation package from HyperVM-NG
-	wget http://download.hypervm-ng.org/download/legacy/2.0.1/hypervm-install.zip
+	wget http://download.hypervm-ng.org/download/legacy/production/hypervm-install.zip
 else
 	echo 'Development GIT version found. Skipping download sources.'
 fi

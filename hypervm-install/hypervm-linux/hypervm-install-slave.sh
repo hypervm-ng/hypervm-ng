@@ -62,7 +62,7 @@ if 	[ -f ./hypervm-install.zip ] ; then
 	rm -f hypervm-install.zip
 fi
 	echo Downloading installation package from LxCenter
-	wget http://download.hypervm-ng.org/download/legacy/2.0.1/hypervm-install.zip
+	wget http://download.hypervm-ng.org/download/legacy/production/hypervm-install.zip
 #
 	echo Unpacking installation package	
 	unzip -oq hypervm-install.zip
@@ -75,13 +75,13 @@ fi
 #
 case "$1" in
   --virtualization-type=xen)
-    start
+    start $*
     ;;
   --virtualization-type=openvz)
-    start
+    start $*
     ;;
   --virtualization-type=NONE)
-    start
+    start $*
     ;;
   *)
    	echo $"This is the HyperVM Install script"
