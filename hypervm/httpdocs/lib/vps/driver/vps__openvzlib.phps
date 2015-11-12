@@ -1163,16 +1163,16 @@ class vps__openvz extends Lxdriverclass {
 	*/
 	function doSyncToSystemPre()
 	{
-		if ($main->checkIfOffensive()) {
+		if ($this->main->checkIfOffensive()) {
 			dprint('Offensive checking...' . PHP_EOL);
 			
-			$virtual_machine_name = $main->nname;
+			$virtual_machine_name = $this->main->nname;
 				
-			$main->checkVPSLock($virtual_machine_name);
+			$this->main->checkVPSLock($virtual_machine_name);
 		}
 	
-		if (!$main->corerootdir) {
-			$main->corerootdir = '/vz/private';
+		if (!$this->main->corerootdir) {
+			$this->main->corerootdir = '/vz/private';
 		}
 	}
 
