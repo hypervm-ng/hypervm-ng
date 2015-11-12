@@ -1,0 +1,7 @@
+
+#additional packages that may be useful
+[lxcenter-base]
+name=HyperVM - $releasever - lxcenter-base
+baseurl=http://download.hypervm-ng.org/update/%distro%/$basearch/
+gpgcheck=0
+enabled=1
