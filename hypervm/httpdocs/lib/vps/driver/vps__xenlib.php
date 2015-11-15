@@ -333,7 +333,7 @@ class vps__xen extends Lxdriverclass {
 		// List info about the virtual machine
 		exec('xm list ' . $virtual_machine_name, $output, $status);
 	
-		if (!empty($status)) {
+		if (empty($status)) {
 			return 'on';
 		}
 		else {
