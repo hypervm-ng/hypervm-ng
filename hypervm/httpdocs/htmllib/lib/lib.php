@@ -86,7 +86,7 @@ function core_installWithVersion($path, $file, $ver)
     lxfile_mkdir("/var/cache/$prgm");
     if (!lxfile_real("/var/cache/$prgm/$file.$ver.zip")) {
         while (lxshell_return("unzip", "-t", "/var/cache/$prgm/$file.$ver.zip")) {
-            system("cd /var/cache/$prgm/ ; rm -f $file*.zip; wget download.lxcenter.org/download/$file.$ver.zip");
+            system("cd /var/cache/$prgm/ ; rm -f $file*.zip; wget http://download.hypervm-ng.org/download/$file.$ver.zip");
         }
         system("cd $path ; unzip -oq /var/cache/$prgm/$file.$ver.zip");
     }
