@@ -116,12 +116,13 @@ print("Fixing OS template permissions\n");
 if (is_openvz()) {
 print("Fixing Base OS templates\n");
 	if (!lxfile_real("/vz/template/cache/centos-5-i386-afull.tar.gz")) {
-		system("mkdir -p /vz/template/cache/ ; cd /vz/template/cache/ ; rm centos-5-i386-afull.tar.gz; wget http://download.hypervm-ng.org/download/openvztemplates/base/centos-5-i386-afull.tar.gz ");
+		system("mkdir -p /vz/template/cache/ ; cd /vz/template/cache/ ; rm centos-5-i386-afull.tar.gz; rm centos-5-x86.tar.gz; wget http://download.hypervm-ng.org/download/openvztemplates/base/centos-5-x86.tar.gz");
 			system("rm /vz/template/cache/index.html* 2>/dev/null");
 	}
 	} else {
 	if (!lxfile_real("/home/hypervm/xen/template/centos-5-i386-afull.tar.gz")) {
-	system("mkdir -p /home/hypervm/xen/template ; cd /home/hypervm/xen/template/ ; rm centos-5-i386-afull.tar.gz; wget http://download.hypervm-ng.org/download/xentemplates/base/centos-5-i386-afull.tar.gz ");
+
+	system("mkdir -p /home/hypervm/xen/template ; cd /home/hypervm/xen/template/ ; rm centos-5-i386-afull.tar.gz; rm centos-5-x86-pygrub-sda-latest.tar.gz; wget http://download.hypervm-ng.org/download/xentemplates/base/centos-5-x86-pygrub-sda-latest.tar.gz");
 	system("rm /home/hypervm/xen/template/index.html* 2>/dev/null");
 	}
 	}
