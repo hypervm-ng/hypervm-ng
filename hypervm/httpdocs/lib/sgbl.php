@@ -30,8 +30,8 @@ class Sgbl extends Sgbllib
 
 
         $this->__ver_major = "2";
-        $this->__ver_minor = "1";
-        $this->__ver_release = "0";
+        $this->__ver_minor = "0";
+        $this->__ver_release = "7994";
         $this->__ver_enterprise = null;
         $this->__ver_type = "production"; // Not used
         $this->__ver_extra = "Stable";
