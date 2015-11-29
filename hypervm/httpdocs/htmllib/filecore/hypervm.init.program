@@ -1,0 +1,208 @@
+#!/bin/bash
+# hypervm       Startup script for HyperVM
+#
+# chkconfig: 2345 96 20
+# description: HyperVM Server Virtualization GUI for  \
+#              OpenVZ and Xen Containers.
+# processname: hypervm
+#
+#    HyperVM, Server Virtualization GUI for OpenVZ and Xen
+#
+#    Copyright (C) 2000-2009     LxLabs
+#    Copyright (C) 2009-2013     LxCenter
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#   Startup script for HyperVM
+#   Source hypervm/httpdocs/htmllib/filecore/hypervm.init.program
+#
+INITLOG_ARGS=""
+prog=`basename $0`
+ 
+initstring=${prog:0:1}
+if [ $initstring = 'S' ] || [ $initstring = 'K' ] ; then
+	prog=${prog#???}
+fi
+
+lxdir=/usr/local/lxlabs/$prog/httpdocs
+
+cd $lxdir
+pwd
+
+if ! [ -f /usr/bin/lphp.exe ] ; then 
+	ln -sf /usr/local/lxlabs/ext/php/php /usr/bin/lphp.exe
+fi
+
+httpd=/usr/local/lxlabs/ext/lxlighttpd/sbin/$prog.httpd
+OPTIONS="-f /usr/local/lxlabs/$prog/file/lighttpd.conf"
+
+RETVAL=0
+__var_server_name=$prog.php
+__var_server_exe=$prog.exe
+__var_wrapper_name=$prog-wrapper.sh
+__var_slave_db=/usr/local/lxlabs/$prog/etc/conf/slave-db.db
+
+start() {
+        echo -n $"Starting $prog: "
+		cd $lxdir
+
+		if ! lphp.exe ../bin/common/misc/pgrep.php $__var_wrapper_name ; then
+			sh ../sbin/$__var_wrapper_name &
+		fi
+
+		if ! [ -f $__var_slave_db ] ; then
+			if ! /etc/init.d/mysqld status ; then
+				/etc/init.d/mysqld start
+			fi
+			sleep 1
+		fi
+
+		cp /usr/local/lxlabs/ext/lxlighttpd/sbin/lighttpd /usr/local/lxlabs/ext/lxlighttpd/sbin/$prog.httpd 2>/dev/null
+		(cd /usr/local/lxlabs/$prog/httpdocs ; lphp.exe ../bin/common/misc/fixlighty.php "$1" )
+		$httpd $OPTIONS &
+		(cd /usr/local/lxlabs/$prog/httpdocs ; lphp.exe ../bin/execatinit.php)
+
+		echo "Started $prog"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch /var/lock/subsys/lxhttpd
+        return $RETVAL
+}
+
+startdefaultport () {
+	start --default-port=true
+}
+
+lxstart () {
+		(cd /usr/local/lxlabs/$prog/httpdocs ; lphp.exe ../bin/common/misc/fixlighty.php )
+		$httpd $OPTIONS &
+}
+
+backendrestart () {
+	lphp.exe ../bin/common/misc/killproc.php $__var_server_name 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php $__var_server_exe 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php $__var_wrapper_name 2>/dev/null
+	while : ; do
+		echo "Waiting for the process to die....."
+			if ! lphp.exe ../bin/common/misc/pgrep.php $__var_wrapper_name ; then
+				break;
+			fi
+		sleep 1
+	done
+	sh ../sbin/$__var_wrapper_name &
+}
+
+mystatus () {
+
+	local base=${1##*/}
+	if lphp.exe ../bin/common/misc/pgrep.php $base >/dev/null 2>&1; then
+		echo Process $base is running 
+	fi
+}
+
+stop() {
+	echo -n $"Stopping $prog: "
+	lphp.exe ../bin/common/misc/killproc.php $httpd
+	lphp.exe ../bin/common/misc/killproc.php $__var_server_name 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php $__var_server_exe 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php $__var_wrapper_name 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php lxportmonitor.php 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php lxhttpd 2>/dev/null
+
+	while : ; do
+		echo "Waiting for the process to die....."
+		if ! lphp.exe ../bin/common/misc/pgrep.php $__var_wrapper_name ; then
+			break;
+		fi
+		sleep 1
+		lphp.exe ../bin/common/misc/killproc.php $__var_wrapper_name 2>/dev/null
+	done
+
+	RETVAL=$?
+	echo "Stopped $prog"
+	echo
+	[ $RETVAL = 0 ] && rm -f /var/lock/subsys/lxhttpd /var/run/lxhttpd.pid
+}
+
+lxstop() {
+	echo -n $"Stopping $prog: "
+	lphp.exe ../bin/common/misc/killproc.php $__var_server_name 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php $__var_server_exe 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php lxhttpd 2>/dev/null
+	lphp.exe ../bin/common/misc/killproc.php lxphp 2>/dev/null
+#	lphp.exe ../bin/common/misc/killproc.php $httpd
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f /var/lock/subsys/lxhttpd /var/run/lxhttpd.pid
+}
+
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        mystatus $httpd
+		mystatus $__var_server_exe
+		mystatus $__var_server_name
+	RETVAL=$?
+	;;
+  restart)
+	stop
+	start
+	;;
+
+startdefaultport)
+	startdefaultport
+	;;
+
+restartdefaultport)
+	stop
+	startdefaultport
+	;;
+
+backendrestart)
+	backendrestart
+	;;
+
+ lxrestart)
+	lxstop
+	lxstart
+#	start
+	;;
+
+  condrestart)
+	if [ -f /var/run/lxhttpd.pid ] ; then
+		stop
+		start
+	fi
+	;;
+  reload)
+        reload
+	;;
+  graceful|help|configtest|fullstatus)
+	$apachectl $@
+	RETVAL=$?
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart}"
+	exit 1
+esac
+
+exit $RETVAL

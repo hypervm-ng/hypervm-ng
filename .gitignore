@@ -19,3 +19,5 @@ hypervm/src/lxxen
 *.orig
 *.rej
 
+#Ignore PHPStorm files
+.idea/
