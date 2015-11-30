@@ -17,7 +17,7 @@ and much, much more.
 
 Just follow this simple guide:
 
-https://hypervm-ng.atlassian.net/wiki/display/HYP/Installation
+http://wiki.hypervm-ng.org/display/DOCS/Installation
 
 # Contributing
 
