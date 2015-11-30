@@ -30,7 +30,7 @@ HYPERVM_PATH='/usr/local/lxlabs'
 
 usage(){
     echo "Usage: $0 [BRANCH] [-h]"
-    echo 'BRANCH: master or dev'
+    echo 'BRANCH: master, legacy or dev'
     echo 'h: shows this help.'
     exit 1
 }
@@ -82,7 +82,7 @@ require_root
 
 require_requirements
 
-echo 'Installing HyperVM development version.'
+echo 'Installing HyperVM-NG development version.'
 
 if which git >/dev/null; then
 	echo 'GIT support detected.'
@@ -96,26 +96,39 @@ case $1 in
 		# Clone from GitHub the last version using git transport (no http or https)
 		echo "Installing branch hypervm/master"
 		mkdir -p ${HYPERVM_PATH}
-		git clone git://github.com/lxcenter/hypervm.git ${HYPERVM_PATH}
+		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
 		cd ${HYPERVM_PATH}
 		git checkout master
 		cd ${HYPERVM_PATH}/hypervm-install
 		sh ./make-distribution.sh
 		cd ${HYPERVM_PATH}/hypervm
 		sh ./make-development.sh
-		printf "Done.\nInstall HyperVM:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
+		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
+		;;
+	legacy )
+		# Clone from GitHub the last version using git transport (no http or https)
+		echo "Installing branch hypervm/legacy"
+		mkdir -p ${HYPERVM_PATH}
+		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
+		cd ${HYPERVM_PATH}
+		git checkout legacy
+		cd ${HYPERVM_PATH}/hypervm-install
+		sh ./make-distribution.sh
+		cd ${HYPERVM_PATH}/hypervm
+		sh ./make-development.sh
+		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
 		;;
 	dev )
 		# Clone from GitHub the last version using git transport (no http or https)
 		echo "Installing branch hypervm/dev"
-		git clone git://github.com/lxcenter/hypervm.git ${HYPERVM_PATH}
+		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
 		cd ${HYPERVM_PATH}
 		git checkout dev -f
 		cd ${HYPERVM_PATH}/hypervm-install
 		sh ./make-distribution.sh
 		cd ${HYPERVM_PATH}/hypervm
 		sh ./make-development.sh
-		printf "Done.\nInstall HyperVM:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
+		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
 		;;
 	*   )
 		usage
