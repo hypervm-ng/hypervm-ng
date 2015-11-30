@@ -26,7 +26,7 @@ HYPERVM_PATH='/usr/local/lxlabs'
 
 usage(){
     echo "Usage: $0 [BRANCH] [-h]"
-    echo 'BRANCH: master or dev'
+    echo 'BRANCH: master or legacy'
     echo 'h: shows this help.'
     exit 1
 }
@@ -81,7 +81,7 @@ case $1 in
 		# Clone from GitHub the last version using git transport (no http or https)
 		echo "Installing branch hypervm/master"
 		mkdir -p ${HYPERVM_PATH}
-		git clone git://github.com/lxcenter/hypervm.git ${HYPERVM_PATH}
+		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
 		cd ${HYPERVM_PATH}
 		git checkout master
 		cd hypervm-install
@@ -90,12 +90,12 @@ case $1 in
 		sh ./make-development.sh
 		echo "Done. For install run:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/; sh hypervm-install-[master|slave].sh with args"
 		;;
-	dev )
+	legacy )
 		# Clone from GitHub the last version using git transport (no http or https)
-		echo "Installing branch hypervm/dev"
-		git clone git://github.com/lxcenter/hypervm.git ${HYPERVM_PATH}
+		echo "Installing branch hypervm/legacy"
+		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
 		cd ${HYPERVM_PATH}
-		git checkout dev
+		git checkout legacy
 		cd hypervm-install
 		sh ./make-distribution.sh
 		cd ../hypervm
