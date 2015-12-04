@@ -40,7 +40,7 @@
 	if [ "$VERSION" == "" ] ; then
 	 echo "## Could not read version from commandline, please add a number on commandline"
          echo "## Using current version plus one"
-	 CURRENT=`curl --silent http://download.lxcenter.org/download/thirdparty/hypervm-version.list`
+	 CURRENT=`curl --silent http://download.hypervm-ng.org/download/thirdparty/hypervm-version.list`
          if [ "$CURRENT" == "" ] ; then
          echo "## Could not read version from download center, please add a number on commandline"
 	 exit 1

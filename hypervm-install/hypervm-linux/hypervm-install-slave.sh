@@ -23,6 +23,10 @@
 # More information at http://www.lxcenter.org/
 # Author dterweij
 #
+# Changelog:
+# - v1.0.2:
+#       * switched from lxcenter to hypervm-ng
+#
 ######
 clear
 cat LICENSE | more
@@ -33,7 +37,7 @@ start() {
 
 	if ! [ -f /usr/bin/yum ] ; then
 		echo "You at least need yum installed for this to work..."
-		echo "Please contact us or visit the forum at http://forum.lxcenter.org"
+		echo "Please contact us or visit the forum at http://community.hypervm-ng.org"
 		echo "                                "
 		exit
 	fi
@@ -54,7 +58,7 @@ start() {
 
 	if [ ! -d '../../.git' ]; then
 		echo "Downloading installation package from LxCenter"
-		wget http://download.lxcenter.org/download/hypervm-install.zip
+		wget http://download.hypervm-ng.org/download/hypervm-ng/production/hypervm-install.zip
 		echo "Unpacking installation package"
 		unzip -oq hypervm-install.zip
 	else

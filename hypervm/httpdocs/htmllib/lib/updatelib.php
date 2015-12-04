@@ -284,7 +284,7 @@ function download_thirdparty()
         print("Development GIT version found. Skipping download from LxCenter.\n");
     } else {
         // Fixes #303 and #304
-        $string = file_get_contents("http://download.lxcenter.org/download/thirdparty/$prgm-version.list");
+        $string = file_get_contents("http://download.hypervm-ng.org/download/thirdparty/$prgm-version.list");
         if ($string != "") {
             $string = trim($string);
             $string = str_replace("\n", "", $string);
@@ -477,7 +477,7 @@ function doUpdateExtraStuff()
         if (!lxfile_real("$OSTemplateDir/$defaultOSTemplate"))
         {
             lxfile_rm("$OSTemplateDir/$defaultOSTemplate");
-            system("cd $OSTemplateDir/ ; wget download.lxcenter.org/download/openvztemplates/base/$defaultOSTemplate");
+            system("cd $OSTemplateDir/ ; wget http://download.hypervm-ng.org/download/openvztemplates/base/$defaultOSTemplate");
             system("rm $OSTemplateDir/index.html* 2>/dev/null");
             system("rm $OSTemplateDir/robots.txt* 2>/dev/null");
         }
@@ -491,8 +491,8 @@ function doUpdateExtraStuff()
         }
 
     } else {
-        if (!lxfile_real("/home/hypervm/xen/template/centos-5-i386.tar.gz")) {
-            system("mkdir -p /home/hypervm/xen/template ; cd /home/hypervm/xen/template/ ; rm centos-5-i386.tar.gz;  wget download.lxcenter.org/download/xentemplates/base/centos-5-i386.tar.gz ");
+        if (!lxfile_real("/home/hypervm/xen/template/centos-6-x86-pygrub-sda-latest.tar.gz")) {
+            system("mkdir -p /home/hypervm/xen/template ; cd /home/hypervm/xen/template/ ; rm centos-6-i386.tar.gz; rm centos-5-i386.tar.gz; rm centos-5-i386-afull.tar.gz; rm centos-6-x86-pygrub-sda-latest.tar.gz; wget http://download.hypervm-ng.org/download/xentemplates/base/centos-6-x86-pygrub-sda-latest.tar.gz");
             system("rm /home/hypervm/xen/template/index.html* 2>/dev/null");
             system("rm /home/hypervm/xen/template/robots.txt* 2>/dev/null");
         }
@@ -533,13 +533,13 @@ function get_kloxo_ostemplate()
     if (is_openvz()) {
         if (lxfile_exists("/vz/template/cache")) {
             if (!lxfile_real("/vz/template/cache/centos-5-i386-hostinabox$ver.tar.gz")) {
-                system("cd /vz/template/cache/ ;rm -f centos-?-i386-lxadmin*.tar.gz ; rm -f centos-?-i386-hostinabox*.tar.gz; wget download.lxcenter.org/download/openvztemplates/base/centos-5-i386-hostinabox$ver.tar.gz");
+                system("cd /vz/template/cache/ ;rm -f centos-?-i386-lxadmin*.tar.gz ; rm -f centos-?-i386-hostinabox*.tar.gz; wget http://download.hypervm-ng.org/download/openvztemplates/base/centos-5-i386-hostinabox$ver.tar.gz");
             }
         }
     } else {
         if (lxfile_exists("/home/hypervm/xen/template/")) {
             if (!lxfile_nonzero("/home/hypervm/xen/template/centos-5-i386-hostinabox$ver.tar.gz")) {
-                system("cd /home/hypervm/xen/template/ ; rm -f centos-?-i386-lxadmin*.tar.gz; rm -f centos-?-i386-hostinabox*.tar.gz; wget download.lxcenter.org/download/xentemplates/base/centos-5-i386-hostinabox$ver.tar.gz");
+                system("cd /home/hypervm/xen/template/ ; rm -f centos-?-i386-lxadmin*.tar.gz; rm -f centos-?-i386-hostinabox*.tar.gz; wget http://download.hypervm-ng.org/download/xentemplates/base/centos-5-i386-hostinabox$ver.tar.gz");
             }
         }
     }

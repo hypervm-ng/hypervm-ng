@@ -3250,7 +3250,7 @@ function if_demo_throw_exception($where = null)
 
 function get_package_version($name)
 {
-	$cont = curl_general_get("http://download.lxcenter.org/download/version/$name");
+	$cont = curl_general_get("http://download.hypervm-ng.org/download/version/$name");
 	return trim($cont);
 }
 

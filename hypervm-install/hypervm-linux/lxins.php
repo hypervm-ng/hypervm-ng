@@ -138,9 +138,9 @@ function lxins_main()
     }
 
     if (file_exists('/usr/local/lxlabs/.git')) {
-        echo 'Development GIT version found. Skipping download from LxCenter.';
+        echo 'Development GIT version found. Skipping download from HyperVM-NG.';
     } else {
-        system("wget http://download.lxcenter.org/download/hypervm/production/hypervm/hypervm-current.zip");
+        system("wget http://download.hypervm-ng.org/download/hypervm-ng/production/hypervm-current.zip");
     }
 
     system("unzip -oq hypervm-current.zip", $return);
