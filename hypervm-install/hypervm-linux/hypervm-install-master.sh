@@ -77,19 +77,19 @@ start() {
 #
 case "$1" in
   --virtualization-type=xen)
-	echo 'Installing HyperVM with Xen virtualization'
+	echo 'Installing HyperVM Master Host with Xen virtualization'
     start $*
     ;;
   --virtualization-type=openvz)
-	echo 'Installing HyperVM with OpenVZ virtualization'
+	echo 'Installing HyperVM Master Host with OpenVZ virtualization'
     start $*
     ;;
   --virtualization-type=NONE)
-	echo 'Installing HyperVM with default(Xen) virtualization'
+	echo 'Installing HyperVM Master Host without virtualization'
     start $*
     ;;
   *)
-   	echo $"This is the HyperVM Install script"
+   	echo $"This is the HyperVM Master Host Install script"
     	echo $"The usage is:"
     	echo $"sh $0 --virtualization-type=xen/openvz/NONE [--skipostemplate=true]"
 	exit 1

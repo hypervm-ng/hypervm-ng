@@ -29,7 +29,6 @@
 #
 ######
 clear
-cat LICENSE | more
 echo "--------------------------------------------"
 
 start() {
@@ -76,12 +75,15 @@ start() {
 #
 case "$1" in
   --virtualization-type=xen)
+	echo 'Installing HyperVM Slave Host with Xen virtualization'
     start $*
     ;;
   --virtualization-type=openvz)
+	echo 'Installing HyperVM Slave Host with OpenVZ virtualization'
     start $*
     ;;
   --virtualization-type=NONE)
+	echo 'Installing HyperVM Slave Host without virtualization'
     start $*
     ;;
   *)
