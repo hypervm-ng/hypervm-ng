@@ -58,21 +58,10 @@ function openvz_install($installtype)
 
 }
 
-//
-// This function is changed.
-// It downloads only two base ostemplates
-// It only download ostemplates for virtualisation type
-// added /base/ and /extra/ to download server to split base and extra os templates
-// dterweij 17aug09
-//
 function installOstemplates($virtualization)
 {
-	if ($virtualization === 'xen') {
 	system("mkdir -p /home/hypervm/xen/template/ ; cd /home/hypervm/xen/template/ ; wget -nd -np -c -r http://download.hypervm-ng.org/download/xentemplates/base/;");
-	}
-	if ($virtualization === 'openvz') {
 	system("mkdir -p /vz/template/cache ; cd /vz/template/cache/ ; wget -nd -np -c -r http://download.hypervm-ng.org/download/openvztemplates/base/;");
-	}
 }
 
 function xen_install($installtype)
@@ -88,7 +77,7 @@ function xen_install($installtype)
         $arch = trim($arch);
 
         if ($arch === 'x86_64') {
-            $cont = our_file_get_contents("centos-6-xen.repo.template");
+            $cont = our_file_get_contents("../file/centos-6-xen.repo.template");
             our_file_put_contents("/etc/yum.repos.d/CentOS-Xen.repo", $cont);
         } else {
             echo "Sorry, installation aborted. Xen is not supported at CentOS 6 32bit.";
