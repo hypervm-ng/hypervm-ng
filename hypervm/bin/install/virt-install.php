@@ -77,8 +77,7 @@ function xen_install($installtype)
         $arch = trim($arch);
 
         if ($arch === 'x86_64') {
-            $cont = our_file_get_contents("../file/centos-6-xen.repo.template");
-            our_file_put_contents("/etc/yum.repos.d/CentOS-Xen.repo", $cont);
+			lxfile_cp("../file/centos-6-xen.repo.template", "/etc/yum.repos.d/CentOS-Xen.repo");
         } else {
             echo "Sorry, installation aborted. Xen is not supported at CentOS 6 32bit.";
             exit;
