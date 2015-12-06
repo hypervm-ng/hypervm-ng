@@ -1189,6 +1189,7 @@ class vps__xen extends Lxdriverclass {
 						$string .= "kernel = '/boot/hypervm-xen-vmlinuz'\n";
 						$string .= "ramdisk = '/boot/hypervm-xen-initrd.img'\n";
 					}
+				}
         }
 
         //Add xvd configuration if template name contains xvd
