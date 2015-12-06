@@ -835,13 +835,31 @@ class vps__xen extends Lxdriverclass {
 
 	public function copyKernelModules()
 	{
-                // if template name contains pygrub then skip copying of kernel modules, 
-                // they should be already included into template        
+		/*
+		 * For Xen we may have few different situation here:
+		 * 1. RHEL5 with pygrub template -> do nothing, follow pygrub procedure (skip copying of kernel modules)
+		 * 2. RHEL5 without pygrub template -> copy existing kernel modules
+		 * 3. RHEL6 with pygrub template -> same as for RHEL5
+		 * 4. RHEL6 without pygrub template -> check below:
+		 *  4a. if RHEL-5/CentOS-5 or old kloxo (hostinabox) -> copy lxkernel-domU-xen kernel modules
+		 *  4b. if other modern linux -> copy existing kernel modules
+		 *
+		 */
+
 		$pygrub_record = explode('-', $this->main->ostemplate);
 		if (stripos($pygrub_record[3], 'pygrub') == TRUE) {
                 
                     $mountpoint = $this->mount_this_guy();
-                    $kernev = trim(`uname -r`);
+					if (is_centosfive()) {
+						$kernev = trim(`uname -r`);
+					} else {
+						if (char_search_beg($this->main->ostemplate, "centos-5")) {
+							$kernev = trim(`rpm -q --queryformat  '%{VERSION}-%{RELEASE}' lxkernel-domU-xen`);
+							$kernev .= 'xen';
+						} else {
+							$kernev = trim(`uname -r`);
+						}
+					}
 	
                 	if (!lxfile_exists("$mountpoint/lib/modules/$kernev")) {
                         	lxfile_cp_rec("/lib/modules/$kernev", "$mountpoint/lib/modules/$kernev");
@@ -1151,8 +1169,26 @@ class vps__xen extends Lxdriverclass {
             $string .= "bootloader = '/usr/bin/pygrub'\n";
         } else {
 
-            $string .= "kernel = '/boot/hypervm-xen-vmlinuz'\n";
-            $string .= "ramdisk = '/boot/hypervm-xen-initrd.img'\n";
+			/* okay - a bit word here as well...
+			 *
+			 * 1. RHEL5 Host and not using pygrub template -> use existing kernel
+			 * 2. RHEL6 Host and not using pygrub template -> check below:
+ 			 *  2a. if RHEL-5/CentOS-5 or old kloxo (hostinabox) template -> use lxkernel-domU-xen kernel
+			 *  2b. if other modern linux template -> copy existing kernel modules
+			 */
+				if (is_centosfive()) {
+					$kernev = trim(`uname -r`);
+					$string .= "kernel = '/boot/hypervm-xen-vmlinuz'\n";
+					$string .= "ramdisk = '/boot/hypervm-xen-initrd.img'\n";
+				} else {
+					if (char_search_beg($this->main->ostemplate, "centos-5")) {
+						$string .= "kernel = '/boot/hypervm-xen-vmlinuz-2.6.18'\n";
+						$string .= "ramdisk = '/boot/hypervm-xen-initrd-2.6.18.img'\n";
+
+					} else {
+						$string .= "kernel = '/boot/hypervm-xen-vmlinuz'\n";
+						$string .= "ramdisk = '/boot/hypervm-xen-initrd.img'\n";
+					}
         }
 
         //Add xvd configuration if template name contains xvd

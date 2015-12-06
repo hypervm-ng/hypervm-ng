@@ -83,8 +83,11 @@ function xen_install($installtype)
             exit;
         }
     }
-
-    $list = array("kernel-xen", "xen", "virt-manager");
+	if (is_centosfive()) {
+		$list = array("kernel-xen", "xen", "virt-manager");
+	} else {
+		$list = array("kernel-xen", "xen", "virt-manager", "lxmkinitrd", "lxkernel-domU-xen");
+	}
     run_package_installer($list);
     if (file_exists("/boot/vmlinuz-2.6-xen") && !file_exists("/boot/hypervm-xen-vmlinuz")) {
         system("cd /boot ; ln -s vmlinuz-2.6-xen hypervm-xen-vmlinuz; ln -s initrd-2.6-xen.img hypervm-xen-initrd.img");
@@ -93,11 +96,12 @@ function xen_install($installtype)
         system("chkconfig libvirtd off");
     }
     system("chkconfig xendomains on");
+	system("chkconfig xend on");
     if (is_centossix()) {
         system("../bin/grub-bootxen.sh");
+		system("sh /script/fixxenkernel");
     }
 }
-
 
 function run_package_installer($list)
 {
