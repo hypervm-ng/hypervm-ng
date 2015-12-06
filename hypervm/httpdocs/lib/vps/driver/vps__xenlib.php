@@ -848,7 +848,7 @@ class vps__xen extends Lxdriverclass {
 
 		$pygrub_record = explode('-', $this->main->ostemplate);
 		if (!stripos($pygrub_record[3], 'pygrub') !== FALSE) {
-			
+
                     $mountpoint = $this->mount_this_guy();
 					if (is_centosfive()) {
 						$kernev = trim(`uname -r`);
