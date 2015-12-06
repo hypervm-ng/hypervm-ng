@@ -95,6 +95,14 @@ function lxins_main()
     // New since HyperVM 2.1.0 hypervm-core-php yum-plugin-replace
     $list = array("which", "lxlighttpd", "zip", "unzip", "hypervm-core-php", "curl","yum-plugin-replace");
 
+    /* Because our builder is on CentOS-6 the binaries like closeallinput are linked against libssl.so.10
+     * To keep backward compatibility with RHEL-5 / CentOS-5 systems HyperVM-NG provides openssl10 package
+     */
+    if (char_search_beg($osversion, "centos-5") && char_search_beg($osversion, "rhel-5")) {
+        $libssl = array("openssl10");
+        $list = array_merge($list, $libssl);
+    }
+
     if ($installtype !== 'slave') {
         $mysql = array("mysql", "mysql-server");
         $list = array_merge($list, $mysql);
