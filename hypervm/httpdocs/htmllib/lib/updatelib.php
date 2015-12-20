@@ -773,7 +773,12 @@ function cleanupProcess()
         lunlink("/var/log/loadvg.log");
     }
     if (lxfile_exists("/etc/vz")) {
-        lxfile_cp("__path_program_root/file/sysfile/openvz/ve-vps.basic.conf-sample", "/etc/vz/conf");
+        if (is_centossix()) {
+            lxfile_cp("__path_program_root/file/sysfile/openvz/centos-6-openvz-ve-vswap-hypervm.conf-sample", "/etc/vz/conf/ve-vswap-hypervm.conf-sample");
+        } else {
+            lxfile_cp("__path_program_root/file/sysfile/openvz/ve-vps.basic.conf-sample", "/etc/vz/conf");
+        }
+
         print("Set NEIGHBOUR_DEVS=all to vz.conf\n");
         vps__openvz::staticChangeConf("/etc/vz/vz.conf", "NEIGHBOUR_DEVS", "all");
     }

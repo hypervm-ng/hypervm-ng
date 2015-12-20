@@ -56,6 +56,10 @@ function openvz_install($installtype)
 
 	run_package_installer($list);
 
+	if (is_centossix()) {
+		lxfile_cp("../file/sysfile/openvz/centos-6-openvz-ve-vswap-hypervm.conf-sample", "/etc/vz/conf/ve-vswap-hypervm.conf-sample");
+	}
+
 }
 
 function installOstemplates($virtualization)
