@@ -21,6 +21,8 @@
 #
 #    Install and deploy a develoment version on a local enviroment
 #
+#    Version 0.6 Added local [ Krzysztof Taraszka <krzysztof.taraszka@hypervm-ng.org> ]
+#    Version 0.5 Added legacy & NG [ Krzysztof Taraszka <krzysztof.taraszka@hypervm-ng.org> ]
 #    Version 0.4 Added which, zip and unzip as requirement [ Danny Terweij <d.terweij@lxcenter.org> ]
 #    Version 0.3 Added perl-ExtUtils-MakeMaker as requirement to install_GIT [ Danny Terweij <d.terweij@lxcenter.org> ]
 #    Version 0.2 Changed git version [ Danny Terweij <d.terweij@lxcenter.org> ]
@@ -30,7 +32,7 @@ HYPERVM_PATH='/usr/local/lxlabs'
 
 usage(){
     echo "Usage: $0 [BRANCH] [-h]"
-    echo 'BRANCH: master, legacy or dev'
+    echo 'BRANCH: master, legacy, dev or local'
     echo 'h: shows this help.'
     exit 1
 }
@@ -130,6 +132,21 @@ case $1 in
 		sh ./make-development.sh
 		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
 		;;
+	local )
+		# Clone from GitHub the last version using git transport (no http or https)
+		echo "Installing local branch of hypervm"
+        if [ ! -f ${HYPERVM_PATH}/.git ]
+        then
+    		touch ${HYPERVM_PATH}/.git
+    	fi
+		cd hypervm-install
+		sh ./make-distribution.sh
+		cd ..//hypervm
+		sh ./make-development.sh
+		cp hypervm-current.zip ${HYPERVM_PATH}/hypervm
+		printf "Done.\nInstall HyperVM-NG:\ncd hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
+		;;
+
 	*   )
 		usage
 		return 1 ;;
