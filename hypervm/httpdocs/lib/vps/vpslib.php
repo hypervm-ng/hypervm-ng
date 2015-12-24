@@ -1633,10 +1633,14 @@ static function addform($parent, $class, $typetd = null)
 
 	$serverlist = $parent->getVpsServers($typetd['val']);
 	if (!$serverlist) {
-		throw new lxexception('This server is not configured for driver '. $typetd['val'] . '. You can use setdriver.php for configure a driver.
+		// be more ModSecurity with OWASP_CRS friendly...
+		// TODO: rewrite this part to use htmllib with built in exception window without using stupid GET HTTP method with frm_emessage...
+		throw new lxexception('This server was not configure for driver '. $typetd['val'] . '. You can use setdriver.php for configure a driver. For more please visit our KB: http://wiki.hypervm-ng.org/display/DOCS/KB', '', '');
+/*		throw new lxexception('This server is not configured for driver '. $typetd['val'] . '. You can use setdriver.php for configure a driver.
 		 For example:
 		cd /usr/local/lxlabs/hypervm/httpdocs;
 		lphp.exe ../bin/common/setdriver.php --server=localhost --class=vps --driver='. $typetd['val'] . '', '', '');
+*/
 	}
 
 	$sinfo = pserver::createServerInfo($serverlist, "vps");
