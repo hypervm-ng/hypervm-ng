@@ -1634,13 +1634,7 @@ static function addform($parent, $class, $typetd = null)
 	$serverlist = $parent->getVpsServers($typetd['val']);
 	if (!$serverlist) {
 		// be more ModSecurity with OWASP_CRS friendly...
-		// TODO: rewrite this part to use htmllib with built in exception window without using stupid GET HTTP method with frm_emessage...
-		throw new lxexception('This server was not configure for driver '. $typetd['val'] . '. You can use setdriver.php for configure a driver. For more please visit our KB: http://wiki.hypervm-ng.org/display/DOCS/KB', '', '');
-/*		throw new lxexception('This server is not configured for driver '. $typetd['val'] . '. You can use setdriver.php for configure a driver.
-		 For example:
-		cd /usr/local/lxlabs/hypervm/httpdocs;
-		lphp.exe ../bin/common/setdriver.php --server=localhost --class=vps --driver='. $typetd['val'] . '', '', '');
-*/
+		throw new lxexception('not_configured_for_driver');
 	}
 
 	$sinfo = pserver::createServerInfo($serverlist, "vps");
@@ -1889,6 +1883,12 @@ function createShowAlist(&$alist, $subaction = null)
 
 	if ($this->checkIfLockedForAction('livemigrate')) {
 		$alist['__v_message'] = 'The VPS is being Migrated Live. The CP is inactive, but your VPS is running Normally.';
+		$alist['__v_refresh'] = true;
+		return $alist;
+	}
+
+	if ($this->checkIfLockedForAction('changelocation')) {
+		$alist['__v_message'] = 'The VM is getting changed location, please wait...';
 		$alist['__v_refresh'] = true;
 		return $alist;
 	}

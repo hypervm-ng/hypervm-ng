@@ -119,3 +119,4 @@ $__smessage['vps_creation_in_background'] = "Vpses are getting created in the ba
 $__smessage['kloxo_installation_started'] = "Kloxo Installation has been started in the VPS. The log is kept in a file called HyperVM-kloxo_install.log in the / directory, which you can view using the File Manager";
 $__emessage['need_confirm_reboot'] = "Confirmation is needed for rebooting.";
 $__emessage['need_confirm_poweroff'] = "Confirmation is needed for halting.";
+$__emessage['not_configured_for_driver'] = "This server is not configured for driver you requested. You can use setdriver.php for configure a driver.<br>&emsp;For example:<br>&emsp;cd /usr/local/lxlabs/hypervm/httpdocs;<br>&emsp;lphp.exe ../bin/common/setdriver.php --server=localhost --class=vps --driver=openvz";
