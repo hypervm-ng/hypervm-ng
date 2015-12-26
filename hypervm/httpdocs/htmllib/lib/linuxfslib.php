@@ -578,6 +578,36 @@ function lxshell_background($cmd)
 	return true;
 }
 
+function lxshell_background_pid_return($cmd)
+{
+	global $gbl, $sgbl, $login, $ghtml;
+	global $global_dontlogshell;
+	$username = '__system__';
+	$start = 1;
+	$arglist = array();
+	for ($i = $start; $i < func_num_args(); $i++) {
+		if (isset($transforming_func)) {
+			$arglist[] = $transforming_func(func_get_arg($i));
+		} else {
+			$arglist[] = func_get_arg($i);
+		}
+	}
+
+	$cmd = "nohup ";
+	$cmd .= getShellCommand($cmd, $arglist);
+	$cmd .= " >/dev/null 2>&1 & echo $!";
+	$pwd = getcwd();
+	if (!$global_dontlogshell) {
+		log_shell("Background: ($pwd) $cmd");
+	} else {
+		log_log("other_cmd", "Background: ($pwd) $cmd");
+	}
+
+	exec($cmd, $op);
+	$pid = (int)$op[0];
+	return $pid;
+}
+
 function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input) 
 {
 	//dprint("<hr>$dir <hr> ");
