@@ -312,7 +312,11 @@ class vps__xen extends Lxdriverclass {
 		if (lx_core_lock_check_only('background.php', $virtual_machine_name . '.create')) {
 			return 'create';
 		}
-	
+
+		if (lx_core_lock_check_only("hypervm.php", "$virtual_machine_name.changelocation")) {
+			return 'changelocation';
+		}
+
 		// Check if background create failed
 		if (lxfile_exists('__path_program_root/tmp/' . $virtual_machine_name . '.createfailed')) {
 			$reason = lfile_get_contents('__path_program_root/tmp/' . $virtual_machine_name . '.createfailed');
@@ -1511,13 +1515,16 @@ class vps__xen extends Lxdriverclass {
 		} else {
 			$oldimage = "{$this->__oldlocation}/{$this->main->nname}/root.img";
 		}
-	
+
+		if (lx_core_lock("$name.changelocation")) {
+			throw new lxException("could_not_clone");
+		}
+
 		$ret = lxshell_return("dd", "if=$oldimage", "of={$this->main->maindisk}");
 		if ($ret) {
 			throw new lxException("could_not_clone");
 		}
-	
-	
+
 		// Don't do this at all. The saved space is not going to be very important for the short period.
 		//lunlink("$this->__oldlocation/{$this->main->nname}/root.img");
 		/*

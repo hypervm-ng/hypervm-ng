@@ -286,7 +286,11 @@ class vps__openvz extends Lxdriverclass {
 		if (lx_core_lock_check_only("background.php", "$vpsid.create")) {
 			return 'create';
 		}
-	
+
+		if (lx_core_lock_check_only("hypervm.php", "$vpsid.changelocation")) {
+			return 'changelocation';
+		}
+
 		if (lxfile_exists("__path_program_root/tmp/$vpsid.createfailed")) {
 			$reason = lfile_get_contents("__path_program_root/tmp/$vpsid.createfailed");
 			return "createfailed: $reason";
@@ -567,7 +571,11 @@ class vps__openvz extends Lxdriverclass {
 		if (lxfile_exists("{$this->main->newlocation}/{$this->main->vpsid}")) {
 			throw new lxException("vpsid_already_exists_in_new_location", 'newlocation', $this->main->vpsid);
 		}
-	
+
+		if (lx_core_lock("{$this->main->vpsid}.changelocation")) {
+			throw new lxException("could_not_clone");
+		}
+
 		$ret = lxfile_cp_rec("{$this->main->corerootdir}/{$this->main->vpsid}", "{$this->main->newlocation}/");
 		if ($ret) {
 			throw new lxException("copy_of_vps_failed", 'newlocation', $this->main->vpsid);

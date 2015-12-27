@@ -1887,7 +1887,7 @@ function createShowAlist(&$alist, $subaction = null)
 		return $alist;
 	}
 
-	if ($this->checkIfLockedForAction('changelocation')) {
+	if ($this->checkIfLockedForAction('changelocation') || $this->status === 'changelocation') {
 		$alist['__v_message'] = 'The VM is getting changed location, please wait...';
 		$alist['__v_refresh'] = true;
 		return $alist;
