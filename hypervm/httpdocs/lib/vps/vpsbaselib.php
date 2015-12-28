@@ -378,7 +378,7 @@ function updateform($subaction, $param)
 				$vlist['networkgateway'] = null;
 				$vlist['networknetmask'] = null;
 				if ($login->priv->isOn('ip_manage_flag') || $login->isAdmin()) {
-					$vlist['networkbridge'] = array('s', array("--automatic--", "xenbr0", "xenbr1", "xenbr2", "xenbr3", "xenbr4"));
+					$vlist['networkbridge'] = array('s', array("__automatic__", "xenbr0", "xenbr1", "xenbr2", "xenbr3", "xenbr4"));
 				}
 			}
 			$iplist = $this->vmipaddress_a;

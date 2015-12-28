@@ -1020,7 +1020,7 @@ class vps__xen extends Lxdriverclass {
 		if (!char_search_beg($mac, "aa:00")) { $mac = "aa:00:$mac"; }
 		if (strlen($mac) === 14) { $mac = "$mac:01"; }
 		$bridgestring = null;
-		if ($this->main->networkbridge && $this->main->networkbridge !== '--automatic--') {
+		if ($this->main->networkbridge && $this->main->networkbridge !== '__automatic__') {
 			$bridgestring = ",bridge={$this->main->networkbridge}";
 		}
 		$string = "vif        = ['$ipstring $vifnamestring $ratestring mac=$mac $bridgestring']\n";
@@ -1065,7 +1065,7 @@ class vps__xen extends Lxdriverclass {
 			$hex = get_double_hex($i);
 			$h = base_convert($i, 10, 36);
 			$bridgestring = null;
-			if ($this->main->networkbridge && $this->main->networkbridge !== '--automatic--') {
+			if ($this->main->networkbridge && $this->main->networkbridge !== '__automatic__') {
 				$bridgestring = ",bridge={$this->main->networkbridge}";
 			}
 			$vifnamestring = "vifname=vif{$this->main->vifname}$h,";
