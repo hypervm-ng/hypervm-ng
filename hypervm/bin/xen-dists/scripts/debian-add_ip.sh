@@ -52,6 +52,7 @@ iface ${ETH_DEV} inet static
 	netmask ${MAIN_NETMASK}
 	up route add -net ${FAKEGATEWAYNET} netmask ${MAIN_NETMASK} dev ${ETH_DEV}
 	up route add default gw ${FAKEGATEWAY}
+	mtu 1452
 iface ${LOOPBACK} inet loopback
 " >> ${CFGFILE}
 	# Set up /etc/hosts

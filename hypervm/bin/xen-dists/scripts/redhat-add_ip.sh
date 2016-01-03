@@ -67,7 +67,8 @@ function setup_network()
 BOOTPROTO=static
 ONBOOT=yes
 IPADDR=${MAIN_IP_ADDRESS}
-NETMASK=${MAIN_NETMASK}" > $IFCFG || error "Can't write to file $IFCFG" $VZ_FS_NO_DISK_SPACE
+NETMASK=${MAIN_NETMASK}
+MTU=1452" > $IFCFG || error "Can't write to file $IFCFG" $VZ_FS_NO_DISK_SPACE
 
 	rm -f ${routefile}
 	if ! grep -q "${FAKEGATEWAYNET}/24 dev ${ETH_DEV}" ${routefile} 2>/dev/null; then
