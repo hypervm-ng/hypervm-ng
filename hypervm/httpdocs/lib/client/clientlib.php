@@ -427,8 +427,8 @@ static function createListSlist($parent)
 	$nlist['contactemail'] = null;
 
 	$nlist['resourceplan_used'] = null;
-	$nlist['status'] = array('s', array('--any--', 'on', 'off'));
-	$nlist['cttype'] = array('s', array('--any--', 'reseller', 'customer'));
+	$nlist['status'] = array('s', array('__any__', 'on', 'off'));
+	$nlist['cttype'] = array('s', array('__any__', 'reseller', 'customer'));
 
 
 	return $nlist;

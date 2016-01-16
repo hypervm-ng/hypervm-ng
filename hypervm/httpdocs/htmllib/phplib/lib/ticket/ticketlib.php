@@ -148,7 +148,7 @@ static function createListSlist($parent)
 
 	$gen = $login->getObject('general');
 	$cat = get_namelist_from_objectlist($gen->helpdeskcategory_a);
-	$cat = lx_merge_good('--any--', $cat);
+	$cat = lx_merge_good('__any__', $cat);
 
 	$nlist['category'] = array('s', $cat);
 	return $nlist;

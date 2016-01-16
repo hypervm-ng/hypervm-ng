@@ -4190,7 +4190,7 @@ class HtmlLib
 				}
 			}
 
-			if ($value && $value !== '--any--') {
+			if ($value && $value !== '__any__') {
 				$global_visible = true;
 				break;
 			}
@@ -4372,7 +4372,7 @@ class HtmlLib
 	{
 
 		foreach ($filter as $k => $f) {
-			if ($k !== 'view' && $k !== 'pagesize' && $k !== 'pagenum' && $k !== 'sortby' && $k !== 'sortdir' && $f && $f !== '--any--') {
+			if ($k !== 'view' && $k !== 'pagesize' && $k !== 'pagenum' && $k !== 'sortby' && $k !== 'sortdir' && $f && $f !== '__any__') {
 				return true;
 			}
 		}

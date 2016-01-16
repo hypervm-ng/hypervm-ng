@@ -830,16 +830,16 @@ static function createListSlist($parent)
 		$nlist['default_domain'] = null;
 	}
 
-	$nlist['status'] = array('s', array('--any--', 'on', 'off'));
-	$nlist['cttype'] = array('s', array('--any--', 'reseller', 'customer'));
-	$nlist['traffic_usage_q'] = array('s', array('--any--', 'overquota', 'underquota'));
+	$nlist['status'] = array('s', array('__any__', 'on', 'off'));
+	$nlist['cttype'] = array('s', array('__any__', 'reseller', 'customer'));
+	$nlist['traffic_usage_q'] = array('s', array('__any__', 'overquota', 'underquota'));
 
 
 	if (check_if_many_server()) {
 		$sql = new Sqlite($parent->__masterserver, "pserver");
 		$res = $sql->getTable(array('nname'));
 		$rs = get_namelist_from_arraylist($res);
-		$rs = lx_merge_good(array('--any--'), $rs);
+		$rs = lx_merge_good(array('__any__'), $rs);
 		$nlist['websyncserver'] = array('s', $rs);
 		$nlist['mmailsyncserver'] = array('s', $rs);
 		//$nlist['coma_dnssyncserver_list'] = array('s', $rs);

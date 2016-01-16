@@ -1057,7 +1057,7 @@ static function getdbFilter($filter = null, $class)
 			$var = str_replace(array("\"", "'", ";"), "",  $var);
 			$val = str_replace(array("\"", "'", ";"), "", $val);
 			if ($val) {
-				if ($val === '--any--') {
+				if ($val === '__any__') {
 					continue;
 				}
 

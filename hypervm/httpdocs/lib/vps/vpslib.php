@@ -724,14 +724,14 @@ static function createListSlist($parent)
 	$nlist['hostname'] = null;
 	$nlist['resourceplan_used'] = null;
 	$nlist['parent_clname'] = null;
-	$nlist['ttype'] = array('s', array('--any--', 'xen', 'openvz'));
-	$nlist['status'] = array('s', array('--any--', 'on', 'off', 'deleted'));
-	$nlist['traffic_usage_q'] = array('s', array('--any--', 'overquota', 'underquota'));
+	$nlist['ttype'] = array('s', array('__any__', 'xen', 'openvz'));
+	$nlist['status'] = array('s', array('__any__', 'on', 'off', 'deleted'));
+	$nlist['traffic_usage_q'] = array('s', array('__any__', 'overquota', 'underquota'));
 	if ($parent->get__table() === 'client') {
 		$res = $parent->getServerList('vps');
 		$rs = $res;
 		//foreach($rs as $k => $v) { if (!$v) { $rs[$k] = $k ; } }
-		$rs = lx_merge_good(array("--any--"), $rs);
+		$rs = lx_merge_good(array("__any__"), $rs);
 		$nlist['syncserver'] = array('s', $rs);
 	}
 	return $nlist;

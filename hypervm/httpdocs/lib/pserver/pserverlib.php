@@ -63,7 +63,7 @@ static function createListSlist($parent)
 
 	$list = get_namelist_from_objectlist($parent->getList('datacenter'));
 
-	$clist[] = '--any--';
+	$clist[] = '__any__';
 
 	$clist = lx_merge_good($clist, $list);
 
