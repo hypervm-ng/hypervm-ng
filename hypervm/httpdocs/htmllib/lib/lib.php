@@ -1373,12 +1373,12 @@ function get_form_variable_name($descr)
 
 function is_disabled($var)
 {
-	return ($var === '--Disabled--');
+	return ($var === '__Disabled__');
 }
 
 function is_disabled_or_null($var)
 {
-	return (!$var || $var === '--Disabled--');
+	return (!$var || $var === '__Disabled__');
 }
 
 function getFQDNforServer($v)

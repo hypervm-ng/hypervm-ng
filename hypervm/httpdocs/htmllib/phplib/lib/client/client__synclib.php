@@ -48,7 +48,7 @@ function createUser()
 
 	$password = $this->main->password;
 	$cmd = "useradd"; 
-	$shell = fix_disabled("--Disabled--", $sgbl->__var_noaccess_shell);
+	$shell = fix_disabled("__Disabled__", $sgbl->__var_noaccess_shell);
 	$username = $this->main->getPathFromName();
 
 	if (is_numeric($username[0])) {

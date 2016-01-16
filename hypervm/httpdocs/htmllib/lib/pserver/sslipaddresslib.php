@@ -74,7 +74,7 @@ function updateUpdate($param)
 	global $gbl, $sgbl, $login, $ghtml; 
 	$driverapp = $gbl->getSyncClass($this->__masterserver, $this->__readserver, 'web');
 
-	if ($param['sslcert'] == '--Select One--') {
+	if ($param['sslcert'] == '__Select One__') {
 		throw new lxException("need_real_cert");
 	}
 

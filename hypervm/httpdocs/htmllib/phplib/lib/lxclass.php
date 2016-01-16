@@ -409,7 +409,7 @@ function doCustomAction()
 
 function isDisabled($var)
 {
-	return (!$this->$var || $this->$var === '--Disabled--');
+	return (!$this->$var || $this->$var === '__Disabled__');
 }
 
 function displaySet($var, $val)

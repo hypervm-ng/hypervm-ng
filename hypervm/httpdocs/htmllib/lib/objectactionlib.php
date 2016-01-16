@@ -411,14 +411,14 @@ function do_desc_update($object, $subaction, $param)
 		return false;
 	}
 
-	if (array_search_bool('--Select One--', $param, true)) {
+	if (array_search_bool('__Select One__', $param, true)) {
 		// OA Left this here so you see why Ive added 'strict' to array_search
-		// Basically 1 = '--Select One--' without strict search
+		// Basically 1 = '__Select One__' without strict search
 		//
 		// Anyone knows where else could 'strict' be needed?
 		//
-		//$ret = array_search('--Select One--', $param, true);
-		//if($param[$ret] == '--Select One--') $str_ = $param[$ret] ."  equals --Select One-- according to php...";
+		//$ret = array_search('__Select One__', $param, true);
+		//if($param[$ret] == '__Select One__') $str_ = $param[$ret] ."  equals __Select One__ according to php...";
                                                                 	
 		throw new lxException("Select One is not an acceptable Value", '');
 	}

@@ -3276,7 +3276,7 @@ class HtmlLib
 		foreach ((array) $list as $k => $l) {
 			$value = ($assoc) ? $k : $l;
 
-			if ($l === '--Disabled--') {
+			if ($l === '__Disabled__') {
 				$match = true;
 			}
 
@@ -3291,9 +3291,9 @@ class HtmlLib
 		// IF the select is nonnull and the the damn thing doesn't match, then there is some problem. That is the current value isn't in the list of acceptable values.
 		if (!$match && !$multi) {
 			if ($select) {
-				$sel['--Select One--'] = "--Select One ($select not in List)--";
+				$sel['__Select One__'] = "__Select One ($select not in List)__";
 			} else {
-				$sel['--Select One--'] = '--Select One--';
+				$sel['__Select One__'] = '__Select One__';
 			}
 		}
 
@@ -3307,7 +3307,7 @@ class HtmlLib
 
 	function isSelectOne($var)
 	{
-		return ($var === '--Select One--');
+		return ($var === '__Select One__');
 	}
 
 	function print_current_input_vars($ignore)

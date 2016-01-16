@@ -2644,21 +2644,21 @@ function if_search_continue($obj)
 
 function add_select_one($list)
 {
-	$newlist[] = "--Select One--";
+	$newlist[] = "__Select One__";
 	$newlist = lx_array_merge(array($newlist, $list));
 	return $newlist;
 }
 
 function add_disabled($list)
 {
-	$newlist[] = "--Disabled--";
+	$newlist[] = "__Disabled__";
 	$newlist = lx_merge_good($newlist, $list);
 	return $newlist;
 }
 
 function fix_disabled($value, $disabled_val)
 {
-	if ($value === "--Disabled--") {
+	if ($value === "__Disabled__") {
 		return $disabled_val;
 	} else {
 		return $value;
