@@ -1961,10 +1961,6 @@ function createShowAlist(&$alist, $subaction = null)
 	if (!$this->isWindows()) {
 		$alist['__v_dialog_main'] = "a=updateform&sa=mainipaddress";
 	}
-	if (!$this->isXen()) {
-		$alist['__v_dialog_fixdev'] = "a=updateform&sa=fixdev";
-	}
-
 
 	if ($hackbutton && $hackbutton->isOn('nobackup') && !$this->isWindows()) {
 		vps::$__desc_backup_num = array("", "",  "backup:number_of_backups", "number_of_backups");
