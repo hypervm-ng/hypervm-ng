@@ -1196,11 +1196,11 @@ function updateform($subaction, $param)
 			if ($sgbl->isHyperVm()) {
 				$list = get_namelist_from_objectlist($login->getList('datacenter'));
 				if (!$list) {
-					$list[] = '--no-dc--';
-					$this->datacenter = '--no-dc--';
+					$list[] = '__no-dc__';
+					$this->datacenter = '__no-dc__';
 				}
 				$vlist['datacenter'] = array('s', $list);
-				$newclientlist = lx_array_merge(array(array('--unassigned--'), $clientlist));
+				$newclientlist = lx_array_merge(array(array('__unassigned__'), $clientlist));
 				if ($this->nname === 'localhost') {
 					$vlist['clientname'] = array('M', $login->getKeyword('master_cannot_be_assigned'));
 				} else {
