@@ -9,7 +9,7 @@ static $__desc_networknetmask	 = array("n", "",  "NetMask");
 static $__desc_centralbackup_server	 = array("", "",  "central_backup_server");
 static $__desc_secondlevelquota_flag	 = array("q", "",  "second_level_quota_(only_for_openvz)");
 static $__desc_text_inittab	 = array("", "",  "append_to_inittab");
-static $__desc_kloxo_flag	 = array("f", "",  "show_kloxo_buttons");
+// static $__desc_kloxo_flag	 = array("f", "",  "show_kloxo_buttons");
 static $__desc_text_xen_config	 = array("", "",  "append_to_xen_config");
 static $__desc_fixdev_confirm_f	 = array("f", "",  "confirm_fix_dev");
 static $__desc_recover_ostemplate	 = array("", "",  "could_not_find_your_ostemplate_please_supply_one");
@@ -294,12 +294,12 @@ function updateform($subaction, $param)
 			$vlist['rebuild_confirm_f'] = null;
 			return $vlist;
 
-		case "installkloxo":
+/*		case "installkloxo":
 			$this->kloxo_type = 'master';
 			$vlist['rebuild_confirm_f'] = null;
 			$vlist['__v_button'] = 'Install';
 			return $vlist;
-
+*/
 		case "commandcenter":
 			return $this->commandCenter($param);
 
@@ -330,7 +330,7 @@ function updateform($subaction, $param)
 			$vlist['nname'] = array('M', $this->nname);
 			$vlist['corerootdir'] = array('M', $this->corerootdir);
 			$vlist['ddate']= array('M', @ date('d-m-Y', $this->ddate));
-			$vlist['kloxo_flag'] = null;
+//			$vlist['kloxo_flag'] = null;
 
 			if ($login->isAdmin() && $this->isXen()) {
 				$vlist['nosaveconfig_flag'] = null;

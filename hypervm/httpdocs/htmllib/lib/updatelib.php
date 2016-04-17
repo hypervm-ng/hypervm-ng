@@ -329,7 +329,7 @@ function fixExtraDB()
     $sq->rawQuery("update vps set priv_q_centralbackup_flag = centralbackup_flag where priv_q_centralbackup_flag = ''");
     $sq->rawQuery("update vps set priv_q_centralbackup_flag = centralbackup_flag where priv_q_centralbackup_flag is null");
 
-    db_set_default('vps', 'kloxo_flag', 'on');
+    db_set_default('vps', 'kloxo_flag', 'off');
     db_set_default('vps', 'priv_q_managedns_flag', 'on');
     db_set_default('vps', 'priv_q_managereversedns_flag', 'on');
     db_set_default('vps', 'priv_q_rebuildvps_flag', 'on');
