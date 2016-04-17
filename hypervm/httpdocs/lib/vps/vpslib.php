@@ -1804,6 +1804,7 @@ function createShowAlist(&$alist, $subaction = null)
 	global $gbl, $sgbl, $login, $ghtml; 
 
 	$revc = $login->getObject('general')->reversedns_b;
+	$gen = $login->getObject('general')->generalmisc_b;
 
 	$hackbutton = $login->getObject('general')->hackbuttonconfig_b;
 
@@ -1943,18 +1944,21 @@ function createShowAlist(&$alist, $subaction = null)
 	}
 
 
+	if (!$gen->isOn('no_console_user')) {
+		$alist['__title_console'] = $login->getKeywordUc('console');
 
-	$alist['__title_console'] = $login->getKeywordUc('console');
-
-    if ($this->isWindows()) {
-		$alist[] = "a=show&o=vncviewer";
-	} else {
-		$alist[] = "a=show&o=consolessh";
-		$alist[] = "a=list&c=sshauthorizedkey";
+		if ($this->isWindows()) {
+			$alist[] = "a=show&o=vncviewer";
+		} else {
+			$alist[] = "a=show&o=consolessh";
+			$alist[] = "a=list&c=sshauthorizedkey";
+		}
 	}
+
 	if (!$this->isXen()) {
 		$alist[] = "a=updateform&sa=commandcenter";
 	}
+
 	$alist[] = "a=list&c=blockedip";
 	$alist['__v_dialog_netw'] = "a=updateform&sa=network";
 	$alist[] = "a=list&c=traceroute";
