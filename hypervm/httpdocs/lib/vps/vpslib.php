@@ -2011,11 +2011,13 @@ function createShowAlist(&$alist, $subaction = null)
 		$alist['__v_dialog_root'] = "a=updateform&sa=rootpassword";
 		$alist[] = "a=show&l[class]=ffile&l[nname]=/";
 		$alist['__v_dialog_time'] = "a=updateform&sa=timezone";
+/*
+ * commented out - hypervm-ng no longer ships kloxo. If you like it fell free to install kloxo-mr by hand
 		if ($this->isOn('kloxo_flag') && $login->priv->isOn('rebuildvps_flag')) {
 			$alist['__v_dialog_inst'] = "a=updateform&sa=installkloxo";
 		}
+*/
 	}
-
 
 
 
