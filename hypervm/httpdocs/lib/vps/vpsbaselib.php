@@ -346,7 +346,7 @@ function updateform($subaction, $param)
 			}
 
 			if ($login->isAdmin()) {
-				$use_slaves = "--use-slaves-backup-server--";
+				$use_slaves = "__use-slaves-backup-server__";
 				if (!$this->centralbackup_server) {
 					$this->centralbackup_server = $use_slaves;
 				}

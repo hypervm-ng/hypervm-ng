@@ -1496,7 +1496,7 @@ function getFfileFromVirtualList($name)
 
 function getBackupServer()
 {
-	$use_slaves = "--use-slaves-backup-server--";
+	$use_slaves = "__use-slaves-backup-server__";
 	if (!$this->centralbackup_server || ($this->centralbackup_server === $use_slaves)) {
 		$bserver = db_get_value("pserver", $this->syncserver, "centralbackupserver");
 	} else {
