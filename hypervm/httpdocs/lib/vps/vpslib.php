@@ -1961,7 +1961,9 @@ function createShowAlist(&$alist, $subaction = null)
 
 	$alist[] = "a=list&c=blockedip";
 	$alist['__v_dialog_netw'] = "a=updateform&sa=network";
+/* we are beleve that traceroute is not necessary any more. There are no benefits
 	$alist[] = "a=list&c=traceroute";
+*/
 	if (!$this->isWindows()) {
 		$alist['__v_dialog_main'] = "a=updateform&sa=mainipaddress";
 	}
