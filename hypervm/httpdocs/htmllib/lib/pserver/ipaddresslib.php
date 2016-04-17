@@ -472,7 +472,7 @@ function updateform($subaction, $param)
 		$db = new Sqlite($this->__masterserver, "client");
 		$list = $db->getTable(array("nname"));
 		$list = get_namelist_from_arraylist($list);
-		$list = lx_merge_good('--unassigned--', $list);
+		$list = lx_merge_good('__unassigned__', $list);
 		$vlist['clientname'] = array('s', $list);
 	}
 
