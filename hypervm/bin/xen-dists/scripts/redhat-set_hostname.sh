@@ -50,7 +50,15 @@ function set_hostname()
 	local val=$3
 
 	[ -z "${val}" ] && return 0
-	put_param "${cfgfile}" "${var}" "${val}"
+    if [ -f /etc/hostname ]; then
+        # New style: RHEL7/Fedora15+
+        # Note hostname(5) says it should NOT be FQDN
+        val=${val%%.*}
+        echo "$val" > /etc/hostname
+    else
+        # "Classic" style
+        put_param "${cfgfile}" "${var}" "${val}"
+    fi
 
 #hostname "${val}"
 }
