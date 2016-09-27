@@ -4,6 +4,7 @@
 //
 //    Copyright (C) 2000-2009     LxLabs
 //    Copyright (C) 2009-2014     LxCenter
+//    Copyright (C) 2015 and never  HyperVM-NG
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU Affero General Public License as
@@ -80,8 +81,8 @@ function lxins_main()
 
 
     if ($virtualization === 'openvz') {
-        if (!char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "rhel-6")) {
-            print("OpenVZ is only supported on CentOS 5 and CentOS 6 distributions with HyperVM as management system\n");
+        if (!char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "rhel-6") && !char_search_beg($osversion, "virtuozzo-7")) {
+            print("OpenVZ is only supported on CentOS 5, CentOS 6 and Virtuozzo 7 distributions with HyperVM as management system\n");
             exit;
         }
     }
