@@ -10,6 +10,7 @@
 #
 #    Copyright (C) 2000-2009     LxLabs
 #    Copyright (C) 2009-2013     LxCenter
+#    Copyright (C) 2015-         HyperVM-NG
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -62,12 +63,20 @@ start() {
 			sh ../sbin/$__var_wrapper_name &
 		fi
 
-		if ! [ -f $__var_slave_db ] ; then
-			if ! /etc/init.d/mysqld status ; then
-				/etc/init.d/mysqld start
-			fi
-			sleep 1
-		fi
+        if ! [ -f $__var_slave_db ] ; then
+            if grep -q -i "release 7" /etc/redhat-release
+            then
+                if ! /usr/sbin/service mariadb status
+                then
+                    /usr/sbin/service mariadb start
+                fi
+            else
+                if ! /etc/init.d/mysqld status ; then
+                    /etc/init.d/mysqld start
+                fi
+            fi
+            sleep 1
+        fi
 
 		cp /usr/local/lxlabs/ext/lxlighttpd/sbin/lighttpd /usr/local/lxlabs/ext/lxlighttpd/sbin/$prog.httpd 2>/dev/null
 		(cd /usr/local/lxlabs/$prog/httpdocs ; lphp.exe ../bin/common/misc/fixlighty.php "$1" )
