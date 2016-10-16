@@ -105,7 +105,7 @@ function lxins_main()
     }
 
     if ($installtype !== 'slave') {
-        if (char_search_beg($osversion, "centos-7") && char_search_beg($osversion, "rhel-7") && char_search_beg($osversion, "virtuozzo-7")) {
+        if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
             $mysql = array("mariadb", "mariadb-server");
         } else {
             $mysql = array("mysql", "mysql-server");

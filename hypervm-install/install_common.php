@@ -51,7 +51,7 @@ function addLineIfNotExistTemp($filename, $pattern, $comment)
 
 function check_default_mysql($dbroot, $dbpass)
 {
-    if (char_search_beg($osversion, "centos-7") && char_search_beg($osversion, "rhel-7") && char_search_beg($osversion, "virtuozzo-7")) {
+    if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
         system("service mariadb restart");
     } else {
         system("service mysqld restart");
@@ -66,7 +66,7 @@ function check_default_mysql($dbroot, $dbpass)
 		print("Fatal Error: Could not connect to Mysql Localhost using user $dbroot and password \"$dbpass\"\n");
 		print("If this is a brand new install, you can completely remove mysql by running the commands below\n");
 		print("            rm -rf /var/lib/mysql\n");
-        if (char_search_beg($osversion, "centos-7") && char_search_beg($osversion, "rhel-7") && char_search_beg($osversion, "virtuozzo-7")) {
+        if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
             print("            rpm -e mariadb-server\n");
         } else {
             print("            rpm -e mysql-server\n");
