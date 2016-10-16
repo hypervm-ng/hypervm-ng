@@ -221,9 +221,9 @@ function find_os_version()
 		$osv = explode(" ", $release);
 		if(isset($osv[6])) {
 			$osversion = "rhel-" . $osv[6];
-		} elseif (isset($osv[3]) {
+		} elseif (isset($osv[3]))  {
             $osversion = "virtuozzo-" . $osv[3];
-        }else {
+        } else {
 			$oss = explode(".", $osv[2]);
 			$osversion = "centos-" . $oss[0];
 		}
