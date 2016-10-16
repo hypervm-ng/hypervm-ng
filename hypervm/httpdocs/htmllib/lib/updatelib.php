@@ -677,21 +677,29 @@ function find_os_version()
 
         return $osversion;
     }
+
     if (file_exists("/etc/redhat-release")) {
         $release = trim(file_get_contents("/etc/redhat-release"));
         $osv = explode(" ", $release);
         if(isset($osv[6])) {
             $osversion = "rhel-" . $osv[6];
-        } else{
+        } elseif (isset($osv[3]))  {
+            if (($osv[0]) == "CentOS") {
+                $osversion = "centos-" . $osv[0];
+            } else {
+                $osversion = "virtuozzo-" . $osv[0];
+            }
+            $oss = explode(".", $osv[3]);
+        } else {
             $oss = explode(".", $osv[2]);
             $osversion = "centos-" . $oss[0];
         }
         return $osversion;
     }
 
-
     print("This Operating System is Currently Not supported.\n");
     exit;
+
 }
 
 function cleanupProcess()
