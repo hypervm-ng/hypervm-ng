@@ -51,6 +51,8 @@ function addLineIfNotExistTemp($filename, $pattern, $comment)
 
 function check_default_mysql($dbroot, $dbpass)
 {
+    $osversion = find_os_version();
+
     if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
         system("service mariadb restart");
     } else {
@@ -76,7 +78,6 @@ function check_default_mysql($dbroot, $dbpass)
 	}
 
 }
-
 
 function parse_opt($argv)
 {
