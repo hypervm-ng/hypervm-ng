@@ -684,12 +684,12 @@ function find_os_version()
         if(isset($osv[6])) {
             $osversion = "rhel-" . $osv[6];
         } elseif (isset($osv[3]))  {
-            if (($osv[0]) == "CentOS") {
-                $osversion = "centos-" . $osv[0];
-            } else {
-                $osversion = "virtuozzo-" . $osv[0];
-            }
             $oss = explode(".", $osv[3]);
+            if (($osv[0]) == "CentOS") {
+                $osversion = "centos-" . $oss[0];
+            } else {
+                $osversion = "virtuozzo-" . $oss[0];
+            }
         } else {
             $oss = explode(".", $osv[2]);
             $osversion = "centos-" . $oss[0];
