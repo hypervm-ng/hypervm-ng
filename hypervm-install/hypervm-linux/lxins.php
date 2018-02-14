@@ -4,6 +4,7 @@
 //
 //    Copyright (C) 2000-2009     LxLabs
 //    Copyright (C) 2009-2014     LxCenter
+//    Copyright (C) 2015 and never  HyperVM-NG
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU Affero General Public License as
@@ -80,8 +81,8 @@ function lxins_main()
 
 
     if ($virtualization === 'openvz') {
-        if (!char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "rhel-6")) {
-            print("OpenVZ is only supported on CentOS 5 and CentOS 6 distributions with HyperVM as management system\n");
+        if (!char_search_beg($osversion, "centos-7") && !char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-7") && !char_search_beg($osversion, "rhel-6") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "virtuozzo-7")) {
+            print("OpenVZ is only supported on CentOS 5, CentOS 6 and Virtuozzo 7 distributions with HyperVM as management system\n");
             exit;
         }
     }
@@ -93,7 +94,7 @@ function lxins_main()
     exec("useradd lxlabs -g lxlabs -s '/sbin/nologin'");
 
     // New since HyperVM 2.1.0 hypervm-core-php yum-plugin-replace
-    $list = array("which", "lxlighttpd", "zip", "unzip", "hypervm-core-php", "curl","yum-plugin-replace");
+    $list = array("which", "lxlighttpd", "zip", "unzip", "hypervm-core-php", "curl", "yum-plugin-replace");
 
     /* Because our builder is on CentOS-6 the binaries like closeallinput are linked against libssl.so.10
      * To keep backward compatibility with RHEL-5 / CentOS-5 systems HyperVM-NG provides openssl10 package
@@ -104,7 +105,11 @@ function lxins_main()
     }
 
     if ($installtype !== 'slave') {
-        $mysql = array("mysql", "mysql-server");
+        if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
+            $mysql = array("mariadb", "mariadb-server");
+        } else {
+            $mysql = array("mysql", "mysql-server");
+        }
         $list = array_merge($list, $mysql);
     }
 

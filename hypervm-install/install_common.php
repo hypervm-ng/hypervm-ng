@@ -51,8 +51,13 @@ function addLineIfNotExistTemp($filename, $pattern, $comment)
 
 function check_default_mysql($dbroot, $dbpass)
 {
-	system("service mysqld restart");
+    $osversion = find_os_version();
 
+    if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
+        system("service mariadb restart");
+    } else {
+        system("service mysqld restart");
+    }
 	if ($dbpass) {
 		exec("echo \"show tables\" | mysql -u $dbroot -p\"$dbpass\" mysql", $out, $return);
 	} else {
@@ -63,13 +68,16 @@ function check_default_mysql($dbroot, $dbpass)
 		print("Fatal Error: Could not connect to Mysql Localhost using user $dbroot and password \"$dbpass\"\n");
 		print("If this is a brand new install, you can completely remove mysql by running the commands below\n");
 		print("            rm -rf /var/lib/mysql\n");
-		print("            rpm -e mysql-server\n");
+        if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
+            print("            rpm -e mariadb-server\n");
+        } else {
+            print("            rpm -e mysql-server\n");
+        }
 		print("And then run the installer again\n");
 		exit;
 	}
 
 }
-
 
 function parse_opt($argv)
 {
@@ -216,18 +224,24 @@ function find_os_version()
 		return $osversion;
 	}
 
-	if (file_exists("/etc/redhat-release")) {
-		$release = trim(file_get_contents("/etc/redhat-release"));
-		$osv = explode(" ", $release);
-		if(isset($osv[6])) {
-			$osversion = "rhel-" . $osv[6];
-		} else{
-			$oss = explode(".", $osv[2]);
-			$osversion = "centos-" . $oss[0];
-		}
-		return $osversion;
-	}
-	
+    if (file_exists("/etc/redhat-release")) {
+        $release = trim(file_get_contents("/etc/redhat-release"));
+        $osv = explode(" ", $release);
+        if(isset($osv[6])) {
+            $osversion = "rhel-" . $osv[6];
+        } elseif (isset($osv[3]))  {
+            $oss = explode(".", $osv[3]);
+            if (($osv[0]) == "CentOS") {
+                $osversion = "centos-" . $oss[0];
+            } else {
+                $osversion = "virtuozzo-" . $oss[0];
+            }
+        } else {
+            $oss = explode(".", $osv[2]);
+            $osversion = "centos-" . $oss[0];
+        }
+        return $osversion;
+    }
 
 	print("This Operating System is Currently Not supported.\n");
 	exit;
