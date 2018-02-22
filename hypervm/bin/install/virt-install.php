@@ -101,8 +101,17 @@ function xen_install($installtype)
     if (file_exists("/etc/init.d/libvirtd")) {
         system("chkconfig libvirtd off");
     }
-    system("chkconfig xendomains on");
-	system("chkconfig xend on");
+
+    if (is_centosfive() || is_centossix()) {
+
+        if (file_exists("/etc/init.d/xendomains")) {
+            system("chkconfig xendomains on");
+        }
+        if (file_exists("/etc/init.d/xend")) {
+            system("chkconfig xend on");
+        }
+    }
+
     if (is_centossix()) {
         system("../bin/grub-bootxen.sh");
 		system("sh /script/fixxenkernel");
