@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "htmllib/lib/displayinclude.php";
 
 schedulebackup_main();
@@ -6,14 +6,14 @@ schedulebackup_main();
 
 function schedulebackup_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$progname = $sgbl->__var_program_name;
 	initProgram('admin');
 
 	$login->loadAllBackups();
 	$list = $login->lxbackup_l;
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l->backupstage = 'done';
 		$l->setUpdateSubaction();
 		$l->write();
@@ -65,8 +65,5 @@ function schedulebackup_main()
 
 		print("Scheduling for $class $name\n");
 		lxshell_return("__path_php_path", "../bin/common/backup.php", "--class=$class", "--name=$name", "--v-backup_file_name=$fname");
-
-
 	}
-
 }

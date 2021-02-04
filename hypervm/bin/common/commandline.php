@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "htmllib/lib/include.php";
 
 
@@ -9,15 +9,15 @@ commandline_main();
 
 function commandline_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $argv;
 	initProgram('admin');
 	$must = array('action');
 	$p = parse_opt($argv);
 	$pk = array_keys($p);
-	foreach($must as $m) {
+	foreach ($must as $m) {
 		if (!array_search_bool($m, $pk)) {
-			Print("Need action, class and name\n");
+			print("Need action, class and name\n");
 			exit;
 		}
 	}
@@ -36,7 +36,7 @@ function commandline_main()
 					print($out);
 				}
 			} else {
-				foreach($list as $l) {
+				foreach ($list as $l) {
 					print("$l\n");
 				}
 			}
@@ -50,7 +50,3 @@ function commandline_main()
 		exit(8);
 	}
 }
-
-
-
-

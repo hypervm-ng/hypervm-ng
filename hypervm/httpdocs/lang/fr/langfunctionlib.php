@@ -1,7 +1,7 @@
-<?php 
+<?php
 function get_plural($word)
 {
-	return $word ;
+	return $word;
 }
 
 // This is an alternate get_plural, which has the all the plurals are defined in a file.
@@ -16,5 +16,3 @@ function get_plural_alternate($word)
 	//return "{$word}s";
 	return "{$word}";
 }
-
-

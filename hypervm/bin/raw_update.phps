@@ -1,7 +1,16 @@
-<?php 
+<?php
 
-function windowsOs() { if (getOs() == "windows") { return true; } return false; }
-function getOs() { return (substr(php_uname(), 0, 7) == "Windows")? "windows": "linux"; }
+function windowsOs()
+{
+	if (getOs() == "windows") {
+		return true;
+	}
+	return false;
+}
+function getOs()
+{
+	return (substr(php_uname(), 0, 7) == "Windows") ? "windows" : "linux";
+}
 
 function download_file($url, $localfile = null)
 {
@@ -28,5 +37,3 @@ if (WindowsOs()) {
 	print("Chowning...\n");
 	system("chown -R lxlabs ..");
 }
-
-

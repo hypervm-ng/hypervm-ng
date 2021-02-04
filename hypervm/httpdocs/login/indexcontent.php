@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // OA Why the heck is this here?
 $accountlist = array('client' => "Kloxo Account", 'domain' => 'Domain Owner', 'mailaccount' => "Mail Account");
@@ -49,13 +49,9 @@ if (!$cgi_forgotpwd) {
     } else {
         include("login/login_main.php");
     }
-
-
-}
-elseif ($cgi_forgotpwd == 1) {
+} elseif ($cgi_forgotpwd == 1) {
     include("login/login_forgot.php");
-} 
-elseif ($cgi_forgotpwd == 2) {
+} elseif ($cgi_forgotpwd == 2) {
 
     $progname = $sgbl->__var_program_name;
     $cprogname = ucfirst($progname);
@@ -98,7 +94,6 @@ elseif ($cgi_forgotpwd == 2) {
             lx_mail(null, $mailto, $subject, $message);
 
             $ghtml->print_redirect("/login/?frm_smessage=password_sent");
-
         } else {
             $ghtml->print_redirect("/login/?frm_emessage=nouser_email");
         }
@@ -113,4 +108,5 @@ if (lxfile_exists("__path_program_htmlbase/login/login_footer_vendor.html")) {
 
 ?>
 </body>
+
 </html>

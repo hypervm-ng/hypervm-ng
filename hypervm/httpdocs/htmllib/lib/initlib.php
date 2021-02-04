@@ -1,18 +1,18 @@
-<?php 
+<?php
 
 function create_mysql_db($type, $opt, $admin_pass)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$progname = $sgbl->__var_program_name;
-    $db = $sgbl->__var_dbf;
+	$db = $sgbl->__var_dbf;
 
 	if (!isset($opt['db-rootuser']) || !isset($opt['db-rootpassword'])) {
 		print("Need db Root User and password --db-rootuser, --db-rootpassword \n");
 		exit;
 	}
 	if ($sgbl->__var_database_type === 'mysql') {
-        // TODO: REPLACE MYSQL_CONNECT
-	// TUT TUT naughty programmer... We are creating the db now XD
+		// TODO: REPLACE MYSQL_CONNECT
+		// TUT TUT naughty programmer... We are creating the db now XD
 		$req = mysqli_connect('localhost', $opt['db-rootuser'], $opt['db-rootpassword']);
 	} else if ($sgbl->__var_database_type === 'mssql') {
 		$req = mssql_connect("localhost,$sgbl->__var_mssqlport");
@@ -22,7 +22,7 @@ function create_mysql_db($type, $opt, $admin_pass)
 
 
 	if (!$req) {
-		print("Could not Connect to Database on localhost using root user: ".mysqli_connect_error()."\n");
+		print("Could not Connect to Database on localhost using root user: " . mysqli_connect_error() . "\n");
 	}
 	//$sqlcm = lfile_get_contents("__path_program_root/httpdocs/sql/init/$type.sql");
 
@@ -33,28 +33,27 @@ function create_mysql_db($type, $opt, $admin_pass)
 	$dbname = $sgbl->__var_dbf;
 	$pguser = $sgbl->__var_admin_user;
 	if ($sgbl->__var_database_type === 'mysql') {
-		@ mysqli_query($req,"CREATE DATABASE $dbname");
-		mysqli_query($req,"GRANT ALL ON $dbname.* TO '$pguser'@'localhost' IDENTIFIED BY '$dbadminpass';");
+		@mysqli_query($req, "CREATE DATABASE $dbname");
+		mysqli_query($req, "GRANT ALL ON $dbname.* TO '$pguser'@'localhost' IDENTIFIED BY '$dbadminpass';");
 	} else if ($sgbl->__var_database_type === 'mssql') {
-		 mssql_query("create database $dbname;");
-		 mssql_query("use master ");
-		 mssql_query("sp_addlogin '$pguser', '$dbadminpass', '$dbname';");
-		 mssql_query("use $dbname ");
-		 mssql_query("grant all to $pguser");
+		mssql_query("create database $dbname;");
+		mssql_query("use master ");
+		mssql_query("sp_addlogin '$pguser', '$dbadminpass', '$dbname';");
+		mssql_query("use $dbname ");
+		mssql_query("grant all to $pguser");
 	} else {
 	}
 
 
 	lfile_put_contents("__path_admin_pass", $dbadminpass);
 	lxfile_generic_chown("__path_admin_pass", "lxlabs");
-
 }
 
 
 function add_admin($pass)
 {
-		
-	global $gbl, $sgbl, $login, $ghtml; 
+
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$client = new Client(null, null, 'admin');
 	$login = $client;
@@ -74,7 +73,7 @@ function add_admin($pass)
 		$res['password'] = crypt($pass);
 		$res['cttype'] = 'admin';
 		$res['cpstatus'] = 'on';
-		if(if_demo()){
+		if (if_demo()) {
 			$res['email'] = "admin@lxcenter.org";
 		}
 		$client->create($res);
@@ -96,13 +95,12 @@ function add_admin($pass)
 	$display->parent_clname = $client->getClName();
 	$display->dbaction = 'add';
 	$display->write();
-
 }
 
 
 function create_general()
 {
-	global $sgbl, $login, $ghtml; 
+	global $sgbl, $login, $ghtml;
 	$gen = new General(null, null, 'admin');
 	$gen->initThisDef();
 	$g = $gen->generalmisc_b;
@@ -115,7 +113,7 @@ function create_general()
 
 	$list = array("Billing", "Complaint", "Other");
 	$h = null;
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$cat = new helpdeskcategory_a(null, null, $l);
 		$h[$l] = $cat;
 	}
@@ -123,12 +121,11 @@ function create_general()
 
 	$gen->dbaction = 'add';
 	$gen->write();
-
 }
 
 function create_servername()
 {
-	
+
 	$pserver = new pserver(null, 'localhost', "localhost");
 	$pserver->initThisDef();
 	$pserver->rolelist = array("web", "dns");
@@ -144,8 +141,3 @@ function create_servername()
 	//dprintr($pserver);
 	return;
 }
-
-
-
-
-

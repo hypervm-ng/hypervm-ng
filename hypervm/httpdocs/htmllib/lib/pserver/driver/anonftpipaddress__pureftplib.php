@@ -1,5 +1,5 @@
-<?php 
+<?php
 
-class anonftpipaddress__pureftp extends Lxdriverclass {
-
+class anonftpipaddress__pureftp extends Lxdriverclass
+{
 }

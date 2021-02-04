@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 
@@ -40,9 +40,3 @@ $dr->setUpdateSubaction();
 $dr->write();
 
 print("Successfully changed Driver for $class to $pgm\n");
-
-
-
-
-
-

@@ -7,7 +7,7 @@ backup_main();
 function backup_main()
 {
 	global $argc, $argv;
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$progname = $sgbl->__var_program_name;
 
@@ -73,7 +73,7 @@ function backup_main()
 		$param['backup_to_file_f'] = "$progname-scheduled";
 	}
 
-	foreach($opt as $k => $v) {
+	foreach ($opt as $k => $v) {
 		if (csb($k, "--v-backupextra_")) {
 			$kk = strfrom($k, "--v-");
 			$param[$kk] = $v;
@@ -93,8 +93,4 @@ function backup_main()
 	}
 
 	clearLxbackup($backup);
-
-
-
 }
-

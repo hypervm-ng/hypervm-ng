@@ -1,98 +1,99 @@
 <?php
 
-class dns__msdns extends lxDriverClass {
-
-
-function dbactionAdd()
+class dns__msdns extends lxDriverClass
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	if ($sgbl->dbg < 0) {
-		throw new lxException("no_dns_on_windows", '');
+
+
+	function dbactionAdd()
+	{
+		global $gbl, $sgbl, $login, $ghtml;
+		if ($sgbl->dbg < 0) {
+			throw new lxException("no_dns_on_windows", '');
+		}
+		$this->createDnsData();
 	}
-	$this->createDnsData();
-}
 
-function dbactionDelete()
-{
-	//return;
-	$this->deleteZone($this->main->nname);
-}
+	function dbactionDelete()
+	{
+		//return;
+		$this->deleteZone($this->main->nname);
+	}
 
-function createDnsData()
-{
-	dprint("DbActionAdd\n");
-    $fdata="";
-	$tmp="";
+	function createDnsData()
+	{
+		dprint("DbActionAdd\n");
+		$fdata = "";
+		$tmp = "";
 
-	$this->createPrimaryZone($this->main->nname);
-	lfile_put_contents("c:/Windows/System32/drivers/etc/hosts", "127.0.0.1 {$this->main->nname}", FILE_APPEND);
-	return null;
-}
+		$this->createPrimaryZone($this->main->nname);
+		lfile_put_contents("c:/Windows/System32/drivers/etc/hosts", "127.0.0.1 {$this->main->nname}", FILE_APPEND);
+		return null;
+	}
 
 
-function createPrimaryZone($zoneName)
-{
-	print("Create Primary Zone\n");
+	function createPrimaryZone($zoneName)
+	{
+		print("Create Primary Zone\n");
 
-	$ObjSvc = new lxCOM("winMgmts://./root/MicrosoftDNS");
+		$ObjSvc = new lxCOM("winMgmts://./root/MicrosoftDNS");
 
-	$colItems = $ObjSvc->ExecQuery("Select * from MicrosoftDNS_Zone Where Name='$zoneName' and ContainerName='$zoneName'");
+		$colItems = $ObjSvc->ExecQuery("Select * from MicrosoftDNS_Zone Where Name='$zoneName' and ContainerName='$zoneName'");
 
-	if (mycount($colItems) > 0) {
-		//$this->deleteZone($zoneName);
+		if (mycount($colItems) > 0) {
+			//$this->deleteZone($zoneName);
 
-		foreach($colItems as $obj) {
-			$obj->delete_();
+			foreach ($colItems as $obj) {
+				$obj->delete_();
+			}
 		}
 
+
+		$objDNSSet = $ObjSvc->Get("MicrosoftDNS_Zone");
+
+		if ($objDNSSet) {
+			// Only for 2003 it appears.
+			$objDNSSet->CreateZone($zoneName, "0");
+		}
+		return true;
+	}
+
+	function updateZonesFiles($zoneName)
+	{
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_Zone Where Name = '$zoneName'");
+		foreach ($colItems as $o) {
+			$o->UpdateFromDS();
+		}
+
+		foreach ($colItems as $o) {
+			$o->WriteBackZone();
+		}
+	}
+
+	function deleteZone($zoneName)
+	{
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
+		$objServer = $objWMIService->Get("MicrosoftDNS_Server.name='.'");
+
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_Zone Where Name='$zoneName' and ContainerName='$zoneName'");
+		foreach ($colItems as $objDNS) {
+			//print("$objDNS->ZoneType\n");		
+			//print("$objDNS->DnsServerName\n");		
+			$objDNS->Delete_();
+		}
 	}
 
 
-    $objDNSSet = $ObjSvc->Get("MicrosoftDNS_Zone");
-
-	if ($objDNSSet) {
-	// Only for 2003 it appears.
-		$objDNSSet->CreateZone($zoneName, "0");
-	}
-	return true;
-}
-
-function updateZonesFiles($zoneName)
-{
-	$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_Zone Where Name = '$zoneName'");
-	foreach($colItems as $o) {
-		$o->UpdateFromDS();
+	function resolveBase($strDomain, $ownerName)
+	{
+		if ($ownerName === "__base__") {
+			$ownerstring = "$strDomain";
+		} else {
+			$ownerstring = "$ownerName.$strDomain";
+		}
+		return $ownerstring;
 	}
 
-	foreach($colItems as $o) {
-		$o->WriteBackZone();
-	}
-}
-
-function deleteZone($zoneName)
-{
-	$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
-	$objServer = $objWMIService->Get("MicrosoftDNS_Server.name='.'");
-
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_Zone Where Name='$zoneName' and ContainerName='$zoneName'");
-	foreach($colItems as $objDNS) {
-		//print("$objDNS->ZoneType\n");		
-		//print("$objDNS->DnsServerName\n");		
-		$objDNS->Delete_();
-	}
-}
-
-
-function resolveBase($strDomain, $ownerName)
-{
-	if ($ownerName === "__base__") {
-		$ownerstring = "$strDomain";
-	} else {
-		$ownerstring = "$ownerName.$strDomain";
-	}
-	return $ownerstring;
-}
 
 
 
@@ -102,238 +103,235 @@ function resolveBase($strDomain, $ownerName)
 
 
 
+	//      NS Record
 
-//      NS Record
-
-function createNSRecord($strDomain, $recordValue)
-{
-	$strServer="";	
-	$strContainer = $strDomain;
-	$strOwner = $strDomain;
-	$intRecordClass = '1';
-//	$intTTL = '600';
-	$intTTL = $this->main->ttl ;
-
-	$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
-	$objItem = $objWMIService->Get("MicrosoftDNS_NSType");
-
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_NSType where domainname='$strDomain' and recorddata='$recordValue.'");
-
-	if (mycount($colItems) > 0) {
-		print("Already Exists/n");
-		throw new lxException("ns_rec_already_exist", '');
-	}
-	
-	$errResult = $objItem->CreateInstanceFromPropertyData($strServer, $strContainer, $strOwner, $intRecordClass, $intTTL, $recordValue);
-
-}
-
-function addNSRecord()
-{
-	$rec = $this->main->__t_new_ns_rec_a_list;
-
-	foreach($rec as $r) {
-		$this->createNSRecord($this->nname, $r->nname);
-	}
-}
-
-function delNSRecord($strDomain, $nspref)
-{
-	$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
-
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_NSType where domainname='$strDomain' and recorddata='$nspref.'");
-
-	foreach($colItems as $objItem) {
-		$objItem->delete_();
-	}
-}
-
-
-function deleteNSRecord()
-{
-	$rec = $this->main->__t_delete_ns_rec_a_list;
-
-	foreach($rec as $o) {
-		$this->delNSRecord($this->nname, $o->nname);
-	}
-}
-
-
-
-
-
-
-//              Arecord
-
-function createARecord($strDomain, $host, $strIPAddress)
-{
-	$strContainer = $strDomain;
-
-	if ($host === "__base__") {
+	function createNSRecord($strDomain, $recordValue)
+	{
+		$strServer = "";
+		$strContainer = $strDomain;
 		$strOwner = $strDomain;
-	} else {
-		$strOwner = "$host.$strDomain";
+		$intRecordClass = '1';
+		//	$intTTL = '600';
+		$intTTL = $this->main->ttl;
+
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
+		$objItem = $objWMIService->Get("MicrosoftDNS_NSType");
+
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_NSType where domainname='$strDomain' and recorddata='$recordValue.'");
+
+		if (mycount($colItems) > 0) {
+			print("Already Exists/n");
+			throw new lxException("ns_rec_already_exist", '');
+		}
+
+		$errResult = $objItem->CreateInstanceFromPropertyData($strServer, $strContainer, $strOwner, $intRecordClass, $intTTL, $recordValue);
 	}
 
-	$intRecordClass = 1;
-//	$intTTL = 600;
-	$intTTL = $this->main->ttl ;
+	function addNSRecord()
+	{
+		$rec = $this->main->__t_new_ns_rec_a_list;
 
-	$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
-
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_AType where ownername='$strOwner'");
-
-	if (mycount($colItems) > 0) {
-		print("Already Exists/n");
-		throw new lxException("a_rec_already_exist", '');
-	}
-
-	$objItem = $objWMIService->Get("MicrosoftDNS_AType");
-
-	$objServer = $objWMIService->Get("MicrosoftDNS_Server.name='.'");
-
-	print($strContainer);
-	$objItem->CreateInstanceFromPropertyData(".", $strContainer, $strOwner, $intRecordClass, $intTTL, $strIPAddress);
-
-	dprint("UPdateing zone files/n");
-}
-
-function addARecord()
-{
-	$rec = $this->main->__t_new_a_rec_a_list;
-
-	foreach($rec as $r) {
-		$this->createARecord($this->nname, $r->nname, $r->param);
-	}
-}
-
-function deleteARecord()
-{
-	$objWMIService = New lxCOM("winmgmts://./root/MicrosoftDNS");
-	$strDomain = $this->main->nname;
-	foreach($this->main->__t_delete_a_rec_a_list as $o) {
-		$strDomain = $this->resolveBase($this->main->nname, $o->nname);
-		$ownerstring = "ownername='$strDomain'";
-		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_AType where $ownerstring");
-		foreach ($colItems as $p) {
-			$p->delete_();
+		foreach ($rec as $r) {
+			$this->createNSRecord($this->nname, $r->nname);
 		}
 	}
-}
 
+	function delNSRecord($strDomain, $nspref)
+	{
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
 
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_NSType where domainname='$strDomain' and recorddata='$nspref.'");
 
-
-
-
-//         CName Record
-
-function createCNameRecord($strDomain, $host, $recordValue)
-{
-	$strServer="";
-	$strContainer = $strDomain;
-
-	$strOwner=$host.".".$strDomain;
-
-	$intRecordClass = '1';
-//	$intTTL = '600'; 
-	$intTTL = $this->main->ttl ;
-	
-	$intPreference = $recordValue.".".$strDomain;
-
-	$objWMIService = new COM("winmgmts://./root/MicrosoftDNS");
-	$objItem = $objWMIService->Get("MicrosoftDNS_CNAMEType");
-
-	 $colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_CNAMEType where ownername='$strOwner'");
-	
-	 if (mycount($colItems) > 0) {
-		print("Already Exists/n");
-		throw new lxException("cn_rec_already_exist", '');
-	 }
-
-	$errResult = $objItem->CreateInstanceFromPropertyData($strServer, $strContainer, $strOwner, $intRecordClass, $intTTL, $intPreference);
-}
-
-function addCNameRecord()
-{
-	$rec = $this->main->__t_new_cn_rec_a_list;
-
-	foreach($rec as $r) {
-		$this->createCNameRecord($this->nname , $r->nname , $r->param);
-	}
-}
-
-function deleteCNameRecord($strDomain , $primaryName_Old)
-{
-	$objWMIService = New COM("winmgmts://./root/MicrosoftDNS");
-	$strDomain = $this->main->nname;
-	foreach($this->main->__t_delete_cn_rec_a_list as $o) {
-		$strDomain = $this->resolveBase($this->main->nname, $o->nname);
-		$ownerstring = "ownername='$strDomain'";
-		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_CNAMEType where $ownerstring");
-		foreach ($colItems as $p) {
-			$p->delete_();
+		foreach ($colItems as $objItem) {
+			$objItem->delete_();
 		}
 	}
-}
 
 
+	function deleteNSRecord()
+	{
+		$rec = $this->main->__t_delete_ns_rec_a_list;
 
-
-
-
-//         Mx Record
-
-function createMxRecord($strDomain, $recordType, $recordValue, $MXpref)
-{
-	$strContainer = $strDomain;
-	$strOwner = $strDomain;
-	$intTTL = $this->main->ttl ;
-	$intPreference = $MXpref;
-	$intRecordClass = '1';
-	$strMailExchanger = $recordValue;
-	$strServer = "";
-	 
-	$objWMIService = new COM("winmgmts://./root/MicrosoftDNS");
-	
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_MXType where domainname='$strDomain' and preference='$MXpref'");
-
-	if (mycount($colItems) > 0) {
-		print("Already Exists/n");
-		throw new lxException("mx_rec_already_exist", '');
+		foreach ($rec as $o) {
+			$this->delNSRecord($this->nname, $o->nname);
+		}
 	}
 
-	$objItem = $objWMIService->Get("MicrosoftDNS_MXType");
 
-	$errResult = $objItem->CreateInstanceFromPropertyData($strServer, $strContainer, $strOwner, $intReCordClass, $intTTL, $intPreference, $strMailExchanger);
 
-}
 
-function addMxRecord()
-{
-	/*
+
+
+	//              Arecord
+
+	function createARecord($strDomain, $host, $strIPAddress)
+	{
+		$strContainer = $strDomain;
+
+		if ($host === "__base__") {
+			$strOwner = $strDomain;
+		} else {
+			$strOwner = "$host.$strDomain";
+		}
+
+		$intRecordClass = 1;
+		//	$intTTL = 600;
+		$intTTL = $this->main->ttl;
+
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
+
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_AType where ownername='$strOwner'");
+
+		if (mycount($colItems) > 0) {
+			print("Already Exists/n");
+			throw new lxException("a_rec_already_exist", '');
+		}
+
+		$objItem = $objWMIService->Get("MicrosoftDNS_AType");
+
+		$objServer = $objWMIService->Get("MicrosoftDNS_Server.name='.'");
+
+		print($strContainer);
+		$objItem->CreateInstanceFromPropertyData(".", $strContainer, $strOwner, $intRecordClass, $intTTL, $strIPAddress);
+
+		dprint("UPdateing zone files/n");
+	}
+
+	function addARecord()
+	{
+		$rec = $this->main->__t_new_a_rec_a_list;
+
+		foreach ($rec as $r) {
+			$this->createARecord($this->nname, $r->nname, $r->param);
+		}
+	}
+
+	function deleteARecord()
+	{
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
+		$strDomain = $this->main->nname;
+		foreach ($this->main->__t_delete_a_rec_a_list as $o) {
+			$strDomain = $this->resolveBase($this->main->nname, $o->nname);
+			$ownerstring = "ownername='$strDomain'";
+			$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_AType where $ownerstring");
+			foreach ($colItems as $p) {
+				$p->delete_();
+			}
+		}
+	}
+
+
+
+
+
+
+	//         CName Record
+
+	function createCNameRecord($strDomain, $host, $recordValue)
+	{
+		$strServer = "";
+		$strContainer = $strDomain;
+
+		$strOwner = $host . "." . $strDomain;
+
+		$intRecordClass = '1';
+		//	$intTTL = '600'; 
+		$intTTL = $this->main->ttl;
+
+		$intPreference = $recordValue . "." . $strDomain;
+
+		$objWMIService = new COM("winmgmts://./root/MicrosoftDNS");
+		$objItem = $objWMIService->Get("MicrosoftDNS_CNAMEType");
+
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_CNAMEType where ownername='$strOwner'");
+
+		if (mycount($colItems) > 0) {
+			print("Already Exists/n");
+			throw new lxException("cn_rec_already_exist", '');
+		}
+
+		$errResult = $objItem->CreateInstanceFromPropertyData($strServer, $strContainer, $strOwner, $intRecordClass, $intTTL, $intPreference);
+	}
+
+	function addCNameRecord()
+	{
+		$rec = $this->main->__t_new_cn_rec_a_list;
+
+		foreach ($rec as $r) {
+			$this->createCNameRecord($this->nname, $r->nname, $r->param);
+		}
+	}
+
+	function deleteCNameRecord($strDomain, $primaryName_Old)
+	{
+		$objWMIService = new COM("winmgmts://./root/MicrosoftDNS");
+		$strDomain = $this->main->nname;
+		foreach ($this->main->__t_delete_cn_rec_a_list as $o) {
+			$strDomain = $this->resolveBase($this->main->nname, $o->nname);
+			$ownerstring = "ownername='$strDomain'";
+			$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_CNAMEType where $ownerstring");
+			foreach ($colItems as $p) {
+				$p->delete_();
+			}
+		}
+	}
+
+
+
+
+
+
+	//         Mx Record
+
+	function createMxRecord($strDomain, $recordType, $recordValue, $MXpref)
+	{
+		$strContainer = $strDomain;
+		$strOwner = $strDomain;
+		$intTTL = $this->main->ttl;
+		$intPreference = $MXpref;
+		$intRecordClass = '1';
+		$strMailExchanger = $recordValue;
+		$strServer = "";
+
+		$objWMIService = new COM("winmgmts://./root/MicrosoftDNS");
+
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_MXType where domainname='$strDomain' and preference='$MXpref'");
+
+		if (mycount($colItems) > 0) {
+			print("Already Exists/n");
+			throw new lxException("mx_rec_already_exist", '');
+		}
+
+		$objItem = $objWMIService->Get("MicrosoftDNS_MXType");
+
+		$errResult = $objItem->CreateInstanceFromPropertyData($strServer, $strContainer, $strOwner, $intReCordClass, $intTTL, $intPreference, $strMailExchanger);
+	}
+
+	function addMxRecord()
+	{
+		/*
 	$objWMIService = new COM("winmgmts://./root/MicrosoftDNS");
 	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_MXType where mailExchange='$MailExchange_Old' and preference=$Preference_Old");
 	foreach($colItems as $objItem) {
 		$objItem->delete_();
 	}
 */
-	//uPDateZonesFiles strDomain
-	$rec = $this->main->__t_new_mx_rec_a_list;
+		//uPDateZonesFiles strDomain
+		$rec = $this->main->__t_new_mx_rec_a_list;
 
-	foreach($rec as $r) {
-		$this->createMxRecord($this->nname,'MX' ,$r->param ,$r->nname);
+		foreach ($rec as $r) {
+			$this->createMxRecord($this->nname, 'MX', $r->param, $r->nname);
+		}
 	}
-}
 
-function delMxRecord($strDomain, $mxpref)
-{
-	$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
+	function delMxRecord($strDomain, $mxpref)
+	{
+		$objWMIService = new lxCOM("winmgmts://./root/MicrosoftDNS");
 
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_MXType where domainname='$strDomain' and preference='$mxpref'");
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_MXType where domainname='$strDomain' and preference='$mxpref'");
 
-	foreach($colItems as $objItem) {
-/*
+		foreach ($colItems as $objItem) {
+			/*
 		print("$objItem->OwnerName"."\n");		
 		print("$objItem->ContainerName"."\n");		
 		print("$objItem->DnsserverName"."\n");		
@@ -344,100 +342,95 @@ function delMxRecord($strDomain, $mxpref)
 		print("$objItem->TextRepresentation"."\n");		
 		print("$objItem->Timestamp"."\n");
 */
-		$objItem->delete_();
+			$objItem->delete_();
+		}
 	}
-}
 
-function deleteMxRecord()
-{
-	$rec = $this->main->__t_delete_mx_rec_a_list;
+	function deleteMxRecord()
+	{
+		$rec = $this->main->__t_delete_mx_rec_a_list;
 
-	foreach($rec as $o) {
-		$this->delMxRecord($this->nname, $o->nname);
+		foreach ($rec as $o) {
+			$this->delMxRecord($this->nname, $o->nname);
+		}
 	}
-}
 
 
 
 
 
-//         Change Parameter
-function changeParameter()
-{
+	//         Change Parameter
+	function changeParameter()
+	{
 
-	$objWMIService = new COM("winmgmts:{impersonationLevel=impersonate}!//./root/MicrosoftDNS");
+		$objWMIService = new COM("winmgmts:{impersonationLevel=impersonate}!//./root/MicrosoftDNS");
 
-	$zoneName=$this->main->nname;
+		$zoneName = $this->main->nname;
 
-	$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_SOAType Where DomainName='$zoneName' and ContainerName='$zoneName'");
+		$colItems = $objWMIService->ExecQuery("Select * from MicrosoftDNS_SOAType Where DomainName='$zoneName' and ContainerName='$zoneName'");
 
-	foreach($colItems as $objItem) {
-		/*
+		foreach ($colItems as $objItem) {
+			/*
 		print("$objItem->ContainerName"."\n");		
 		print("$objItem->DnsserverName"."\n");		
 		print("$objItem->RefreshInterval"."\n");
 		print("$objItem->MinimumTTL"."\n");
 		*/
 
-		$objItem->MinimumTTL= $this->main->ttl;
-		$objItem->Put_();
+			$objItem->MinimumTTL = $this->main->ttl;
+			$objItem->Put_();
+		}
 	}
-}
 
 
 
 
-//         db action
+	//         db action
 
-function dbactionUpdate($subaction)
-{
+	function dbactionUpdate($subaction)
+	{
 
-	switch($subaction) {
+		switch ($subaction) {
 
-		case "full_update":
-			$this->createDnsData();
-			break;
-		case "add_ns_rec_a":
-			$this->addNSRecord();
-			break;
-
-		case "delete_ns_rec_a":
-			$this->deleteNSRecord();
-			break;
-
-		case "add_a_rec_a":
-			$this->addARecord();
-			break;
-
-		case "delete_a_rec_a":
-			$this->deleteARecord();
-			break;
-
-
-		case "add_cn_rec_a":
-			$this->addCNameRecord();
-			break;
-
-		case "delete_cn_rec_a":
-			$this->deleteCNameRecord();
-			break;
-
-		case "add_mx_rec_a":
-			$this->addMxRecord();
+			case "full_update":
+				$this->createDnsData();
+				break;
+			case "add_ns_rec_a":
+				$this->addNSRecord();
 				break;
 
-		case "delete_mx_rec_a":
+			case "delete_ns_rec_a":
+				$this->deleteNSRecord();
+				break;
+
+			case "add_a_rec_a":
+				$this->addARecord();
+				break;
+
+			case "delete_a_rec_a":
+				$this->deleteARecord();
+				break;
+
+
+			case "add_cn_rec_a":
+				$this->addCNameRecord();
+				break;
+
+			case "delete_cn_rec_a":
+				$this->deleteCNameRecord();
+				break;
+
+			case "add_mx_rec_a":
+				$this->addMxRecord();
+				break;
+
+			case "delete_mx_rec_a":
 				$this->deleteMxRecord();
 				break;
 
-		case "parameter":
+			case "parameter":
 				$this->changeParameter();
 				break;
-
+		}
 	}
-
-
 }
-
-}
-

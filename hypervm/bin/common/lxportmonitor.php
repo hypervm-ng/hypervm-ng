@@ -1,7 +1,9 @@
-<?php 
+<?php
 
 
-class Remote { }
+class Remote
+{
+}
 
 $sgbl = new Remote();
 
@@ -13,21 +15,21 @@ monitor_main();
 
 function monitor_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $argv;
 	global $global_ip_array;
 	global $global_remoteserver;
 	global $global_remoteport;
 
 	error_reporting(E_ALL);
-	
+
 
 	$list = parse_opt($argv);
 
 	if (isset($list['data-server'])) {
 		$global_remoteserver = $list['data-server'];
 		$global_remoteport = "8888";
-	} else  {
+	} else {
 		$global_remoteserver = "localhost";
 		$global_remoteport = "5558";
 	}
@@ -78,10 +80,10 @@ function monitor_main()
 		$sendserverhistlist = null;
 		$startmaintime = time();
 
-		foreach($list as $l) {
+		foreach ($list as $l) {
 			$ports = $l['monitorport_l'];
 			$porthistlist = null;
-			foreach($ports as $p) {
+			foreach ($ports as $p) {
 				if (isset($portmonlist[$l['nname']][$p['nname']][2])) {
 					print("Socket Already exists... \n");
 					socket_close($portmonlist[$l['nname']][$p['nname']][2]);
@@ -107,8 +109,8 @@ function monitor_main()
 		$endmaintime = time();
 
 		if ($oldserverhistlist) {
-			foreach($serverhistlist as $s => $slist) {
-				foreach($slist as $p => $plist) {
+			foreach ($serverhistlist as $s => $slist) {
+				foreach ($slist as $p => $plist) {
 					if (!isset($oldserverhistlist[$s][$p])) {
 						$sendserverhistlist[$s][$p] = $serverhistlist[$s][$p];
 						continue;
@@ -129,8 +131,8 @@ function monitor_main()
 			dprintr($sendserverhistlist);
 			send_data_to_server($sendserverhistlist);
 		}
-			
-			
+
+
 		$timeleft = 60 - $endmaintime + $startmaintime;
 
 		if ($timeleft > 0) {
@@ -156,25 +158,23 @@ function monitor_main()
 			getDnsesFirst($list);
 		}
 	}
-
 }
 
 function get_my_name()
 {
-	global $global_remoteserver; 
+	global $global_remoteserver;
 
 	$rmt = new Remote();
 	$rmt->cmd = "my_name";
 	$res = remote_http_exec_monitor($global_remoteserver, "80", $rmt);
 	return $res;
-
 }
 
 function send_alive_info()
 {
 
 	$host = `hostname`;
-	global $global_remoteserver; 
+	global $global_remoteserver;
 
 	$rmt = new Remote();
 	$rmt->cmd = "im_alive";
@@ -184,13 +184,12 @@ function send_alive_info()
 
 function send_data_to_server($serverhistlist)
 {
-	global $global_remoteserver; 
+	global $global_remoteserver;
 
 	$rmt = new Remote();
 	$rmt->cmd = "set_list";
 	$rmt->ddata = $serverhistlist;
 	$res = remote_http_exec_monitor($global_remoteserver, "80", $rmt);
-
 }
 
 function get_data_from_server()
@@ -237,7 +236,7 @@ function remote_http_exec_monitor($server, $port, $rmt)
 
 function send_to_some_http_server_monitor($raddress, $socket_type, $port, $var)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	//print_time('server');
 
@@ -257,7 +256,7 @@ function send_to_some_http_server_monitor($raddress, $socket_type, $port, $var)
 
 function checkPort($sname, $num, $nname)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	$sip = gethostbyname($sname);
@@ -290,24 +289,24 @@ function checkPort($sname, $num, $nname)
 
 function validate_ipaddress($ip)
 {
-	$ind= explode(".",$ip);
-	$d=0;
-	$c=0;
-	foreach($ind as $in) {
+	$ind = explode(".", $ip);
+	$d = 0;
+	$c = 0;
+	foreach ($ind as $in) {
 		$c++;
-		if(is_numeric($in) && $in >= 0 && $in <= 255 ) {
+		if (is_numeric($in) && $in >= 0 && $in <= 255) {
 			$d++;
 		} else {
 			return 0;
 		}
 	}
-	if($c ===  4)   {
-		if($d === 4) {
+	if ($c ===  4) {
+		if ($d === 4) {
 			return 1;
 		} else {
 			return 0;
 		}
-	} else  {
+	} else {
 		return 0;
 	}
 }
@@ -319,7 +318,7 @@ function parse_opt($argv)
 	if (!$argv) {
 		return  null;
 	}
-	foreach($argv as $v) {
+	foreach ($argv as $v) {
 		if (!(strpos($v, "--") === 0)) {
 			$ret['final'] = $v;
 			continue;
@@ -340,11 +339,11 @@ function getDnsesFirst($list)
 	global $global_ip_array;
 	$global_ip_array = null;
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (!isset($global_ip_array[$l['servername']])) {
 			$ip = gethostbyname($l['servername']);
 			$global_ip_array[$l['servername']] = $ip;
-		} 
+		}
 	}
 }
 
@@ -365,8 +364,8 @@ function do_monitor_list($portmonlist, &$serverhistlist)
 	while (true) {
 		$count = 0;
 		$loopcount++;
-		foreach($portmonlist as $s => &$serv) {
-			foreach($serv as $k => &$data) {
+		foreach ($portmonlist as $s => &$serv) {
+			foreach ($serv as $k => &$data) {
 				$nname = $k;
 				if ($data[4] === 'done') {
 					continue;
@@ -460,7 +459,7 @@ function set_global_debug()
 {
 	global $debug_var;
 
-	$val = @ file_get_contents("commands.php");
+	$val = @file_get_contents("commands.php");
 	if ($val === "2") {
 		$debug_var = 2;
 	} else {
@@ -474,7 +473,6 @@ function dprint($mess)
 	if ($debug_var >= 2) {
 		print($mess);
 	}
-
 }
 
 function dprintr($var)
@@ -483,14 +481,13 @@ function dprintr($var)
 	if ($debug_var >= 2) {
 		print_r($var);
 	}
-
 }
 
 function prepare_error_portmonlist($serverhistlist)
 {
-	foreach($serverhistlist as $k => $l) {
+	foreach ($serverhistlist as $k => $l) {
 		$servername = strtilfirst($k, "___");
-		foreach($l as $kk => $p) {
+		foreach ($l as $kk => $p) {
 			if ($p['portstatus'] === 'on') {
 				continue;
 			}
@@ -522,5 +519,3 @@ function strtilfirst($string, $needle)
 		return $string;
 	}
 }
-
-

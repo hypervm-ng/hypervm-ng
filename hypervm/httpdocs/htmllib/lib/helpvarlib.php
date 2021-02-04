@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $__helpvar['status_v_off'] = 'Disabled. Click to Enable';
 $__helpvar['status_v_on'] = 'Enabled. Click to Disable';
@@ -15,4 +15,3 @@ $__helpvar['update_vpsm'] = 'Calculate Real Disk Space. See help at the bottom';
 $__helpvar['update_clientsendmessage'] = 'Send Message to selected objects';
 $__helpvar['update_vpssendmessage'] = 'Send Message to selected objects';
 $__helpvar['ndskshortcut_list'] = 'Edit Favorites';
-

@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 if (!isset($argv[1])) {
 	print("Need file name\n");
@@ -34,7 +34,7 @@ if (!$nlist) {
 }
 //dprintr($nlist);
 
-foreach($res as $r) {
+foreach ($res as $r) {
 	if ($slave) {
 		if ($r['syncserver'] !== $slave) {
 			continue;
@@ -67,4 +67,3 @@ foreach($res as $r) {
 	$sq->rawQuery("update vps set password = '$password' where nname = '{$r['nname']}'");
 	$sq->rawQuery("update vps set rootpassword = '$rootpassword' where nname = '{$r['nname']}'");
 }
-

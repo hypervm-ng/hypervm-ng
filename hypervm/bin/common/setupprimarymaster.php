@@ -1,13 +1,13 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 error_reporting(0);
 pmaster_main();
 
 function pmaster_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $argv;
 	ob_start();
 	$pass = slave_get_db_pass();
@@ -16,9 +16,9 @@ function pmaster_main()
 	$list = parse_opt($argv);
 	$slavepass = $list['slavepass'];
 	add_line_to_master_mycnf();
-    // TODO: REPLACE MYSQL_CONNECT
+	// TODO: REPLACE MYSQL_CONNECT
 	$dblink = mysqli_connect("localhost", "root", $pass, $dbf);
-	mysqli_query($dblink,"GRANT REPLICATION SLAVE ON *.* TO lxlabsslave@'%' IDENTIFIED BY '$slavepass'");
+	mysqli_query($dblink, "GRANT REPLICATION SLAVE ON *.* TO lxlabsslave@'%' IDENTIFIED BY '$slavepass'");
 	system("mysqldump --master-data -u root '-p$pass' $dbf > $tfile");
 	ob_clean();
 	readfile($tfile);
@@ -30,7 +30,7 @@ function pmaster_main()
 
 function add_line_to_master_mycnf()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$dbf = $sgbl->__var_dbf;
 	if (!lxfile_exists("/etc/primary_master.copy.my.cnf")) {
 		lxfile_cp("/etc/my.cnf", "/etc/primary_master.copy.my.cnf");
@@ -44,7 +44,7 @@ function add_line_to_master_mycnf()
 
 	$list = lfile_trim("/etc/my.cnf");
 
-	foreach($list as $k => $l) {
+	foreach ($list as $k => $l) {
 		$ll[] = $l;
 		if ($l == '[mysqld]') {
 			$ll[] = "log-bin=mysql-bin";
@@ -55,5 +55,4 @@ function add_line_to_master_mycnf()
 
 	lfile_put_contents("/etc/my.cnf", implode("\n", $ll));
 	system("service mysqld restart");
-
 }

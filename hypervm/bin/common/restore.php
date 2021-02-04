@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "htmllib/lib/include.php";
 
 backup_main();
@@ -6,7 +6,7 @@ backup_main();
 function backup_main()
 {
 	global $argc, $argv;
-	global $gbl, $login, $ghtml; 
+	global $gbl, $login, $ghtml;
 
 	$gbl->__restore_flag = true;
 
@@ -50,7 +50,7 @@ function backup_main()
 
 		$list = explode(",", $server);
 
-		foreach($list as $l) {
+		foreach ($list as $l) {
 			if (!$l) {
 				continue;
 			}
@@ -83,7 +83,7 @@ function backup_main()
 	if (isset($opt['list'])) {
 		$gbl->__var_list_flag = true;
 		$param['_accountselect'] = null;
-	}  else if (isset($opt['restore'])) {
+	} else if (isset($opt['restore'])) {
 		$gbl->__var_list_flag = false;
 		if (!isset($opt['accounts'])) {
 			print("Restore option needs accounts that are to be restored. --accounts='domain-domain.com,client:clientname'... Use --list to find out all the domain/clients in the backup archive.\n");
@@ -122,9 +122,4 @@ function backup_main()
 	}
 
 	clearLxbackup($backup);
-
-
 }
-
-
-

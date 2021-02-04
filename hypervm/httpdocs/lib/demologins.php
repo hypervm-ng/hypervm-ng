@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -46,4 +46,3 @@ print("<tr>\n<td><img width=20 height=20 src=/img/general/button/on.gif></td>\n<
 print("<tr>\n<td><img width=20 height=20 src=/img/general/button/on.gif></td>\n<td><a href=http://lxcenter.org/ target='_blank'> Visit lxcenter.org</a></td>\n</tr>\n");
 print("<tr>\n<td><img width=20 height=20 src=/img/general/button/on.gif></td>\n<td><a href=http://wiki.lxcenter.org/ target='_blank'> Visit the Wiki</a></td>\n</tr>\n");
 print("</table>\n\n");
-

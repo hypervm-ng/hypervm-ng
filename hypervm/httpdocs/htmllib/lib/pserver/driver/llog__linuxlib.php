@@ -1,6 +1,5 @@
-<?php 
+<?php
 
-class llog__Linux extends lxDriverClass {
-
-
+class llog__Linux extends lxDriverClass
+{
 }

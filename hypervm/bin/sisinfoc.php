@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -28,7 +28,3 @@ function collectdata_main()
 		vps__openvz::find_memoryusage();
 	}
 }
-
-
-
-

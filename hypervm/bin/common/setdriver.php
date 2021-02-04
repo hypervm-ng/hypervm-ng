@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  *    HyperVM, Server Virtualization GUI for OpenVZ and Xen
  *
@@ -60,7 +61,7 @@
  * @version   v1.0 20120302 build
  * @package   scripts
  */
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 
@@ -75,10 +76,8 @@ if (!isset($list['driver'])) {
 	$driverapp = $gbl->getSyncClass(null, $server, $class);
 	echo 'Driver for class ' . $class . ' is ' . $driverapp . PHP_EOL;
 	exit;
-}
-else 
-{
+} else {
 	$driver = $list['driver'];
-	
+
 	changeDriverFunc($server, $class, $driver);
 }

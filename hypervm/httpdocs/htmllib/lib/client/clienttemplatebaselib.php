@@ -1,153 +1,153 @@
-<?php 
+<?php
 
-class ClienttemplateBase extends ClientCore {
-
-//Core
-static $__desc = array("", "",  "client_plan");
-
-//Data
-static $__desc_nname =  array("n", "",  "client_plan", URL_SHOW);
-static $__desc_description = array("", "",  "description");
-static $__desc_share_status = array("ef", "",  "share:share_this_plan_with_your_children");
-static $__desc_share_status_v_on = array("", "",  "plan_is_shared");
-static $__desc_share_status_v_off = array("", "",  "plan_is_not_shared");
-
-
-//Lists
-
-
-
-function update($subaction, $param)
+class ClienttemplateBase extends ClientCore
 {
 
-	if ($this->getParentO()->getClName() != $this->parent_clname) {
-		throw new lxException('template_not_owner', 'parent');
-	}
-	return $param;
-}
+	//Core
+	static $__desc = array("", "",  "client_plan");
 
-static function createListAlist($parent, $class)
-{
+	//Data
+	static $__desc_nname =  array("n", "",  "client_plan", URL_SHOW);
+	static $__desc_description = array("", "",  "description");
+	static $__desc_share_status = array("ef", "",  "share:share_this_plan_with_your_children");
+	static $__desc_share_status_v_on = array("", "",  "plan_is_shared");
+	static $__desc_share_status_v_off = array("", "",  "plan_is_not_shared");
 
-	global $gbl, $sgbl, $login, $ghtml; 
 
-	$alist = null;
-	if ($parent->isNotCustomer()) {
-		$alist[] = "a=list&c=$class";
-		$alist[] = "a=addform&c=$class";
-	}
-	return $alist;
+	//Lists
 
-}
 
-function isSync() { return false; }
 
-function createShowUpdateform()
-{
+	function update($subaction, $param)
+	{
 
-	$uflist['pserver_s'] = null;
-	$uflist['limit'] = null;
-	return $uflist;
-}
-
-function createShowRlist($subaction)
-{
-	return null;
-}
-function createShowPlist($subaction)
-{
-	return null;
-}
-
-function display($var)
-{
-
-	if ($var === 'owner_f') {
-		if ($this->isRightParent()) {
-			return 'on';
-		} else {
-			return 'off';
+		if ($this->getParentO()->getClName() != $this->parent_clname) {
+			throw new lxException('template_not_owner', 'parent');
 		}
+		return $param;
 	}
-	return $this->$var;
 
-}
+	static function createListAlist($parent, $class)
+	{
 
-static function createListNlist($parent, $view)
-{
-	$nlist['owner_f'] = '3%';
-	//$nlist['share_status'] = '3%';
-	$nlist['nname'] = '30%';
-	$nlist['description'] = '100%';
-	return $nlist;
-}
+		global $gbl, $sgbl, $login, $ghtml;
 
-
-function createShowPropertyList(&$alist)
-{
-	$alist['property'][] = 'a=show';
-	$alist['property'][] = "a=updateForm&sa=ipaddress";
-	$alist['property'][] = "a=updateForm&sa=description";
-}
-
-function createShowAlist(&$alist, $subaction = null)
-{
-	
-	global $gbl, $sgbl, $login, $ghtml; 
-	$alist['__title_main'] = $login->getKeywordUc('resource');
-	if (!$this->priv->isOn('dns_manage_flag')) {
-		$alist[] = "a=updateform&sa=dnstemplatelist";
+		$alist = null;
+		if ($parent->isNotCustomer()) {
+			$alist[] = "a=list&c=$class";
+			$alist[] = "a=addform&c=$class";
+		}
+		return $alist;
 	}
-	$alist[] = "a=updateForm&sa=disable_per";
 
-
-	return $alist;
-
-
-}
-
-static function add($parent, $class, $param)
-{
-	ClientBase::fixpserver_list($param);
-	return $param;
-}
-
-
-static function continueForm($parent, $class, $param, $continueaction)
-{
-	$param['nname'] = trim($param['nname']);
-	if ($continueaction === 'server') {
-		$ret = self::continueFormlistpriv($parent, $class, $param, $continueaction);
-	} else if ($continueaction === 'clientfinish') {
-		$ret = client::continueFormClientFinish($parent, $class, $param, $continueaction);
+	function isSync()
+	{
+		return false;
 	}
-	return $ret;
-}
 
-function createShowImageList()
-{
-	return null;
-}
+	function createShowUpdateform()
+	{
 
-static function addform($parent, $class, $typetd = null)
-{
+		$uflist['pserver_s'] = null;
+		$uflist['limit'] = null;
+		return $uflist;
+	}
 
-	$vlist['nname'] = "";
-	$vlist['description'] = null;
-	//$vlist['share_status'] = null;
+	function createShowRlist($subaction)
+	{
+		return null;
+	}
+	function createShowPlist($subaction)
+	{
+		return null;
+	}
+
+	function display($var)
+	{
+
+		if ($var === 'owner_f') {
+			if ($this->isRightParent()) {
+				return 'on';
+			} else {
+				return 'off';
+			}
+		}
+		return $this->$var;
+	}
+
+	static function createListNlist($parent, $view)
+	{
+		$nlist['owner_f'] = '3%';
+		//$nlist['share_status'] = '3%';
+		$nlist['nname'] = '30%';
+		$nlist['description'] = '100%';
+		return $nlist;
+	}
 
 
-	$qvlist = getQuotaListForClass('client', array());
-	$vlist = lx_array_merge(array($vlist, $qvlist));
+	function createShowPropertyList(&$alist)
+	{
+		$alist['property'][] = 'a=show';
+		$alist['property'][] = "a=updateForm&sa=ipaddress";
+		$alist['property'][] = "a=updateForm&sa=description";
+	}
+
+	function createShowAlist(&$alist, $subaction = null)
+	{
+
+		global $gbl, $sgbl, $login, $ghtml;
+		$alist['__title_main'] = $login->getKeywordUc('resource');
+		if (!$this->priv->isOn('dns_manage_flag')) {
+			$alist[] = "a=updateform&sa=dnstemplatelist";
+		}
+		$alist[] = "a=updateForm&sa=disable_per";
 
 
-	$ret['variable'] = $vlist;
-	$ret['action'] = "add";   
+		return $alist;
+	}
 
-	return $ret;
-}
+	static function add($parent, $class, $param)
+	{
+		ClientBase::fixpserver_list($param);
+		return $param;
+	}
 
-/*
+
+	static function continueForm($parent, $class, $param, $continueaction)
+	{
+		$param['nname'] = trim($param['nname']);
+		if ($continueaction === 'server') {
+			$ret = self::continueFormlistpriv($parent, $class, $param, $continueaction);
+		} else if ($continueaction === 'clientfinish') {
+			$ret = client::continueFormClientFinish($parent, $class, $param, $continueaction);
+		}
+		return $ret;
+	}
+
+	function createShowImageList()
+	{
+		return null;
+	}
+
+	static function addform($parent, $class, $typetd = null)
+	{
+
+		$vlist['nname'] = "";
+		$vlist['description'] = null;
+		//$vlist['share_status'] = null;
+
+
+		$qvlist = getQuotaListForClass('client', array());
+		$vlist = lx_array_merge(array($vlist, $qvlist));
+
+
+		$ret['variable'] = $vlist;
+		$ret['action'] = "add";
+
+		return $ret;
+	}
+
+	/*
 static function initThisList($parent, $class)
 {
 	$db = new Sqlite($parent->__masterserver, "clienttemplate");
@@ -171,9 +171,4 @@ static function initThisList($parent, $class)
 	return null;
 }
 */
-
-
 }
-
-
-

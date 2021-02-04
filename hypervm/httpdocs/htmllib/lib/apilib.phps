@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 function send_to_some_http_server($raddress, $port, $url)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	$url = "login-class=client&login-name=admin&login-password=hell&output-type=json&$url";
@@ -42,7 +42,7 @@ function get_and_print_a_select_variable($description, $remotevar, $localvar)
 function print_select($var, $list)
 {
 	print("<select name=$var> ");
-	foreach($list as $realname => $displayname) {
+	foreach ($list as $realname => $displayname) {
 		print("<option value=$realname> $displayname </option>");
 	}
 	print("</select>");

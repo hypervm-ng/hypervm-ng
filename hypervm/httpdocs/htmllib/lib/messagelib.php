@@ -1,12 +1,12 @@
 <?php
 $__emessage['blocked'] = "Your address is blocked";
 $__emessage['no_server'] = "Could not connect to the Server.";
-$__emessage['set_emailid']="Please Set Your EmailId Properly ";
+$__emessage['set_emailid'] = "Please Set Your EmailId Properly ";
 $__emessage['no_socket_connect_to_server'] = "Could not Connect to the server [%s]. This is most likely due to underlying network problem. Make sure that the server is accessible from this particular node by running [b] telnet slave-id $sgbl->__var_remote_port [/b]   ";
 $__emessage['restarting_backend'] = "Restarting the backend. Please try again after 30 seconds.";
 $__emessage['quota_exceeded'] = "Quota Exceeded for [%s]";
 $__emessage['license_no_ipaddress'] = "The public ipaddress [%s] of this server was not found in in the license repository. Please contact Lxlabs sales or your reseller to create a license for this server. </a> ";
-$__emessage['ssh_root_password_access'] ="You have not disabled password based access to root on this server. Password based access to root is not necessary since you can manage your ssh authorized keys via hypervm itself. <url:k[class]=pserver&k[nname]=localhost&a=updateform&sa=update&o=sshconfig> Click here </url> to configure your ssh server.";
+$__emessage['ssh_root_password_access'] = "You have not disabled password based access to root on this server. Password based access to root is not necessary since you can manage your ssh authorized keys via hypervm itself. <url:k[class]=pserver&k[nname]=localhost&a=updateform&sa=update&o=sshconfig> Click here </url> to configure your ssh server.";
 
 $__emessage['already_exists'] = "The resource of name [%s] already exists.";
 $__emessage['lxguard_not_configured'] = "Lxguard for this server is not configured. Please <url:k[class]=pserver&k[nname]=localhost&a=show&o=lxguard>Click here to configure Lxguard </url> since it is very important that you understand what it does. Lxguard is critical for the security of your server, at the same time, it can block your own IPaddress from accessing the server, which can be frustrating if you don't know what's happening.";
@@ -17,8 +17,8 @@ $__emessage['warn_license_limit'] = "You are very close to your license limit fo
 $__emessage['file_already_exists'] = "The file [%s] already exists.";
 $__emessage['contact_set_but_not_correct'] = "Your Contact Information doesn't appear to be a valid email address. Click <url:a=updateform&sa=information> here to fix it.</url> ";
 $__emessage['contact_not_set'] = "Your Contact Information is not set properly. Click <url:a=updateform&sa=information> here to fix it. </url> ";
-$__emessage['you_have_unread_message'] ="You have [%s] Unread Message(s). click <burl:a=list&c=smessage> here  to read it. </burl>";
-$__emessage['you_have_unread_ticket'] ="You have [%s] Unread Ticket(s). click <burl:a=list&c=ticket> here  to read it. </burl>";
+$__emessage['you_have_unread_message'] = "You have [%s] Unread Message(s). click <burl:a=list&c=smessage> here  to read it. </burl>";
+$__emessage['you_have_unread_ticket'] = "You have [%s] Unread Ticket(s). click <burl:a=list&c=ticket> here  to read it. </burl>";
 $__information['ndskshortcut_list__pre'] = " You can add a page in kloxo to the favorites, by clicking on the [b] add to favorites [/b] link on [b] that particular page. [/b] Each shortcut has a parameter called [b] Sort Id [/b]. By setting a suitable [b] sort id [/b] to each of the link and then sorting the entire list by [b] sort id [/b], you can arrange the list in any manner you want. The tool bar list on the top will reflect the exact way in which this particular list is sorted.";
 
 $__emessage['security_warning'] = "Your password is now set as a generic password which constitutes a grave security threat. Please change it immediately by <url:a=updateform&sa=password> clicking here. </url> ";
@@ -35,23 +35,23 @@ $__emessage['template_not_owner'] = "You are not the Owner of this Template";
 $__emessage['ipaddress_changed_amidst_session'] = "IP Address Changed Amidst Session. Possible Session Hijacking.";
 $__emessage['more_than_one_user'] = "More than one user is logged in this account. Click <burl:a=list&c=ssession>here to see list of logins. </burl> ";
 
-$__emessage['login_error'] = "Login Unsuccessful" ;
-$__emessage['file_exists'] = "file(s) [%s] Exists. Not Pasting..." ;
-$__emessage['cannot_unzip_in_root'] = "You cannot unzip files into the root. Please specify a directory and unzip into that." ;
+$__emessage['login_error'] = "Login Unsuccessful";
+$__emessage['file_exists'] = "file(s) [%s] Exists. Not Pasting...";
+$__emessage['cannot_unzip_in_root'] = "You cannot unzip files into the root. Please specify a directory and unzip into that.";
 $__emessage['nouser_email'] = "The Email doesn't match User's Contact Email Address";
-$__emessage['session_expired'] = "Session Expired" ;
+$__emessage['session_expired'] = "Session Expired";
 
-$__emessage['e_password']= "Password Incorrect";
-$__emessage['is_demo']="[%s] is Disabled in Demo Version.";
-$__emessage['user_create']="User [%s] Could not be Created. Please try a different Name";
-$__emessage['switch_done'] ="Switching the Servers has been run in the background. You will be sent a mail when the switch is complete.";
-$__emessage['mis_changed'] ="Display Configuration successfully changed.";
-$__emessage['password_sent'] ="Password was reset and sent successfully.";
-$__emessage['added_successfully'] ="[%s] was added successfully.";
-$__emessage['added_successfully'] ="[%s] was added successfully.";
-$__emessage['backup_has_been_scheduled'] ="The backup is now happening in the background. You will receive a mail at your contact email when it is done.";
-$__emessage['update_scheduled'] ="Update is now running in the background. You can refresh this page to see if the update has completed properly.";
-$__emessage['restore_has_been_scheduled'] ="The Restore is now happening in the background. You will receive a mail at your contact email when it is done.";
+$__emessage['e_password'] = "Password Incorrect";
+$__emessage['is_demo'] = "[%s] is Disabled in Demo Version.";
+$__emessage['user_create'] = "User [%s] Could not be Created. Please try a different Name";
+$__emessage['switch_done'] = "Switching the Servers has been run in the background. You will be sent a mail when the switch is complete.";
+$__emessage['mis_changed'] = "Display Configuration successfully changed.";
+$__emessage['password_sent'] = "Password was reset and sent successfully.";
+$__emessage['added_successfully'] = "[%s] was added successfully.";
+$__emessage['added_successfully'] = "[%s] was added successfully.";
+$__emessage['backup_has_been_scheduled'] = "The backup is now happening in the background. You will receive a mail at your contact email when it is done.";
+$__emessage['update_scheduled'] = "Update is now running in the background. You can refresh this page to see if the update has completed properly.";
+$__emessage['restore_has_been_scheduled'] = "The Restore is now happening in the background. You will receive a mail at your contact email when it is done.";
 
 $__information['login_pre'] = "<p> Welcome to <%programname%>  </p><p>Use a valid username and password to gain access to the console. </p> ";
 $__information['tickethistory_addform__pre'] = "You can use &#91quote&#93 &#91/quote &#93 to quote some text, which will shown properly formatted. You can also use &#91code&#93 &#91/code&#93 for code snippets, and &#91b&#93 &#91/b&#93 for bold.";
@@ -74,7 +74,7 @@ $__information['updateform_ssl_authorized_keys_pre'] = "These are the SSH keys f
 $__information['updateform_ssl_hypervm_pre'] = $__information['updateform_ssl_kloxo_pre'];
 
 $__information['updateform_selfbackupconfig_pre'] = " This is primarily meant to configure the remote backup of the master database and nothing else. The database dump is taken everyday and is saved in a local folder in this machine. If an ftp account is configured here, the file will be uploaded to the machine. This is mainly useful in large cluster setup where the failure of master can have much larger impacts.";
-$__information['lxguard_updateform_update_pre'] = " Lxguard protects you against brute force attacks by monitoring the ssh and ftp log messages, and blocking ipaddresses that have too many failed attempts at logging into the server. Lxguard is default turned on, and will automatically block hosts, and cannot be turned off. You can configure Lxguard by specifying the [b] threshold of failed attempts [/b] or by adding certain ipaddresses to the whitelist. If an IP is found in the whitelist, it won't be blocked, even if it has crossed the threshold of failed attempts. To remove the warnings you get about Lxguard please click on the agreement checkbox below"; 
+$__information['lxguard_updateform_update_pre'] = " Lxguard protects you against brute force attacks by monitoring the ssh and ftp log messages, and blocking ipaddresses that have too many failed attempts at logging into the server. Lxguard is default turned on, and will automatically block hosts, and cannot be turned off. You can configure Lxguard by specifying the [b] threshold of failed attempts [/b] or by adding certain ipaddresses to the whitelist. If an IP is found in the whitelist, it won't be blocked, even if it has crossed the threshold of failed attempts. To remove the warnings you get about Lxguard please click on the agreement checkbox below";
 
 $__information['updateform_generalsetting_pre'] = " The 'HelpDesk Url' is a link to your Helpdesk, which will be used in place of the default help desk built into the software. Community Url is the link the client will see on his left page, and in normal cases can point to your forum.";
 $__information['custombutton_addform__pre'] = " In the url, you can use %nname%, which will be substituted with the name of the client. For Kloxo only, you can use %default_domain% for the default domain of the client.";

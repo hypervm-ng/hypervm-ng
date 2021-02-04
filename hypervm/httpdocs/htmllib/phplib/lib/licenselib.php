@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class licensecom_b extends Lxaclass
 {
@@ -37,38 +37,35 @@ class License extends Lxdb
 	{
 		global $gbl, $sgbl, $login, $ghtml;
 		switch ($subaction) {
-			case "license":
-				{
-				$lo = $login->getObject('license');
-				$lic = $login->getObject('license')->licensecom_b;
+			case "license": {
+					$lo = $login->getObject('license');
+					$lic = $login->getObject('license')->licensecom_b;
 
-				if ($lic->lic_pserver_num != "Unlimited" && $lic->lic_client_num != "Unlimited" && $lic->lic_vps_num != "Unlimited") {
+					if ($lic->lic_pserver_num != "Unlimited" && $lic->lic_client_num != "Unlimited" && $lic->lic_vps_num != "Unlimited") {
 
-					$vlist['__v_button'] = 'Set License to unlimited usage';
+						$vlist['__v_button'] = 'Set License to unlimited usage';
 
-					if ($login->isAdmin()) {
-						if (!isset($lic->lic_maindomain_num)) {
-							$lic->lic_maindomain_num = $lic->lic_domain_num;
-							$lo->setUpdateSubaction();
-							$lo->write();
+						if ($login->isAdmin()) {
+							if (!isset($lic->lic_maindomain_num)) {
+								$lic->lic_maindomain_num = $lic->lic_domain_num;
+								$lo->setUpdateSubaction();
+								$lo->write();
+							}
+							$vlist['lic_pserver_num_f'] = array('M', $lic->lic_pserver_num);
+							$vlist['lic_client_num_f'] = array('M', $lic->lic_client_num);
+							$vlist['lic_vps_num_f'] = array('M', $lic->lic_vps_num);
 						}
-						$vlist['lic_pserver_num_f'] = array('M', $lic->lic_pserver_num);
-						$vlist['lic_client_num_f'] = array('M', $lic->lic_client_num);
-						$vlist['lic_vps_num_f'] = array('M', $lic->lic_vps_num);
+					} else {
+						$vlist['message'] = array('M', 'HyperVM is OpenSourced, No License is needed.');
+						$vlist['__v_button'] = '';
 					}
-				} else {
-					$vlist['message'] = array('M', 'HyperVM is OpenSourced, No License is needed.');
-					$vlist['__v_button'] = '';
-
-				}
-				return $vlist;
+					return $vlist;
 				}
 
-			case "login_info":
-				{
-				$vlist['licensecom_b_s_clientaccount'] = null;
-				$vlist['licensecom_b_s_password'] = array('m', '****');
-				return $vlist;
+			case "login_info": {
+					$vlist['licensecom_b_s_clientaccount'] = null;
+					$vlist['licensecom_b_s_password'] = array('m', '****');
+					return $vlist;
 				}
 		}
 	}
@@ -97,7 +94,7 @@ class License extends Lxdb
 		$rmt->program_name = $sgbl->__var_program_name;
 		$var = base64_encode(serialize($rmt));
 		if (!$login->isLteAdmin()) {
-			throw new lxException ("not_admin", '');
+			throw new lxException("not_admin", '');
 		}
 
 		$license = $login->getObject('license');
@@ -125,7 +122,7 @@ class License extends Lxdb
 
 		$lic = $license->licensecom_b;
 		$def = array("vps_num" => "Unlimited", "client_num" => "Unlimited", "pserver_num" => "Unlimited");
-//		$list = array("maindomain_num", "domain_num", "pserver_num", "vps_num");
+		//		$list = array("maindomain_num", "domain_num", "pserver_num", "vps_num");
 		$list = array("pserver_num", "vps_num");
 
 		foreach ($list as $l) {
@@ -140,6 +137,4 @@ class License extends Lxdb
 	{
 		return false;
 	}
-
 }
-

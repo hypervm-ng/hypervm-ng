@@ -1,15 +1,15 @@
-<?php 
+<?php
 ignore_user_abort(true);
 include_once "htmllib/lib/displayinclude.php";
 include_once "htmllib/lib/include.php";
 
 function __ac_desc_desktop($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	$skindir=$login->getSkinDir();
-	$col=$login->getSkinColor();
-	$sel="des";
-	$a = $ghtml->print_domcollapse($sel);	
+	global $gbl, $sgbl, $login, $ghtml;
+	$skindir = $login->getSkinDir();
+	$col = $login->getSkinColor();
+	$sel = "des";
+	$a = $ghtml->print_domcollapse($sel);
 	$history = $login->dskhistory;
 	$history = array_reverse($history);
 	$shortcut = $login->dskshortcut_a;
@@ -19,7 +19,7 @@ function __ac_desc_desktop($object)
 	//$ghtml->print_curvy_table_start();
 	//print("To add links to  <font style='font-weight:bold'>Favorites </font> , go to a particular page, and then click on the <font style='font-weight:bold'> Add to Favorites </font> link that appears on the top right.  <font style='font-weight:bold'>History </font>  is the list of last 20 pages you have visited.");
 	//$ghtml->print_curvy_table_end();
-	print("<table cellpadding=0  width=90% cellspacing=1 style='border:1px solid #$col;  background:#fffafa;'><tr></tr><tr height=50> <td align=center>"); 
+	print("<table cellpadding=0  width=90% cellspacing=1 style='border:1px solid #$col;  background:#fffafa;'><tr></tr><tr height=50> <td align=center>");
 	print("<form name=desktopsearch method=get action=/display.php>");
 	$ghtml->print_input("hidden", "frm_action", "desktop");
 	print("<table cellpadding=0 cellspacing=0 > <tr> <td> ");
@@ -27,10 +27,10 @@ function __ac_desc_desktop($object)
 	print("</form>\n");
 	print("</td> <td ><a href=javascript:document.desktopsearch.submit()> <img src=img/general/icon/search_b.gif>  Search </a> </td> </tr> </table> ");
 
-	print("</td> </tr> </table>"); 
+	print("</td> </tr> </table>");
 
 	print("<table width=90% cellpadding=0 valign=top cellspacing=20 height=200> <tr> <td valign=top>\n");
-/*	
+	/*	
 <div id="debug"></div><div id="boundary"><div id="content">
 <h2 class=expanded align=center onMouseover="this.style.background='url(<?php echo $skindir?>/onexpand.gif)'" onMouseout="this.style.background='url(<?php echo $skindir?>/background1.gif)'"><code>  </code></h2> 
 
@@ -53,10 +53,10 @@ function __ac_desc_desktop($object)
 	}
 
 	print("</table> </td> </div></div><td valign=top>");
-*/	
-	print("<div id=\"debug\"></div><div id=\"boundary\"><div id=\"content\"> <h2 class=expanded align=center onMouseover=\"this.style.background='url($skindir/onexpand.gif)'\" onMouseout=\"this.style.background='url($skindir/expand.gif)'\"><code>History</code></h2><table cellpadding=0 cellspacing=0 style=\"background:#f0f0f0;\">"); 
+*/
+	print("<div id=\"debug\"></div><div id=\"boundary\"><div id=\"content\"> <h2 class=expanded align=center onMouseover=\"this.style.background='url($skindir/onexpand.gif)'\" onMouseout=\"this.style.background='url($skindir/expand.gif)'\"><code>History</code></h2><table cellpadding=0 cellspacing=0 style=\"background:#f0f0f0;\">");
 	$count = 0;
-	foreach($history as $k => $h) {
+	foreach ($history as $k => $h) {
 		if ($h == 1) {
 			$h = null;
 		} else {
@@ -79,7 +79,7 @@ function __ac_desc_logout($object)
 
 function __ac_desc_updateshow($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$subaction = $ghtml->frm_subaction;
 	$post = $ghtml->__http_vars;
@@ -102,12 +102,11 @@ function __ac_desc_updateshow($object)
 	print("<table cellpadding=0 cellspacing=0 width=90%> <tr> <td > $out </td> </tr> </table> \n");
 
 	print("<table cellpadding=0 cellspacing=0> <tr> <td > [<a href=$url> Go Back </a>] </td> </tr> ");
-
 }
 
 function print_customer_mode($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$url = $ghtml->getFullUrl('a=update&sa=customermode');
 	if ($object->isDomainOwnerMode()) {
 		$mode = ucfirst($object->cttype);
@@ -119,11 +118,13 @@ function print_customer_mode($object)
 
 function __ac_desc_show($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	print_time("show_select");
-	if (!$object) { return; }
+	if (!$object) {
+		return;
+	}
 	$selflist = $object->getSelfList();
 
 	//print_time("show_select", "Show Select");
@@ -137,7 +138,7 @@ function __ac_desc_show($object)
 		}
 	}
 */
-	
+
 	$class = lget_class($object);
 
 	$subaction = $ghtml->frm_subaction;
@@ -155,7 +156,7 @@ function __ac_desc_show($object)
 	$object->createShowPropertyList($prlist);
 	if (!$prlist['property']) {
 		$object->getParentO()->createShowPropertyList($prlist);
-		foreach($prlist['property'] as $k => $v) {
+		foreach ($prlist['property'] as $k => $v) {
 			$prlist['property'][$k] = "goback=1&$v";
 		}
 	}
@@ -170,20 +171,20 @@ function __ac_desc_show($object)
 		$ghtml->printShowSelectBox($selflist);
 	}
 	$printed_message = false;
-	
+
 
 	$clist = $object->createShowClist($subaction);
 
 	$sclist = $object->createShowSclist();
 
-	if ($sclist)  {
+	if ($sclist) {
 		do_select_list($object, $sclist);
 	}
 
 
 	$ghtml->print_message();
 	//if ($ilist) {
-		//$ghtml->print_info_block($object, $ilist);
+	//$ghtml->print_info_block($object, $ilist);
 	//}
 
 	$cname = $object->getClass();
@@ -227,7 +228,6 @@ function __ac_desc_show($object)
 				//print("<META HTTP-EQUIV=REFRESH CONTENT=7>");
 				unset($showalist['__v_refresh']);
 			}
-
 		}
 
 
@@ -235,10 +235,10 @@ function __ac_desc_show($object)
 		$total = lx_merge_good($showalist, $advanced);
 
 		if ($interf) {
-			foreach($interf as $k => $v) {
+			foreach ($interf as $k => $v) {
 				if (csb($v, "__title")) {
 					$interf[$k] = $v;
-				}  else {
+				} else {
 					$interf[$k] = base64_decode($v);
 				}
 			}
@@ -246,7 +246,7 @@ function __ac_desc_show($object)
 
 		if (!$subaction) {
 			if ($interf) {
-				foreach($interf as $k => $i) {
+				foreach ($interf as $k => $i) {
 					if (csb($i, "__title")) {
 						$nnalist[$i] = $total[$i];
 						continue;
@@ -261,7 +261,7 @@ function __ac_desc_show($object)
 			}
 		} else if ($subaction === 'config') {
 			if ($interf) {
-				foreach($total as $k => $a) {
+				foreach ($total as $k => $a) {
 					if ($ghtml->is_special_variable($a)) {
 						$u = $a->purl;
 					} else {
@@ -292,12 +292,12 @@ function __ac_desc_show($object)
 			array_splice($aalist, 1, 0, $acalist);
 		}
 	}
-	
+
 	$nalist = null;
 	if ($aalist) {
 		// We need the title to be the first one. Or else the insides wont' work.
 		$gottitle = false;
-		foreach($aalist as $k => $a) {
+		foreach ($aalist as $k => $a) {
 			if (csb($k, "__title")) {
 				$gottitle = true;
 				$nalist[$k] = $a;
@@ -310,12 +310,12 @@ function __ac_desc_show($object)
 			// Changed back to Advanced
 		}
 
-		foreach((array) $aalist as $k => $a) {
+		foreach ((array) $aalist as $k => $a) {
 			if (csb($k, "__title")) {
 				if (!$a) {
 					$a = 'Advanced';
-			// Lighes changed Advanced to Resource
-			// Changed back to Advanced
+					// Lighes changed Advanced to Resource
+					// Changed back to Advanced
 				}
 				$nalist[$k] = $a;
 				continue;
@@ -333,24 +333,22 @@ function __ac_desc_show($object)
 
 		$ghtml->print_find($object);
 
-		if ($ilist)  {
+		if ($ilist) {
 			$ghtml->printObjectTable(null, $object, 'information');
-
 		}
 		if ($object->createShowNote()) {
 			$ghtml->print_note($object);
 		}
 
-		if ($rlist)  {
+		if ($rlist) {
 			$ghtml->printObjectTable(null, $object, 'resource');
-
 		}
 
 		if ($plist) {
 			$ghtml->printObjectTable(null, $object, 'permission');
 		}
 
-		
+
 		print("</td> </tr> </table> <table cellpadding=0 cellspacing=0 height=650> <tr> <td > </td> </tr> </table>  </td> <td valign=top width=100%> <table cellpadding=0 cellspacing=0 width=100%> <tr> <td >");
 		if (isset($nalist)) {
 			$ghtml->print_object_action_block($object, $nalist, 8);
@@ -370,30 +368,29 @@ function __ac_desc_show($object)
 	$aflist = $object->createShowAddform();
 	$uflist = $object->createShowUpdateform();
 
-	foreach((array) $uflist as $k=> $v) {
+	foreach ((array) $uflist as $k => $v) {
 		do_updateform($object, $k);
 	}
 
-	foreach((array) $aflist as $k => $v) {
+	foreach ((array) $aflist as $k => $v) {
 		do_addform($object, $k);
 	}
 
 
-	foreach((array) $clist as $k => $v) {
+	foreach ((array) $clist as $k => $v) {
 		make_show_all($object, $k);
 		do_list_class($object, $k);
 	}
 
-		
+
 
 	$ghtml->print_information('post', 'show', $cname, $subaction, "");
-
 }
 
 function search_url_in_array($url, $alist)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	foreach($alist as $k => $a) {
+	global $gbl, $sgbl, $login, $ghtml;
+	foreach ($alist as $k => $a) {
 		if ($ghtml->is_special_variable($a)) {
 			$u = $a->purl;
 		} else {
@@ -412,7 +409,7 @@ function search_url_in_array($url, $alist)
 
 function compare_action_urls($src, $dst)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	$src = strtolower("display.php?$src");
@@ -422,7 +419,7 @@ function compare_action_urls($src, $dst)
 
 
 	$arvar = array('a', 'o', 'n', 'c', 'l', 'sa');
-	foreach($arvar as $a) {
+	foreach ($arvar as $a) {
 		if (!isset($srcpost[$a])) {
 			$srcpost[$a] = null;
 		}
@@ -431,19 +428,18 @@ function compare_action_urls($src, $dst)
 		}
 	}
 
-	foreach($arvar as $a) {
+	foreach ($arvar as $a) {
 		if ($srcpost[$a] !== $dstpost[$a]) {
 			return false;
 		}
 	}
 
 	return true;
-
 }
 
 function __ac_desc_graph($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$subaction = $ghtml->frm_subaction;
 	$selflist = $object->getSelfList();
@@ -462,7 +458,7 @@ function __ac_desc_graph($object)
 
 	$nalist = lx_merge_good($nalist, $alist['property']);
 
-	
+
 
 	remove_if_older_than_a_minute_dir("__path_program_htmlbase/tmp/");
 
@@ -472,7 +468,7 @@ function __ac_desc_graph($object)
 	if ($selflist) {
 		$ghtml->printShowSelectBox($selflist);
 	}
-	if (cse($ghtml->frm_subaction, 'base')) { 
+	if (cse($ghtml->frm_subaction, 'base')) {
 		$core = strtil($ghtml->frm_subaction, "base");
 		$ghtml->__http_vars['frm_subaction'] = "{$core}traffic";
 		$subaction = "{$core}traffic";
@@ -502,7 +498,7 @@ function __ac_desc_graph($object)
 		return;
 	}
 	$object->dbaction = 'clean';
-		
+
 
 	lfile_put_contents($tmpgraph, $file);
 
@@ -514,7 +510,7 @@ function __ac_desc_graph($object)
 function showParentProperty($object)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$nalist[] = "a=show";
 	$object->createShowPropertyList($nalist);
 	$ghtml->print_tab_block($nalist);
@@ -523,10 +519,10 @@ function showParentProperty($object)
 
 function do_select_list($object, $sclist)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$class = lget_class($object);
 	$desc = get_classvar_description($class);
-	foreach($sclist as $k => $s) {
+	foreach ($sclist as $k => $s) {
 		$cg = $ghtml->frm_o_o;
 		$n = count($cg);
 		$cg[$n]['frm_o_o']['class'] = $k;
@@ -542,7 +538,7 @@ function do_select_list($object, $sclist)
 
 function __ac_desc_delete($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$cname = $ghtml->frm_o_cname;
 
 	if ($login->isDemo()) {
@@ -564,33 +560,31 @@ function __ac_desc_delete($object)
 	} else {
 		$gbl->setSessionV("lx_delete_return_url", $gbl->getHttpReferer());
 		if (exec_class_method($cname, 'isTreeForDelete')) {
-			print("<br> <table width=100%> <tr> <td width=10> </td><td align=left> These Objects Under these " . get_plural($object->getClass()). " will also be Deleted.<br> <br></td></tr></table>");
-			foreach($ll as $l) {
+			print("<br> <table width=100%> <tr> <td width=10> </td><td align=left> These Objects Under these " . get_plural($object->getClass()) . " will also be Deleted.<br> <br></td></tr></table>");
+			foreach ($ll as $l) {
 				$o = $object->getFromList($cname, $l);
 				$ghtml->do_resource(null, $o, 6, false, "getResourceChildList", true, false);
 			}
 		}
 		do_list_class($object, $cname);
 	}
-
 }
 
 function __ac_desc_backup($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-
+	global $gbl, $sgbl, $login, $ghtml;
 }
 
 function do_list_class($object, $cname)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	//list($iclass, $mclass, $rclass) = get_composite($cname);
 	$rclass = $cname;
 	$blist = exec_class_method($rclass, "createListBlist", $object, $rclass);
 
-	if ($blist) foreach($blist as $k => &$a) {
+	if ($blist) foreach ($blist as $k => &$a) {
 		if (is_numeric($k))
 			$a[0] = $ghtml->getFullUrl($a[0]);
 	}
@@ -603,26 +597,25 @@ function do_list_class($object, $cname)
 
 function check_for_license()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$lic = $login->getObject('license')->licensecom_b;
 
 	$prgm = $sgbl->__var_program_name;
 	$list = get_admin_license_var();
 
-	foreach($list as $k => $l) {
+	foreach ($list as $k => $l) {
 		$res = strfrom($k, "used_q_");
 		$licv = "lic_$res";
 		if ($licv === "lic_maindomain_num" && !isset($lic->$licv)) {
 			$lic->$licv = $lic->lic_domain_num;
 		}
 	}
-
 }
 
 function __ac_desc_list($object, $cname = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 
@@ -655,7 +648,7 @@ function __ac_desc_list($object, $cname = null)
 	$updatelist = exec_class_method($rclass, "createListUpdateForm", $object, $cname);
 
 	if ($updatelist) {
-		foreach($updatelist as $u) {
+		foreach ($updatelist as $u) {
 			do_updateform($object, $u);
 		}
 	}
@@ -664,7 +657,7 @@ function __ac_desc_list($object, $cname = null)
 	if ($addlist) {
 		do_addform($object, $cname);
 	}
-	
+
 
 	make_show_all($object, $cname);
 
@@ -679,15 +672,12 @@ function __ac_desc_list($object, $cname = null)
 	do_search($object, $cname);
 	$ghtml->printListAddForm($object, $cname);
 	do_list_class($object, $cname);
-
-
-
 }
 
 
 function make_show_all($object, $cname)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	dprint($ghtml->frm_clear_filter);
 	if ($ghtml->frm_clear_filter === 'true') {
 		$name = $object->getFilterVariableForThis($cname);
@@ -699,10 +689,10 @@ function make_show_all($object, $cname)
 
 function __ac_desc_selectShow($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$cnamelist = $object->createShowClist("");
 	$cname = "ffile";
-	foreach($cnamelist as $k => $v) {
+	foreach ($cnamelist as $k => $v) {
 		$cname = $k;
 		break;
 	}
@@ -716,7 +706,7 @@ function __ac_desc_selectShow($object)
 
 function get_return_url($action)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$var = "lx_{$action}_return_url";
 
@@ -726,35 +716,33 @@ function get_return_url($action)
 
 function __ac_desc_showform($object)
 {
-
-
 }
 
 function __ac_desc_Update($object)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$subaction = $ghtml->frm_subaction;
 	$class = $ghtml->frm_o_cname;
-	
+
 	$list = null;
-	if($ghtml->frm_accountselect) {
+	if ($ghtml->frm_accountselect) {
 		$list = explode(",", $ghtml->frm_accountselect);
 	}
 
 	if (strtolower($ghtml->frm_change) === 'updateall') {
 		$selflist = $object->getSelfList();
-		foreach($selflist as $l) {
+		foreach ($selflist as $l) {
 			do_update($l, $subaction, null);
 		}
 	}
 
 	if (!$class) {
 		$ret = do_update($object, $subaction, $list);
-	} else  {
+	} else {
 		$desc = get_classvar_description($class);
-		if (csa($desc[0], "P")) { 
+		if (csa($desc[0], "P")) {
 			//Special object... UPdation Happens only to the parent and not to the select ed children. Example is the ffile class... 
 
 			$subaction = "{$class}_$subaction";
@@ -764,7 +752,7 @@ function __ac_desc_Update($object)
 				print("List not set for Multiple Update <br> ");
 				exit;
 			}
-			foreach($list as $l) {
+			foreach ($list as $l) {
 				$ob = $object->getFromList($class, $l);
 				$ret = do_update($ob, $subaction, null);
 			}
@@ -780,14 +768,13 @@ function __ac_desc_Update($object)
 		}
 	}
 	return $ret;
-
 }
 
 
 function security_check($oldvlist, $param)
 {
-	
-	foreach((array) $oldvlist as $k => $v) {
+
+	foreach ((array) $oldvlist as $k => $v) {
 		if (csb($k, "__v")) {
 			continue;
 		}
@@ -800,7 +787,7 @@ function security_check($oldvlist, $param)
 
 	unset($param['_accountselect']);
 
-	foreach((array) $param as $k => $v) {
+	foreach ((array) $param as $k => $v) {
 		if (csb($k, "priv_s_")) {
 			$k = strfrom($k, "priv_s_");
 		}
@@ -814,10 +801,10 @@ function security_check($oldvlist, $param)
 	}
 }
 
-function do_update($object, $subaction, $list) 
+function do_update($object, $subaction, $list)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$class = lget_class($object);
 	$param = $ghtml->createCurrentParam($class);
@@ -834,14 +821,11 @@ function do_update($object, $subaction, $list)
 
 
 	return do_desc_update($object, $subaction, $param);
-
-
-
 }
 
 function do_search($object, $cname)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	//list($iclass, $mclass, $rclass) = get_composite($cname);
 	$rclass = $cname;
@@ -853,9 +837,11 @@ function do_search($object, $cname)
 
 function __ac_desc_UpdateForm($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
-	if (!$object) { return ;}
+	if (!$object) {
+		return;
+	}
 
 	$selflist = $object->getSelfList();
 	$subaction = $ghtml->frm_subaction;
@@ -867,7 +853,7 @@ function __ac_desc_UpdateForm($object)
 
 
 
-	if (isset($alist['property']) && count($alist['property']) > 1)  {
+	if (isset($alist['property']) && count($alist['property']) > 1) {
 		$nalist = null;
 		$nalist = lx_merge_good($nalist, $alist['property']);
 		$ghtml->print_tab_block($nalist);
@@ -875,7 +861,7 @@ function __ac_desc_UpdateForm($object)
 		$alist['property'] = null;
 		$object->getParentO()->createShowPropertyList($alist);
 		$nalist = null;
-		foreach($alist['property'] as &$a) {
+		foreach ($alist['property'] as &$a) {
 			$a .= '&goback=1';
 		}
 		$nalist = lx_merge_good($nalist, $alist['property']);
@@ -894,20 +880,19 @@ function __ac_desc_UpdateForm($object)
 	$sublist = $object->getMultiUpload($subaction);
 
 	if (is_array($sublist)) {
-		foreach($sublist as $subaction) {
+		foreach ($sublist as $subaction) {
 			do_updateform($object, $subaction);
 			print("<br> <br> <br> ");
 		}
 	} else {
 		do_updateform($object, $sublist);
 	}
-
 }
 
 
 function do_updateform($object, $subaction)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$class = lget_class($object);
 	$parent = $object->getParentO();
@@ -925,7 +910,7 @@ function do_updateform($object, $subaction)
 	$gbl->setSessionV("lx_update_return_url", "/display.php?" . $ghtml->get_get_from_current_post(null));
 
 	$param = $ghtml->createCurrentParam($class);
-	if($ghtml->frm_accountselect) {
+	if ($ghtml->frm_accountselect) {
 		$list = explode(",", $ghtml->frm_accountselect);
 		$param['_accountselect'] = $list;
 	}
@@ -948,7 +933,7 @@ function do_updateform($object, $subaction)
 		}
 		/// Hack mega hack.. Adding tparam to the http_vars variable so that do_resource will get them.
 		if ($tparam) {
-			foreach($tparam as $k => $v) {
+			foreach ($tparam as $k => $v) {
 				$param["frm_" . $class . "_c_" . $k] = $v;
 				$ghtml->__http_vars["frm_{$class}_c_{$k}"] = $v;
 			}
@@ -962,7 +947,7 @@ function do_updateform($object, $subaction)
 	}
 
 
-		
+
 
 	// Hack Hack Hack... Cannot handle file permissions neatly now... Just calling the whole thing..
 	if (isset($vlist['file_permission_f'])) {
@@ -985,7 +970,7 @@ function do_updateform($object, $subaction)
 
 	$param = null;
 	if ($tparam) {
-		foreach($tparam as $k => $v) {
+		foreach ($tparam as $k => $v) {
 			$param["frm_{$class}_c_$k"] = $v;
 		}
 		$string[] = $ghtml->object_variable_hiddenlist($param);
@@ -1006,13 +991,12 @@ function do_updateform($object, $subaction)
 	$ghtml->print_information('pre', 'updateform', $class, $subaction, $pre);
 	$ghtml->xml_print_page($string);
 	$ghtml->print_information('post', 'updateform', $class, $subaction, $post);
-
 }
 
 
 function __ac_desc_add($object, $param = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$class = $ghtml->frm_o_cname;
 
@@ -1027,7 +1011,7 @@ function __ac_desc_add($object, $param = null)
 	do_desc_add($object, $class, $param);
 
 	if (!isset($gbl->__this_redirect)) {
-		if (exec_class_method($class, "createListAlist", $object, $class))  {
+		if (exec_class_method($class, "createListAlist", $object, $class)) {
 			$gbl->__this_redirect = $ghtml->getFullUrl("a=list&c=$class");
 		} else {
 			$gbl->__this_redirect = $ghtml->getFullUrl("a=show");
@@ -1040,16 +1024,14 @@ function __ac_desc_add($object, $param = null)
 	if ($class === 'domain' || $class === 'client' || $class === 'vps') {
 		$gbl->setSessionV('__refresh_lpanel', 'true');
 	}
-
-
 }
 
 
 
 function check_for_select_one($param)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	foreach((array) $param as $k => $v) {
+	global $gbl, $sgbl, $login, $ghtml;
+	foreach ((array) $param as $k => $v) {
 		if ($ghtml->isSelectOne($v)) {
 			throw new lxException("please_select_value", $k);
 		}
@@ -1059,7 +1041,7 @@ function check_for_select_one($param)
 function __ac_desc_continue($object)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$cname = $ghtml->frm_o_cname;
 
 
@@ -1107,9 +1089,9 @@ function __ac_desc_continue($object)
 		throw new lxException("{$tparam['nname']}+already+exists+in+$cname.", "nname");
 	}
 
-	
+
 	$param = null;
-	foreach($tparam as $k => $v) {
+	foreach ($tparam as $k => $v) {
 		$param["frm_" . $cname . "_c_" . $k] = $v;
 	}
 	$string[] = $ghtml->object_variable_hiddenlist($param);
@@ -1126,13 +1108,12 @@ function __ac_desc_continue($object)
 	$ghtml->print_information('pre', 'continueform', "", $continueaction, $pre);
 	$ghtml->xml_print_page($string);
 	$ghtml->print_information('post', 'continueform', "", $continueaction, $post);
-
 }
 
 
 function __ac_desc_addform($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$cname = $ghtml->frm_o_cname;
 	$dttype = $ghtml->frm_dttype;
@@ -1167,13 +1148,12 @@ function __ac_desc_addform($object)
 	if (exec_class_method($cname, "createAddformList", $object, $cname)) {
 		do_list_class($object, $cname);
 	}
-
 }
 
 function do_addform($object, $class, $dttype = null, $notitleflag = false)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$gbl->setSessionV("lx_add_return_url", "/display.php?" . $ghtml->get_get_from_current_post(null));
 
@@ -1181,7 +1161,7 @@ function do_addform($object, $class, $dttype = null, $notitleflag = false)
 
 
 	$cdesc = get_description($class);
-	$cdesc = ($dttype)? $dttype['val']: $cdesc;
+	$cdesc = ($dttype) ? $dttype['val'] : $cdesc;
 	if ($notitleflag) {
 		$title = null;
 	} else {
@@ -1214,14 +1194,13 @@ function do_addform($object, $class, $dttype = null, $notitleflag = false)
 	$ghtml->print_information('pre', 'addform', $class, $dttype['val'], $pre);
 	$ghtml->xml_print_page($string);
 	$ghtml->print_information('post', 'addform', $class, $dttype['val'], $post);
-
 }
 
 
 function create_xml($object, $stuff, $ret)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if (is_object($stuff)) {
 		$class = lget_class($stuff);
@@ -1237,21 +1216,21 @@ function create_xml($object, $stuff, $ret)
 	$string = null;
 
 
-	if(!empty($vlist)) {
-		foreach($vlist as $k => $v) {
-	
+	if (!empty($vlist)) {
+		foreach ($vlist as $k => $v) {
+
 			if (csb($k, "__c_")) {
 				$cmd = substr($k, 4);
 				$cmd = substr($cmd, 0, strpos($cmd, '_'));
 				$string[] = $ghtml->object_variable_command($cmd, $v);
 				continue;
 			}
-	
+
 			if (csb($k, "__v_") || csb($k, "__m_")) {
 				continue;
 			}
-	
-	
+
+
 			// Hack hack:: used_s is handled separately.. There is no other way, since without any other way to recognize it, quota variables  defaults to priv...
 			if (!csb($k, "used_s")) {
 				if ($v && $ghtml->is_special_variable($v[1])) {
@@ -1265,18 +1244,18 @@ function create_xml($object, $stuff, $ret)
 				}
 				lxclass::resolve_class_differences($class, $k, $dclass, $dk);
 			}
-	
-	
+
+
 			if ($k === "old_password_f") {
 				$string[] = $ghtml->object_variable_oldpassword($dclass, "old_password_f", $descr);
 				continue;
 			}
-	
+
 			if ($k === "password" || $k === "dbpassword") {
 				$string[] = $ghtml->object_variable_password($class, $k);
 				continue;
 			}
-	
+
 			if ($v) {
 				if (csa($v[0], 'I')) {
 					if ($v[1] && is_array($v[1])) {
@@ -1318,7 +1297,7 @@ function create_xml($object, $stuff, $ret)
 					$list = null;
 					continue;
 				}
-	
+
 				if (csa($v[0], 's')) {
 					if (!$v[1]) {
 						$list = exec_class_method($dclass, "getSelectList", $object, $dk);
@@ -1329,7 +1308,7 @@ function create_xml($object, $stuff, $ret)
 					$list = null;
 					continue;
 				}
-	
+
 				if (csa($v[0], 'A')) {
 					if (!$v[1]) {
 						$list = exec_class_method($dclass, "getSelectList", $object, $dk);
@@ -1340,13 +1319,13 @@ function create_xml($object, $stuff, $ret)
 					$list = null;
 					continue;
 				}
-	
+
 				if (csa($v[0], 'Q')) {
 					$string[] = $ghtml->object_variable_listquota($object, $stuff, $k, $v[1]);
 					continue;
 				}
-	
-	
+
+
 				if (csa($v[0], 'U')) {
 					if (!$v[1]) {
 						$list = exec_class_method($dclass, "getSelectList", $object, $dk);
@@ -1357,8 +1336,8 @@ function create_xml($object, $stuff, $ret)
 					$list = null;
 					continue;
 				}
-	
-	
+
+
 				if (csa($v[0], 'V')) {
 					$string[] = $ghtml->object_variable_htmltextarea($stuff, $k, $v[1]);
 					continue;
@@ -1371,28 +1350,28 @@ function create_xml($object, $stuff, $ret)
 					$string[] = $ghtml->object_variable_textarea($stuff, $k, $v[1], true);
 					continue;
 				}
-	
+
 				if (csa($v[0], 'h')) {
 					$string[] = $ghtml->object_variable_hidden("frm_" . $class . "_c_" . $k, $v[1]);
 					continue;
 				}
-	
+
 				if (csa($v[0], 'f')) {
 					$string[] = $ghtml->object_variable_check($stuff, $k, $v[1]);
 					continue;
 				}
-	
+
 				if (csa($v[0], 'M')) {
 					$string[] = $ghtml->object_variable_nomodify($stuff, $k, $v[1]);
 					continue;
 				}
 			}
-	
+
 			if (csa($descr[0], 'F')) {
 				$string[] = $ghtml->object_variable_file($stuff, $k);
 				continue;
 			}
-	
+
 			if (csa($descr[0], 'E')) {
 				$list = exec_class_method($dclass, "getSelectList", $object, $dk);
 				$string[] = $ghtml->object_variable_selectradio($stuff, $k, $list);
@@ -1403,25 +1382,25 @@ function create_xml($object, $stuff, $ret)
 				$string[] = $ghtml->object_variable_multiselect($stuff, $k, $list);
 				continue;
 			}
-	
+
 			if (csa($descr[0], 'f')) {
 				$string[] = $ghtml->object_variable_check($stuff, $k);
 				continue;
 			}
-	
+
 			if (csa($descr[0], 'e') || csa($descr[0], 's')) {
 				$list = exec_class_method($dclass, "getSelectList", $object, $dk);
 				$string[] = $ghtml->object_variable_select($stuff, $k, $list, false);
 				continue;
 			}
-	
+
 			if (csa($descr[0], 'A')) {
 				$list = exec_class_method($dclass, "getSelectList", $object, $dk);
 				$string[] = $ghtml->object_variable_select($stuff, $k, $list, true);
 				continue;
 			}
-	
-	
+
+
 			if (csa($descr[0], 't')) {
 				$string[] = $ghtml->object_variable_textarea($stuff, $k);
 				continue;
@@ -1430,7 +1409,7 @@ function create_xml($object, $stuff, $ret)
 				$string[] = $ghtml->object_variable_textarea($stuff, $k, null, true);
 				continue;
 			}
-	
+
 			if (csa($descr[0], 'q')) {
 				$string[] = $ghtml->object_variable_quota($object, $stuff, $k);
 				continue;
@@ -1439,14 +1418,13 @@ function create_xml($object, $stuff, $ret)
 				$string[] = $ghtml->object_variable_listquota($object, $stuff, $k);
 				continue;
 			}
-	
-	
-	
+
+
+
 			$string[] = $ghtml->object_variable_modify($stuff, $k);
-	
 		}
 	}
-	
+
 	$string[] = $ghtml->object_variable_hidden("frm_action", $action);
 
 	if (isset($ret['subaction'])) {
@@ -1463,7 +1441,7 @@ function create_xml($object, $stuff, $ret)
 	if (isset($vlist['__v_button'])) {
 		if ($vlist['__v_button']) {
 			$button = $vlist['__v_button'];
-		} 
+		}
 	} else {
 		$button = $action;
 	}
@@ -1476,7 +1454,6 @@ function create_xml($object, $stuff, $ret)
 	}
 
 	return $string;
-
 }
 
 
@@ -1492,7 +1469,7 @@ function resolve_single_child($object, $class, $nname)
 		$object = $object->getFromList($olist[0], $nname);
 		$olist[0] = null;
 		unset($olist[0]);
-		foreach($olist as $o) {
+		foreach ($olist as $o) {
 			$object = $object->getObject($o);
 		}
 	} else {
@@ -1505,7 +1482,7 @@ function resolve_single_child($object, $class, $nname)
 
 function print_navigation($navig)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if ($ghtml->isSelectShow()) {
 		return;
@@ -1551,14 +1528,16 @@ function print_navigation($navig)
 
 	// Hack to fix a bug reported by samuel.
 
-	if (!$ob) { return; }
+	if (!$ob) {
+		return;
+	}
 
 	$imgstr = null;
 	if ($ghtml->frm_action === 'show') {
 
 		$list = $ob->createShowMainImageList();
 
-		foreach((array) $list as $k => $v) {
+		foreach ((array) $list as $k => $v) {
 			if ($v) {
 				if (isset($ob->$k)) {
 					$img = $ghtml->get_image($buttonpath, $ob->getClass(), "{$k}_v_" . $ob->$k, ".gif");
@@ -1567,7 +1546,7 @@ function print_navigation($navig)
 			} else {
 				$v = $ob->display($k);
 				$img = $ghtml->get_image($buttonpath, $ob->getClass(), "{$k}_v_" . $ob->display($k), ".gif");
-				$imgstr[] = "<span title='$k is " . $ob->display($k). "'> <img src=$img width=30 height=30> </span>";
+				$imgstr[] = "<span title='$k is " . $ob->display($k) . "'> <img src=$img width=30 height=30> </span>";
 			}
 		}
 	}
@@ -1583,582 +1562,592 @@ function print_navigation($navig)
 		$demoimg = "<span title='Account is Demo'> <img src=$_timg> </span>";
 	}
 
-	if ($sgbl->isBlackBackground()) { $imgstr = null; $image = "/img/black.gif"; }
-	?> 
+	if ($sgbl->isBlackBackground()) {
+		$imgstr = null;
+		$image = "/img/black.gif";
+	}
+?>
 
 	<script>
-	var gl_imgrightpoint = '<?php echo $imgleftpoint ?>' ;
-	var gl_imgleftpoint = '<?php echo $imgrightpoint ?>' ;
-
+		var gl_imgrightpoint = '<?php echo $imgleftpoint ?>';
+		var gl_imgleftpoint = '<?php echo $imgrightpoint ?>';
 	</script>
-	<br> 
+	<br>
 
-	<table width=100% cellspacing=0 cellpadding=0 border=0><tr><td width=100% > 
-	<table border=0 cellspacing=0> <tr> <td > &nbsp; &nbsp; </td> <td >  <?php echo "$imgstr $demoimg" ?><img width=35 height=35 src=<?php echo $image ?>>  </td> <td > <table cellspacing=0> <tr> <td >
-	
-	<table height=10 align=left  border=0>  <tr> <?php 
+	<table width=100% cellspacing=0 cellpadding=0 border=0>
+		<tr>
+			<td width=100%>
+				<table border=0 cellspacing=0>
+					<tr>
+						<td> &nbsp; &nbsp; </td>
+						<td> <?php echo "$imgstr $demoimg" ?><img width=35 height=35 src=<?php echo $image ?>> </td>
+						<td>
+							<table cellspacing=0>
+								<tr>
+									<td>
 
-
-	$forecolorstring = null; if ($sgbl->isBlackBackground()) { $forecolorstring = "color=gray" ; }
-	foreach((array) $navig as $k => $h) {
-
-		//You have to actually get only the filters of the parents of this object. But let us just print all the filters anyway.
-		$url = $ghtml->get_get_from_post(null, $h);
-		$url = "/display.php?$url";
-		$desc = $ghtml->getActionDescr('', $h, $class, $var, $name);
-		$image = $ghtml->get_image($buttonpath, $class, $var, ".gif");
-		//if ($class === 'mailaccount' || $class === 'domain') { continue; }
-		$desc['help'] = $ghtml->get_action_or_display_help($desc['help'], 'action');
-		$sep = null;
-		$sep = "<td > |</td> ";
-		$nname = substr($name, 0, 19);
-
-		$bracketedname = null;
-		if ($navigmenu[$k][0] != 'list') {
-			$bracketedname = "($nname)";
-		}
-
-		$menustring = null;
-
-		// DOnt print the last.. That is the header, printed later below this...
-		if ($k === count($navig) - 1) {
-			//break;
-		}
-		print("<td > &nbsp;<a href='$url'><b><font $forecolorstring style='font-size:7pt'> {$desc['desc']}</b> $bracketedname </font> </a> &nbsp; </td> $sep ");
-	}
-	print("</td>  </tr></table></td> </tr>");
-
-	$ob = $gbl->__c_object;
-	$name = $ob->getId();
-	$imgstr = array();
-	if ($ghtml->frm_action === 'show') {
-
-		$list = $ob->createShowImageList();
-
-		foreach((array) $list as $k => $v) {
-			if ($v) {
-				if (isset($ob->$k)) {
-					$img = $ghtml->get_image($buttonpath, $ob->getClass(), "{$k}_v_" . $ob->$k, ".gif");
-					$imgstr[] = "<span title='$k is {$ob->$k}'> <img src=$img width=9 height=9> </span>";
-				}
-			} else {
-				$v = $ob->display($k);
-				$img = $ghtml->get_image($buttonpath, $ob->getClass(), "{$k}_v_{$ob->display($k)}", ".gif");
-				$imgstr[] = "<span title='$k is " . $ob->display($k). "'> <img src=$img width=9 height=9> </span>";
-			}
-		}
-	}
+										<table height=10 align=left border=0>
+											<tr> <?php
 
 
-	if ($sgbl->isKloxo() && $gbl->c_session->ssl_param['backbase']) {
-		$s = $gbl->c_session->ssl_param;
-		$v = $s['backbase'];
-		$pcl = $s['parent_clname'];
-		$selfip = $_SERVER['SERVER_NAME'];
-		$curl = "/display.php?{$ghtml->get_get_from_current_post(array('frm_emessage', 'frm_ssl'))}";
-		$kloxourl = "&frm_ndskshortcut_c_vpsparent_clname=$pcl";
+													$forecolorstring = null;
+													if ($sgbl->isBlackBackground()) {
+														$forecolorstring = "color=gray";
+													}
+													foreach ((array) $navig as $k => $h) {
 
-	} else {
-		$v = "/display.php";
-		$curl = "/display.php?{$ghtml->get_get_from_current_post(null)}";
-		$kloxourl = null;
-	}
+														//You have to actually get only the filters of the parents of this object. But let us just print all the filters anyway.
+														$url = $ghtml->get_get_from_post(null, $h);
+														$url = "/display.php?$url";
+														$desc = $ghtml->getActionDescr('', $h, $class, $var, $name);
+														$image = $ghtml->get_image($buttonpath, $class, $var, ".gif");
+														//if ($class === 'mailaccount' || $class === 'domain') { continue; }
+														$desc['help'] = $ghtml->get_action_or_display_help($desc['help'], 'action');
+														$sep = null;
+														$sep = "<td > |</td> ";
+														$nname = substr($name, 0, 19);
 
-	$iconpath = get_image_path() . "/button/";
-	$ac_descr = $ghtml->getActionDetails($curl, null, $iconpath, $path, $post, $_t_file, $_t_name, $_t_image, $__t_identity);
-	$curl = base64_encode($curl);
-	$desc = "{$ac_descr['desc']} $__t_identity";
-	$desc = urlencode($desc);
+														$bracketedname = null;
+														if ($navigmenu[$k][0] != 'list') {
+															$bracketedname = "($nname)";
+														}
 
-	$shurl = "$v?frm_o_cname=ndskshortcut&frm_ndskshortcut_c_ttype=favorite&frm_ndskshortcut_c_url=$curl&frm_action=add&frm_ndskshortcut_c_description=$desc$kloxourl";
+														$menustring = null;
 
-	$clienttype = null;
-	if ($ob->isClient() && $ghtml->frm_action === 'show') { 
-		$clienttype = ucfirst($ob->cttype); 
-		$clienttype = "$clienttype ";
-	}
-	$fullimgstr = implode(" ", $imgstr);
-	print(" <tr valign=middle > <td valign=middle id=tnavig$k onMouseOut=\"changeContent('help', 'helparea');\"> <b><font style='font-size:10pt'>&nbsp; $name {</b>$clienttype{$description['desc']}<b>}  $fullimgstr </font></a> </td></tr> ");
+														// DOnt print the last.. That is the header, printed later below this...
+														if ($k === count($navig) - 1) {
+															//break;
+														}
+														print("<td > &nbsp;<a href='$url'><b><font $forecolorstring style='font-size:7pt'> {$desc['desc']}</b> $bracketedname </font> </a> &nbsp; </td> $sep ");
+													}
+													print("</td>  </tr></table></td> </tr>");
 
-	$hypervm = null;
-	if ($sgbl->isKloxo() && $gbl->c_session->ssl_param) {
-		$hypervm = "HyperVM";
-	}
+													$ob = $gbl->__c_object;
+													$name = $ob->getId();
+													$imgstr = array();
+													if ($ghtml->frm_action === 'show') {
 
-	print("</table> </td> </tr> </table> </td>");
-	
-	if ($login->getSpecialObject('sp_specialplay')->isOn('simple_skin')) {
-// For clients with simple skin this hides the logout button. 
-// The logout link is nowhere. 
-//		if ($login->getSpecialObject('sp_specialplay')->isOn('show_thin_header')) {
-			$v =  create_simpleObject(array('url' => "javascript:top.mainframe.logOut()", 'purl' => '&a=updateform&sa=logout', 'target' => null));
-			$ghtml->print_div_button_on_header(null, true, $k, $v);
-//		}
-	} else {
+														$list = $ob->createShowImageList();
 
-		$imgstring = "<img width=18 height=18 src=/img/general/button/star.gif>";
-		if ($sgbl->isBlackBackground()) {
-			$imgstring = null;
-		}
-		print("<td > </td> <td width=10>&nbsp;</td> <td align=right nowrap><a href=$shurl> Add to $hypervm Favorites </a> &nbsp; </td> ");
-	}
+														foreach ((array) $list as $k => $v) {
+															if ($v) {
+																if (isset($ob->$k)) {
+																	$img = $ghtml->get_image($buttonpath, $ob->getClass(), "{$k}_v_" . $ob->$k, ".gif");
+																	$imgstr[] = "<span title='$k is {$ob->$k}'> <img src=$img width=9 height=9> </span>";
+																}
+															} else {
+																$v = $ob->display($k);
+																$img = $ghtml->get_image($buttonpath, $ob->getClass(), "{$k}_v_{$ob->display($k)}", ".gif");
+																$imgstr[] = "<span title='$k is " . $ob->display($k) . "'> <img src=$img width=9 height=9> </span>";
+															}
+														}
+													}
 
-	print("</tr> ");
-	/*
+
+													if ($sgbl->isKloxo() && $gbl->c_session->ssl_param['backbase']) {
+														$s = $gbl->c_session->ssl_param;
+														$v = $s['backbase'];
+														$pcl = $s['parent_clname'];
+														$selfip = $_SERVER['SERVER_NAME'];
+														$curl = "/display.php?{$ghtml->get_get_from_current_post(array('frm_emessage', 'frm_ssl'))}";
+														$kloxourl = "&frm_ndskshortcut_c_vpsparent_clname=$pcl";
+													} else {
+														$v = "/display.php";
+														$curl = "/display.php?{$ghtml->get_get_from_current_post(null)}";
+														$kloxourl = null;
+													}
+
+													$iconpath = get_image_path() . "/button/";
+													$ac_descr = $ghtml->getActionDetails($curl, null, $iconpath, $path, $post, $_t_file, $_t_name, $_t_image, $__t_identity);
+													$curl = base64_encode($curl);
+													$desc = "{$ac_descr['desc']} $__t_identity";
+													$desc = urlencode($desc);
+
+													$shurl = "$v?frm_o_cname=ndskshortcut&frm_ndskshortcut_c_ttype=favorite&frm_ndskshortcut_c_url=$curl&frm_action=add&frm_ndskshortcut_c_description=$desc$kloxourl";
+
+													$clienttype = null;
+													if ($ob->isClient() && $ghtml->frm_action === 'show') {
+														$clienttype = ucfirst($ob->cttype);
+														$clienttype = "$clienttype ";
+													}
+													$fullimgstr = implode(" ", $imgstr);
+													print(" <tr valign=middle > <td valign=middle id=tnavig$k onMouseOut=\"changeContent('help', 'helparea');\"> <b><font style='font-size:10pt'>&nbsp; $name {</b>$clienttype{$description['desc']}<b>}  $fullimgstr </font></a> </td></tr> ");
+
+													$hypervm = null;
+													if ($sgbl->isKloxo() && $gbl->c_session->ssl_param) {
+														$hypervm = "HyperVM";
+													}
+
+													print("</table> </td> </tr> </table> </td>");
+
+													if ($login->getSpecialObject('sp_specialplay')->isOn('simple_skin')) {
+														// For clients with simple skin this hides the logout button. 
+														// The logout link is nowhere. 
+														//		if ($login->getSpecialObject('sp_specialplay')->isOn('show_thin_header')) {
+														$v =  create_simpleObject(array('url' => "javascript:top.mainframe.logOut()", 'purl' => '&a=updateform&sa=logout', 'target' => null));
+														$ghtml->print_div_button_on_header(null, true, $k, $v);
+														//		}
+													} else {
+
+														$imgstring = "<img width=18 height=18 src=/img/general/button/star.gif>";
+														if ($sgbl->isBlackBackground()) {
+															$imgstring = null;
+														}
+														print("<td > </td> <td width=10>&nbsp;</td> <td align=right nowrap><a href=$shurl> Add to $hypervm Favorites </a> &nbsp; </td> ");
+													}
+
+													print("</tr> ");
+													/*
 	?> 
 	<tr > <td colspan=2 id=histtd align=left  onClick="tdd = document.getElementById('histtd') ; pos = getAbsolutePos(tdd);histToggleHistory('histlist', <?php echo $xpos ?>, pos.y, event);" onMouseOver=" style.cursor='pointer';style.textDecoration='underline'; changeContent('help', 'Click To Show History'); " onMouseOut=" style.textDecoration='none';changeContent('help', 'helparea');"> &nbsp;</td></tr>
 	<?php 
 	*/
 
 
-	
-	print("</table> ");
-	//print("<script> navigsetDefaultImage('$imgpoint'); </script>");
-}
 
-function create_navmenu($n, $action, $stuff)
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-	if (is_object($stuff)) {
-		$class = lget_class($stuff);
-	} else {
-		$class = $stuff;
-	}
+													print("</table> ");
+													//print("<script> navigsetDefaultImage('$imgpoint'); </script>");
+												}
 
-	if (is_object($stuff)) {
-		$stuff->createShowAlist($alist);
-		$type = 'slist';
-	} else {
-		$type = 'llist';
-		$alist = exec_class_method($stuff, "createListAlist", $login, $stuff);
-	}
+												function create_navmenu($n, $action, $stuff)
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+													if (is_object($stuff)) {
+														$class = lget_class($stuff);
+													} else {
+														$class = $stuff;
+													}
 
-
-	$f = null;
-	if (isset($gbl->__navig[$n]['frm_o_o'])) {
-		$f = $gbl->__navig[$n]['frm_o_o'];
-	} 
-
-	$ghtml->print_menulist("navig$n", $alist, $f, $type);
-
-//	print("navig$n.writeMenus();\n");
+													if (is_object($stuff)) {
+														$stuff->createShowAlist($alist);
+														$type = 'slist';
+													} else {
+														$type = 'llist';
+														$alist = exec_class_method($stuff, "createListAlist", $login, $stuff);
+													}
 
 
-}
+													$f = null;
+													if (isset($gbl->__navig[$n]['frm_o_o'])) {
+														$f = $gbl->__navig[$n]['frm_o_o'];
+													}
+
+													$ghtml->print_menulist("navig$n", $alist, $f, $type);
+
+													//	print("navig$n.writeMenus();\n");
 
 
-
-function __ac_desc_resource($object)
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-
-	$sgbl->__var_main_resource = true;
-
-	$treename = fix_nname_to_be_variable($object->nname);
-	?> 
-	<table  valign=top > <tr align=left><td width=10><input class=submitbutton onClick='<?php echo $treename ?>.closeAll();' type=button value="Close"></td> <td align=left width=10> <input class=submitbutton onClick='<?php echo $treename ?>.openAll();' type=button value="Open"> </td> <td width=100%> </td> </tr></table>
-	<?php 
-	$ghtml->do_full_resource($object, 0, false);
-}
-
-function print_warning()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-	if ($gbl->getSessionV('__v_not_first_time')) {
-		return;
-	}
-	$sesss = $login->getList('ssession');
-
-	if (count($sesss) > 1) {
-		$ghtml->__http_vars['frm_emessage'] = "more_than_one_user";
-	}
-
-			
-	$gbl->setSessionV('__v_not_first_time', 1);
-	$gbl->__v_first_time = 1;
-}
+												}
 
 
 
-function license_check()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
+												function __ac_desc_resource($object)
+												{
+													global $gbl, $sgbl, $login, $ghtml;
 
-	// Don't check for license if you are currently doing license management. 
-	if (csb($ghtml->frm_action, 'update')  && $ghtml->frm_subaction === 'license') {
-		return;
-	}
-	if ($gbl->getSessionV('__v_not_first_time')) {
-		return;
-	}
+													$sgbl->__var_main_resource = true;
 
-	// First time;
-	dprint("First time");
-	$time = getLicense('lic_expiry_date');
-	$iip = getLicense('lic_ipaddress');
-	$ipdb = new Sqlite(null, 'ipaddress');
-	$iplist = $ipdb->getRowsWhere("syncserver = 'localhost'", array('ipaddr'));
-	$match = false;
-	// Lack of ip should give a warning. Or allow people to reread the ip address.
-	foreach((array) $iplist as $ip) {
-		if ($ip['ipaddr'] === $iip) {
-			$match = true;
-		}
-	}
-	$time = intval($time);
-	if ($time < time()) {
+													$treename = fix_nname_to_be_variable($object->nname);
+													?>
+												<table valign=top>
+													<tr align=left>
+														<td width=10><input class=submitbutton onClick='<?php echo $treename ?>.closeAll();' type=button value="Close"></td>
+														<td align=left width=10> <input class=submitbutton onClick='<?php echo $treename ?>.openAll();' type=button value="Open"> </td>
+														<td width=100%> </td>
+													</tr>
+												</table>
+											<?php
+													$ghtml->do_full_resource($object, 0, false);
+												}
 
-		$mess = "License Expired";
-		print('<br> <br> <br> <br> <br> ');
-		print($mess);
-		if ($login->isAdmin()) {
-			do_updateform($login, "license");
-		}
-		exit;
-	} 
+												function print_warning()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+													if ($gbl->getSessionV('__v_not_first_time')) {
+														return;
+													}
+													$sesss = $login->getList('ssession');
 
-	if ($login->isAdmin()) {
-		if (($time - time()) < 24 * 3600 * 27) {
-			// Putting it into http error messaeg. Should actually move this to gbl.
-			$expire = ($time - time())/(24 * 3600);
-			$ghtml->__http_vars['frm_emessage'] = "license_will_expire";
-			$ghtml->__http_vars['frm_m_emessage_data'] = round($expire);
-		}
+													if (count($sesss) > 1) {
+														$ghtml->__http_vars['frm_emessage'] = "more_than_one_user";
+													}
 
-		if (!$match) {
-			$ghtml->__http_vars['frm_emessage'] = "license_doesnt_match_ip";
-		}
-	}
-	$gbl->setSessionV('__v_not_first_time', 1);
-	$gbl->__v_first_time = 1;
-}
 
-function password_contact_check()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
+													$gbl->setSessionV('__v_not_first_time', 1);
+													$gbl->__v_first_time = 1;
+												}
 
-	if (!$login->isAdmin()) {
-		return;
-	}
 
-	/*
+
+												function license_check()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+
+													// Don't check for license if you are currently doing license management. 
+													if (csb($ghtml->frm_action, 'update')  && $ghtml->frm_subaction === 'license') {
+														return;
+													}
+													if ($gbl->getSessionV('__v_not_first_time')) {
+														return;
+													}
+
+													// First time;
+													dprint("First time");
+													$time = getLicense('lic_expiry_date');
+													$iip = getLicense('lic_ipaddress');
+													$ipdb = new Sqlite(null, 'ipaddress');
+													$iplist = $ipdb->getRowsWhere("syncserver = 'localhost'", array('ipaddr'));
+													$match = false;
+													// Lack of ip should give a warning. Or allow people to reread the ip address.
+													foreach ((array) $iplist as $ip) {
+														if ($ip['ipaddr'] === $iip) {
+															$match = true;
+														}
+													}
+													$time = intval($time);
+													if ($time < time()) {
+
+														$mess = "License Expired";
+														print('<br> <br> <br> <br> <br> ');
+														print($mess);
+														if ($login->isAdmin()) {
+															do_updateform($login, "license");
+														}
+														exit;
+													}
+
+													if ($login->isAdmin()) {
+														if (($time - time()) < 24 * 3600 * 27) {
+															// Putting it into http error messaeg. Should actually move this to gbl.
+															$expire = ($time - time()) / (24 * 3600);
+															$ghtml->__http_vars['frm_emessage'] = "license_will_expire";
+															$ghtml->__http_vars['frm_m_emessage_data'] = round($expire);
+														}
+
+														if (!$match) {
+															$ghtml->__http_vars['frm_emessage'] = "license_doesnt_match_ip";
+														}
+													}
+													$gbl->setSessionV('__v_not_first_time', 1);
+													$gbl->__v_first_time = 1;
+												}
+
+												function password_contact_check()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+
+													if (!$login->isAdmin()) {
+														return;
+													}
+
+													/*
 	if ($sgbl->dbg > 0) {
 		return;
 	}
 */
 
-	if (csb($ghtml->frm_action, 'update')  && $ghtml->frm_subaction === 'password') {
-		return;
-	}
+													if (csb($ghtml->frm_action, 'update')  && $ghtml->frm_subaction === 'password') {
+														return;
+													}
 
-	if (if_demo()) {
-		return;
-	}
+													if (if_demo()) {
+														return;
+													}
 
-	if (check_raw_password('client', 'admin', 'admin')) {
-		print("<br> <br> <br> ");
+													if (check_raw_password('client', 'admin', 'admin')) {
+														print("<br> <br> <br> ");
 
-		if (!isset($ghtml->__http_vars['frm_emessage'])) {
-			$ghtml->__http_vars['frm_emessage'] = 'security_warning';
-		}
-		$ghtml->print_message();
-		$gbl->frm_ev_list = "old_password_f";
-		do_updateform($login, 'password');
-		exit;
-	}
-}
+														if (!isset($ghtml->__http_vars['frm_emessage'])) {
+															$ghtml->__http_vars['frm_emessage'] = 'security_warning';
+														}
+														$ghtml->print_message();
+														$gbl->frm_ev_list = "old_password_f";
+														do_updateform($login, 'password');
+														exit;
+													}
+												}
 
 
 
 
-function do_display_init()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
+												function do_display_init()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
 
-	$skindir = $login->getSkinDir();
-	$col=$login->getSkinColor();
-	check_if_disabled_and_exit();
+													$skindir = $login->getSkinDir();
+													$col = $login->getSkinColor();
+													check_if_disabled_and_exit();
 
-	if (!ifSplashScreen()) {
-		ob_start();
-	}
-	if ($gbl->getSessionV('__refresh_lpanel') == 'true') {
-		print("<script> top.leftframe.window.location.reload() ; </script>");
-		print("<script> top.topframe.window.location.reload() ; </script>");
-		$gbl->unsetSessionV('__refresh_lpanel');
-	}
+													if (!ifSplashScreen()) {
+														ob_start();
+													}
+													if ($gbl->getSessionV('__refresh_lpanel') == 'true') {
+														print("<script> top.leftframe.window.location.reload() ; </script>");
+														print("<script> top.topframe.window.location.reload() ; </script>");
+														$gbl->unsetSessionV('__refresh_lpanel');
+													}
 
-	if ($ghtml->frm_refresh_lpanel === 'true') {
-		unset($ghtml->__http_vars['frm_refresh_lpanel']);
-		print("<script> top.leftframe.window.location.reload(); </script>");
-		print("<script> top.topframe.window.location.reload() ; </script>");
-	}
+													if ($ghtml->frm_refresh_lpanel === 'true') {
+														unset($ghtml->__http_vars['frm_refresh_lpanel']);
+														print("<script> top.leftframe.window.location.reload(); </script>");
+														print("<script> top.topframe.window.location.reload() ; </script>");
+													}
 
 
-	createPrincipleObject();
+													createPrincipleObject();
 
 
-	initLanguageCharset();
-	$ghtml->print_real_beginning();
+													initLanguageCharset();
+													$ghtml->print_real_beginning();
 
-	if (!$login->isDefaultSkin()) {
-		print_head_image();
-	}
+													if (!$login->isDefaultSkin()) {
+														print_head_image();
+													}
+
 
+													// OA: Why only kloxo? Because of this there is no Logout text link on 
+													// simple skin for end users (with thin header) 
+													// anyway, I like the door icon better, so I leave this alone and enablo the door
+													if ($sgbl->isKloxo() && $gbl->c_session->ssl_param) {
+														$url = $gbl->c_session->ssl_param['backurl'];
+														$parent = $gbl->c_session->ssl_param['parent_clname'];
+														print("<table cellpadding=0 height=26 cellspacing=0 background=$skindir/expand.gif> <tr> <td nowrap> <a href=$url> Back to HyperVM ($parent) </a> </td>  <td width=10>&nbsp;|&nbsp;</td> <td > Kloxo </td> <td width=10>&nbsp;|&nbsp;</td><td ><a href=/display.php?frm_action=show>Home</a> </td> <td width=10>&nbsp;|&nbsp;</td>  <td > <a href=/display.php?frm_action=list&frm_o_cname=all_domain>All </a> </td> <td width=10>&nbsp;|&nbsp;</td><td > <a href=/display.php?frm_action=list&frm_o_cname=client>Clients</a></td><td width=100%></td> <td > <a href=/htmllib/phplib/logout.php> Logout </a> </td> </tr> </table> ");
+													}
 
-	// OA: Why only kloxo? Because of this there is no Logout text link on 
-	// simple skin for end users (with thin header) 
-	// anyway, I like the door icon better, so I leave this alone and enablo the door
-	if ($sgbl->isKloxo() && $gbl->c_session->ssl_param) {
-		$url = $gbl->c_session->ssl_param['backurl'];
-		$parent = $gbl->c_session->ssl_param['parent_clname'];
-		print("<table cellpadding=0 height=26 cellspacing=0 background=$skindir/expand.gif> <tr> <td nowrap> <a href=$url> Back to HyperVM ($parent) </a> </td>  <td width=10>&nbsp;|&nbsp;</td> <td > Kloxo </td> <td width=10>&nbsp;|&nbsp;</td><td ><a href=/display.php?frm_action=show>Home</a> </td> <td width=10>&nbsp;|&nbsp;</td>  <td > <a href=/display.php?frm_action=list&frm_o_cname=all_domain>All </a> </td> <td width=10>&nbsp;|&nbsp;</td><td > <a href=/display.php?frm_action=list&frm_o_cname=client>Clients</a></td><td width=100%></td> <td > <a href=/htmllib/phplib/logout.php> Logout </a> </td> </tr> </table> ");
-	}
+													if ($gbl->c_session->consuming_parent) {
+														print("<table cellpadding=0 cellspacing=0 bgcolor = $col > <tr> <td nowrap>  Consumed Login </td> <td > <a href=/display.php?frm_consumedlogin=true&frm_action=desktop>Desktop </a> </td>  <td width=100%> </td> <td > <a href=/htmllib/phplib/logout.php?frm_consumedlogin=true> Logout </a> </td> </tr> </table> ");
+													}
 
-	if ($gbl->c_session->consuming_parent) {
-		print("<table cellpadding=0 cellspacing=0 bgcolor = $col > <tr> <td nowrap>  Consumed Login </td> <td > <a href=/display.php?frm_consumedlogin=true&frm_action=desktop>Desktop </a> </td>  <td width=100%> </td> <td > <a href=/htmllib/phplib/logout.php?frm_consumedlogin=true> Logout </a> </td> </tr> </table> ");
-	}
+													$ghtml->print_splash();
 
-	$ghtml->print_splash();
+													if (ifSplashScreen()) {
+														flush();
+														ob_start();
+													}
 
-	if (ifSplashScreen()) {
-		flush();
-		ob_start();
-	}
 
+													$ghtml->print_start();
 
-	$ghtml->print_start();
 
+													$gbl->__this_redirect = null;
+												}
 
-	$gbl->__this_redirect = null;
+												function __ac_desc_about()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
 
+													$ghtml->print_about();
+												}
 
+												function main_system_lock()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
 
+													// Not needed for hyperVM. HyperVM has more intelligent per vps locking.
+													if ($sgbl->isHyperVm()) {
+														return null;
+													}
+													return null;
+												}
 
-}
+												function display_init()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+													initProgram();
+													initLanguage();
+
+													if ($sgbl->is_this_slave()) {
+														print("This is a Slave Server. You control it at the Master Server.\n");
+														exit;
+													}
+
+													// The only thing that gets modified when the dbaction is not a modify action, is the ssession table. Other tables should get modified only inside non-form actions.
+													if (isModifyAction() && isUpdating()) {
+														$ghtml->print_redirect_back('system_is_updating_itself', '');
+														exit;
+													}
 
-function __ac_desc_about()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-
-	$ghtml->print_about();
-
-}
-
-function main_system_lock()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-
-	// Not needed for hyperVM. HyperVM has more intelligent per vps locking.
-	if ($sgbl->isHyperVm()) {
-		return null;
-	}
-	return null;
-}
-
-function display_init()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-	initProgram();
-	initLanguage();
-
-	if ($sgbl->is_this_slave()) { print("This is a Slave Server. You control it at the Master Server.\n"); exit; }
-
-	// The only thing that gets modified when the dbaction is not a modify action, is the ssession table. Other tables should get modified only inside non-form actions.
-	if (isModifyAction() && isUpdating()) {
-		$ghtml->print_redirect_back('system_is_updating_itself', '');
-		exit;
-	}
-
-
-
-	try {
-		do_display_init();
-		main_system_lock();
-
-
-		print_navigation($gbl->__navig);
-		if (if_demo()) {
-			//$url = $ghtml->get_get_from_current_post(null);
-			//log_clicks($url);
-		}
-
-
-		print_warning();
-		password_contact_check();
-
-	} catch (Exception $e) {
-		log_log("redirect_error", "exception");
-		$gbl->setSessionV('__tmp_redirect_var', $ghtml->__http_vars);
-		$gbl->c_session->write();
-		if (is_array($e->variable)) {
-			$evlist = implode(",", $e->variable);
-		} else {
-			$evlist = $e->variable;
-		}
-		$ghtml->print_redirect_back($e->getMessage(), $evlist, $e->value);
-		exit;
-	}
-	//license_check();
-
-	if ($ghtml->frm_filter) {
-		$filtername = $gbl->__c_object->getFilterVariableForThis($ghtml->frm_o_cname);
-		$list[$filtername] = $ghtml->frm_filter;
-		$login->setupHpFilter($list);
-		$login->setUpdateSubaction();
-	}
-
-	if ($ghtml->frm_hpfilter) {
-		//dprintr($ghtml->frm_hpfilter);
-		$login->setupHpFilter($ghtml->frm_hpfilter);
-		$login->setUpdateSubaction();
-	}
-
-}
-
-
-
-function lx_frm_inc()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-
-	if (!$ghtml->iset("frm_action")) {
-		die("Action Not set <br> ");
-	}
-
-	$caction = $ghtml->frm_action;
-	$cgi_action = "__ac_desc_{$ghtml->frm_action}";
-
-	if (!function_exists($cgi_action)) {
-		die("Action not supported..\n");
-	}
-
-	try {
-
-		switch($caction) {
-
-			case "add":
-				__ac_desc_add($gbl->__c_object);
-				break;
-
-			case "addform":
-				__ac_desc_addform($gbl->__c_object);
-				break;
-
-			case "update":
-				__ac_desc_update($gbl->__c_object);
-				break;
-
-			case "delete":
-				__ac_desc_delete($gbl->__c_object);
-				break;
-
-
-			default:
-				$cgi_action($gbl->__c_object);
-				break;
-		}
-
-		$login->was();
-
-		if ($login->isAuxiliary()) {
-			$login->__auxiliary_object->setUpdateSubaction();
-			$login->__auxiliary_object->write();
-		}
-
-
-		if ($caction === 'add' || $caction === 'delete') {
-			//collect_quota_later();
-		}
-		$gbl->unsetSessionV('__tmp_redirect_var');
-	} catch (Exception $e) {
-		//save_login();
-		log_log("redirect_error", "exception");
-		$gbl->setSessionV('__tmp_redirect_var', $ghtml->__http_vars);
-		$gbl->c_session->write();
-		if (is_array($e->variable)) {
-			$evlist = implode(",", $e->variable);
-		} else {
-			$evlist = $e->variable;
-		}
-		//dprint("$e");
-		$ghtml->print_redirect_back($e->getMessage(), $evlist, $e->value);
-		exit;
-	}
-
-	//log_log("redirect_error", "here");
-
-// If redirecting, too, ssession wont be saved....
-
-
-	if ($gbl->__this_redirect) {
-		save_login();
-
-		if ($gbl->__this_warning) {
-			$m = $gbl->__this_warning['message'];
-			$gbl->__this_redirect .= "&frm_emessage=$m";
-		}
-
-		$windowurl = null;
-		if (isset($gbl->__this_window_url)) {
-			$windowurl = $gbl->__this_window_url;
-		}
-		$ghtml->print_redirect($gbl->__this_redirect, $windowurl);
-	}
-
-
-	// Thsi is a misnomer.. It jsut saves the lx_http_refer, ssession variables... And also saves the login, if it exists.
-	exit_program();
-
-	if (function_exists("after_exit_program")) {
-		after_exit_program();
-	}
-
-	if (isset($gbl->__this_function)) {
-		dprint("Calling $gbl->__this_function <br> <br> ");
-		call_user_func_array($gbl->__this_function, $gbl->__this_functionargs);
-	}
-
-}
-
-function exit_if_under_maintenance()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-
-	if ($login->isAdmin()) {
-		return;
-	}
-	$g = $login->getObject('general');
-	$gen = $login->getObject('general')->generalmisc_b;
-	if ($gen->isOn("maintenance_flag")) {
-		print($g->text_maintenance_message);
-		exit;
-	}
-
-}
-
-function display_exec()
-{
-	global $gbl, $sgbl, $login, $ghtml; 
-
-
-	exit_if_under_maintenance();
-
-	try {
-		//log_redirect("Before form");
-		lx_frm_inc();
-	} catch (Exception $e) {
-		log_redirect("Caught except");
-		print("The resource you requested could not be retrieved..." . $e->getMessage());
-		print("\n");
-	}
-
-
-
-	//$ghtml->print_end();
-
-}
-
-
-
-
+
+
+													try {
+														do_display_init();
+														main_system_lock();
+
+
+														print_navigation($gbl->__navig);
+														if (if_demo()) {
+															//$url = $ghtml->get_get_from_current_post(null);
+															//log_clicks($url);
+														}
+
+
+														print_warning();
+														password_contact_check();
+													} catch (Exception $e) {
+														log_log("redirect_error", "exception");
+														$gbl->setSessionV('__tmp_redirect_var', $ghtml->__http_vars);
+														$gbl->c_session->write();
+														if (is_array($e->variable)) {
+															$evlist = implode(",", $e->variable);
+														} else {
+															$evlist = $e->variable;
+														}
+														$ghtml->print_redirect_back($e->getMessage(), $evlist, $e->value);
+														exit;
+													}
+													//license_check();
+
+													if ($ghtml->frm_filter) {
+														$filtername = $gbl->__c_object->getFilterVariableForThis($ghtml->frm_o_cname);
+														$list[$filtername] = $ghtml->frm_filter;
+														$login->setupHpFilter($list);
+														$login->setUpdateSubaction();
+													}
+
+													if ($ghtml->frm_hpfilter) {
+														//dprintr($ghtml->frm_hpfilter);
+														$login->setupHpFilter($ghtml->frm_hpfilter);
+														$login->setUpdateSubaction();
+													}
+												}
+
+
+
+												function lx_frm_inc()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+
+													if (!$ghtml->iset("frm_action")) {
+														die("Action Not set <br> ");
+													}
+
+													$caction = $ghtml->frm_action;
+													$cgi_action = "__ac_desc_{$ghtml->frm_action}";
+
+													if (!function_exists($cgi_action)) {
+														die("Action not supported..\n");
+													}
+
+													try {
+
+														switch ($caction) {
+
+															case "add":
+																__ac_desc_add($gbl->__c_object);
+																break;
+
+															case "addform":
+																__ac_desc_addform($gbl->__c_object);
+																break;
+
+															case "update":
+																__ac_desc_update($gbl->__c_object);
+																break;
+
+															case "delete":
+																__ac_desc_delete($gbl->__c_object);
+																break;
+
+
+															default:
+																$cgi_action($gbl->__c_object);
+																break;
+														}
+
+														$login->was();
+
+														if ($login->isAuxiliary()) {
+															$login->__auxiliary_object->setUpdateSubaction();
+															$login->__auxiliary_object->write();
+														}
+
+
+														if ($caction === 'add' || $caction === 'delete') {
+															//collect_quota_later();
+														}
+														$gbl->unsetSessionV('__tmp_redirect_var');
+													} catch (Exception $e) {
+														//save_login();
+														log_log("redirect_error", "exception");
+														$gbl->setSessionV('__tmp_redirect_var', $ghtml->__http_vars);
+														$gbl->c_session->write();
+														if (is_array($e->variable)) {
+															$evlist = implode(",", $e->variable);
+														} else {
+															$evlist = $e->variable;
+														}
+														//dprint("$e");
+														$ghtml->print_redirect_back($e->getMessage(), $evlist, $e->value);
+														exit;
+													}
+
+													//log_log("redirect_error", "here");
+
+													// If redirecting, too, ssession wont be saved....
+
+
+													if ($gbl->__this_redirect) {
+														save_login();
+
+														if ($gbl->__this_warning) {
+															$m = $gbl->__this_warning['message'];
+															$gbl->__this_redirect .= "&frm_emessage=$m";
+														}
+
+														$windowurl = null;
+														if (isset($gbl->__this_window_url)) {
+															$windowurl = $gbl->__this_window_url;
+														}
+														$ghtml->print_redirect($gbl->__this_redirect, $windowurl);
+													}
+
+
+													// Thsi is a misnomer.. It jsut saves the lx_http_refer, ssession variables... And also saves the login, if it exists.
+													exit_program();
+
+													if (function_exists("after_exit_program")) {
+														after_exit_program();
+													}
+
+													if (isset($gbl->__this_function)) {
+														dprint("Calling $gbl->__this_function <br> <br> ");
+														call_user_func_array($gbl->__this_function, $gbl->__this_functionargs);
+													}
+												}
+
+												function exit_if_under_maintenance()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+
+													if ($login->isAdmin()) {
+														return;
+													}
+													$g = $login->getObject('general');
+													$gen = $login->getObject('general')->generalmisc_b;
+													if ($gen->isOn("maintenance_flag")) {
+														print($g->text_maintenance_message);
+														exit;
+													}
+												}
+
+												function display_exec()
+												{
+													global $gbl, $sgbl, $login, $ghtml;
+
+
+													exit_if_under_maintenance();
+
+													try {
+														//log_redirect("Before form");
+														lx_frm_inc();
+													} catch (Exception $e) {
+														log_redirect("Caught except");
+														print("The resource you requested could not be retrieved..." . $e->getMessage());
+														print("\n");
+													}
+
+
+
+													//$ghtml->print_end();
+
+												}

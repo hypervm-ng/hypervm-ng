@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 function __cmd_desc_add($p, $parent = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	if (!$parent) {
@@ -17,7 +17,6 @@ function __cmd_desc_add($p, $parent = null)
 			if (!$parent->checkIfSomeParent($login->getClName())) {
 				throw new lxException("you_are_not_the_owner_of_parent", "", $p['parent-name']);
 			}
-
 		} else {
 			$parent = $login;
 		}
@@ -31,7 +30,7 @@ function __cmd_desc_add($p, $parent = null)
 
 	if (isset($p['count'])) {
 		$oldname = $p['name'];
-		for($i = 0; $i < $p['count']; $i++) {
+		for ($i = 0; $i < $p['count']; $i++) {
 			if ($class === 'domain') {
 				$p['name'] = "$oldname$i.com";
 			} else {
@@ -53,12 +52,11 @@ function __cmd_desc_add($p, $parent = null)
 	$param = lx_array_merge(array($param, $var));
 	do_desc_add($parent, $class, $param);
 	$parent->was();
-
 }
 
 function __cmd_desc_delete($p)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	/*
 	if (isset($p['parent-class']) && isset($p['parent-name'])) {
 		$parent = new $p['parent-class'](null, 'localhost', $p['parent-name']);
@@ -89,7 +87,7 @@ function __cmd_desc_delete($p)
 
 function __cmd_desc_simplelist($p)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	ob_start();
 	$resource = $p['resource'];
@@ -107,7 +105,6 @@ function __cmd_desc_simplelist($p)
 			if (!$parent->checkIfSomeParent($login->getClName())) {
 				throw new lxException("you_are_not_the_owner_of_parent", "", $p['parent-name']);
 			}
-
 		} else {
 			$parent = $login;
 		}
@@ -128,7 +125,7 @@ function __cmd_desc_simplelist($p)
 		$list = $parent->getList($resource);
 		if (isset($p['v-filter'])) {
 			list($var, $val) = explode(":", $p['v-filter']);
-			foreach($list as $k => $l) {
+			foreach ($list as $k => $l) {
 				if ($l->$var !== $val) {
 					unset($list[$k]);
 				}
@@ -155,7 +152,7 @@ function copy_nname_to_name(&$p)
 
 function __cmd_desc_update($p)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	copy_nname_to_name($p);
 	$object = new $p['class'](null, 'localhost', $p['name']);
 	$object->get();
@@ -174,7 +171,7 @@ function __cmd_desc_update($p)
 	$tparam = $object->commandUpdate($subaction, $tparam);
 
 	$param = array();
-	foreach($tparam as $k => $v) {
+	foreach ($tparam as $k => $v) {
 		$k = str_replace("-", "_s_", $k);
 		$param[$k] = $v;
 	}
@@ -185,7 +182,7 @@ function __cmd_desc_update($p)
 
 function __cmd_desc_getproperty($param)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	if (isset($param['name']) && isset($param['class'])) {
 		$name = $param['name'];
 		$class = $param['class'];
@@ -203,7 +200,7 @@ function __cmd_desc_getproperty($param)
 
 	$vlist = get_variable($param);
 
-	foreach($vlist as $k => $v) {
+	foreach ($vlist as $k => $v) {
 		$nv = $k;
 		if (csa($nv, "-")) {
 			$cc = explode("-", $nv);
@@ -212,7 +209,7 @@ function __cmd_desc_getproperty($param)
 		}
 
 		if ($nv === 'priv' || $nv === 'used') {
-			foreach($object->$nv as $kk => $nnv) {
+			foreach ($object->$nv as $kk => $nnv) {
 				if ($object->isQuotaVariable($kk)) {
 					$result["v-$nv-$kk"] =  $nnv;
 				}
@@ -223,4 +220,3 @@ function __cmd_desc_getproperty($param)
 	}
 	return $result;
 }
-

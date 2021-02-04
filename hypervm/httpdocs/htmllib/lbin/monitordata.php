@@ -1,4 +1,4 @@
-<?php 
+<?php
 chdir("../../");
 
 include_once "htmllib/lib/displayinclude.php";
@@ -9,7 +9,7 @@ monitor_remote_main();
 
 function monitor_remote_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	ob_start();
 
 	// @var $login client
@@ -49,7 +49,7 @@ function monitor_remote_main()
 		$arlist = null;
 		$login->loadAllObjects('monitorserver');
 		$mlist = $login->getList('monitorserver');
-		foreach($mlist as $ml) {
+		foreach ($mlist as $ml) {
 			if (!$ml->isOn('status')) {
 				continue;
 			}
@@ -58,7 +58,7 @@ function monitor_remote_main()
 			$array['servername'] = $ml->servername;
 			$arlist[$ml->nname] = $array;
 			$plist = $ml->getList('monitorport');
-			foreach($plist as $p) {
+			foreach ($plist as $p) {
 				$parray['nname'] = $p->nname;
 				$parray['portnumber'] = $p->portnumber;
 				$arlist[$ml->nname]['monitorport_l'][] = $parray;
@@ -84,8 +84,8 @@ function monitor_remote_main()
 	$slist = $rmt->ddata;
 
 
-	foreach($slist as $ll) {
-		foreach($ll as $l) {
+	foreach ($slist as $ll) {
+		foreach ($ll as $l) {
 			$nname = $servername . "___" . $l['portnname'];
 			$test = new PortStatus(null, null, $nname);
 			$test->get();
@@ -111,9 +111,4 @@ function monitor_remote_main()
 	print($val);
 	flush();
 	exit;
-
-
 }
-
-
-

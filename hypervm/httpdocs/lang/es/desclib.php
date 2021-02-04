@@ -838,4 +838,3 @@ $__description["update_home"] = array("Actualizar - Inicio");
 $__description["desktop"] = array("Escritorio");
 $__description["list_service"] = array("Lista de Servicios");
 $__description["update_lxadmin_now"] = array("Actualizar Lxadmin Ahora");
-

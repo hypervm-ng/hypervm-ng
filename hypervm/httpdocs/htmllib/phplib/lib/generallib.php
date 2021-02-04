@@ -36,8 +36,6 @@ class helpdeskcategory_a extends Lxaclass
     {
         return true;
     }
-
-
 }
 
 class browsebackup_b extends lxaclass
@@ -45,7 +43,6 @@ class browsebackup_b extends lxaclass
     static $__desc_browsebackup_flag = array("f", "", "enable_browse_backup");
     static $__desc_backupslave = array("", "", "backup_slave");
     static $__desc_rootdir = array("", "", "rootdir");
-
 }
 
 class selfbackupparam_b extends lxaclass
@@ -57,7 +54,6 @@ class selfbackupparam_b extends lxaclass
     static $__desc_rm_directory = array("", "", "directory");
     static $__desc_rm_password = array("n", "", "password");
     static $__desc_rm_last_number = array("", "", "keep_this_many_backups_on_the_server");
-
 }
 
 class portconfig_b extends lxaclass
@@ -80,7 +76,8 @@ class lxadminconfig_b extends lxaclass
     static $__desc_installapp_url = array("", "", "Url_for_remote_installapp");
 }
 
-class customaction_b extends lxaclass {
+class customaction_b extends lxaclass
+{
     static $__desc_vps__update__rebuild = array('', '', "rebuild_vps", "");
 }
 class hackbuttonconfig_b extends lxaclass
@@ -101,7 +98,6 @@ class reversedns_b extends lxaclass
     static $__desc_primarydns = array("n", "", "primary_dns");
     static $__desc_secondarydns = array("", "", "secondary_dns");
     static $__desc_dns_slave_list = array("", "", "slaves_the_dns_entries_are_synced_on");
-
 }
 
 class generalmisc_b extends Lxaclass
@@ -249,7 +245,7 @@ class General extends Lxdb
 
         switch ($subaction) {
 
-            case "multi" :
+            case "multi":
                 $vlist['multi'] = null;
                 break;
 
@@ -262,11 +258,11 @@ class General extends Lxdb
                 $vlist['generalmisc_b-loginhistory_time'] = null;
                 break;
 
-            case "disableper" :
+            case "disableper":
                 $vlist['generalmisc_b-dpercentage'] = array('s', array('90', '95', '100', '105', '110', '120'));
                 break;
 
-            case "npercentage" :
+            case "npercentage":
                 $vlist['generalmisc_b-npercentage'] = null;
                 break;
 
@@ -292,7 +288,7 @@ class General extends Lxdb
                 $vlist['generalmisc_b-masterdownload'] = null;
                 return $vlist;
 
-            case "attempts" :
+            case "attempts":
                 $vlist['generalmisc_b-attempts'] = null;
                 break;
 
@@ -377,6 +373,4 @@ class General extends Lxdb
     {
         return 'admin';
     }
-
-
 }

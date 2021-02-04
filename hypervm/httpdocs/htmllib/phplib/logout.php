@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 chdir("../../");
 include_once "htmllib/lib/displayinclude.php";
@@ -7,7 +7,7 @@ logout_main();
 
 function logout_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	initProgram();
 
 	clear_all_cookie();
@@ -26,4 +26,3 @@ function logout_main()
 		$ghtml->print_redirect_self("/login/");
 	}
 }
-

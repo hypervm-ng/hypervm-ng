@@ -1,5 +1,5 @@
-<?php 
-include_once "htmllib/lib/include.php"; 
+<?php
+include_once "htmllib/lib/include.php";
 
 $day = 1;
 
@@ -25,7 +25,7 @@ $sq = new Sqlite(null, "{$class}traffic");
 
 $res = $sq->getTable();
 
-foreach($res as $r) {
+foreach ($res as $r) {
 
 	if (!csa($r['nname'], ":")) {
 		continue;
@@ -55,7 +55,3 @@ if ($laccess->timestamp > $oldtime) {
 
 system("lphp.exe ../bin/gettraffic.php");
 system("lphp.exe ../bin/collectquota.php");
-
-
-
-

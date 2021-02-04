@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function do_remote($rmt)
 {
@@ -35,7 +35,7 @@ function do_remote($rmt)
 
 function update_from_master($rmt)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$ver = $rmt->version;
 	//lxfile_rm("lib/gbl.php");
@@ -44,12 +44,11 @@ function update_from_master($rmt)
 		exec_with_all_closed("$sgbl->__path_php_path ../bin/update.php --till-version=$ver");
 		//sleep(1);
 	}
-	
 }
 
 function do_do_the_action($rmt)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	return do_local_action($rmt);
 }
 
@@ -61,7 +60,7 @@ function do_the_action($rmt, $res)
 		//fprint("in do the action");
 		//fprint($ddata);
 		$res->ddata = $ddata;
-	} catch ( Exception $e) {
+	} catch (Exception $e) {
 		if ($e instanceof lxexception) {
 			$res->exception = $e;
 		} else {
@@ -82,7 +81,7 @@ function do_the_action($rmt, $res)
 
 function check_for_remote($rmt)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$local = false;
 
@@ -151,7 +150,7 @@ function check_for_remote($rmt)
 
 function do_remote_exec($machine, $rmt, $cmdtype, $nname, $dbaction)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$remotechar = $sgbl->__var_remote_char;
 
@@ -166,7 +165,7 @@ function do_remote_exec($machine, $rmt, $cmdtype, $nname, $dbaction)
 	if (!isLocalhost($machine)) {
 
 
-		$var = $table ."_password";
+		$var = $table . "_password";
 		if (isset($gbl->$var) && $gbl->$var) {
 			$password = $gbl->$var;
 		} else {
@@ -194,13 +193,13 @@ function do_remote_exec($machine, $rmt, $cmdtype, $nname, $dbaction)
 	$rmt->remote_login = $class;
 	$rmt->password = $password;
 	$rmt->master_c = getOneIPForLocalhost($machine);
-	
+
 	$var = base64_encode(serialize($rmt));
 	if (!isLocalhost($rmt->machine)) {
 		$user = base64_encode('slave');
 		$pass = base64_encode($rmt->password);
 		$var = $remotechar . "\n" . $user . "\n" . $pass . "\n" . $var;
-	} 
+	}
 
 	$totalout = send_to_some_server($machine, $var);
 
@@ -224,7 +223,7 @@ function do_remote_exec($machine, $rmt, $cmdtype, $nname, $dbaction)
 	// We have only return values. The output of the command is discarded. This leads to tremendous savings of bandwidth; makes the communication almost one way. If you want to get the output, you have to use the lxshell_output function and give your command as the argument. This function changes the output as a return value which is then returned back. The whole concept is about function execution, and returning the ret value of the function.
 
 
-	$err = $res? 3: 2;
+	$err = $res ? 3 : 2;
 
 	dprint("<br>  <table border=2> <tr> <td > Remote: $machine, $cmdtype, $nname, $dbaction<br> ", $err);
 	if (!$res) {
@@ -247,14 +246,14 @@ function do_remote_exec($machine, $rmt, $cmdtype, $nname, $dbaction)
 
 
 /** 
-* @return void 
-* @param 
-* @param 
-* @desc Remote takes two type of command. When called as "get", it executes a given function in the The other machine and returns the return value.  When called as "set", it clones the third argument (an lxclass object), clears all the children And sends the object to the other end, where the 'dosynctosystem' method in the object Is executed.
-*/ 
+ * @return void 
+ * @param 
+ * @param 
+ * @desc Remote takes two type of command. When called as "get", it executes a given function in the The other machine and returns the return value.  When called as "set", it clones the third argument (an lxclass object), clears all the children And sends the object to the other end, where the 'dosynctosystem' method in the object Is executed.
+ */
 function remote_exec($machine, $cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$version = $sgbl->__ver_major_minor_release;
 
 	if (isLocalhost($machine)) {
@@ -272,7 +271,7 @@ function remote_exec($machine, $cmd)
 		$robject = $cmd->robject;
 		$nname = $robject->nname;
 		$dbaction = $robject->dbaction;
-	} else if ($cmd->action === 'get'){
+	} else if ($cmd->action === 'get') {
 		$cmdtype = $cmd->func;
 		if (is_array($cmdtype)) {
 			$cmdtype = implode("::", $cmdtype);
@@ -293,7 +292,7 @@ function remote_exec($machine, $cmd)
 	$rmt = do_remote_exec($machine, $cmd, $cmdtype, $nname, $dbaction);
 	$class = 'get_action';
 	$subaction = "get";
-	if ($cmd->action === 'set')  {
+	if ($cmd->action === 'set') {
 		$class = $cmd->robject->get__table();
 		$subaction = $cmd->robject->subaction;
 	}
@@ -337,10 +336,10 @@ function get_from_master($variable)
 
 function send_to_master($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	if ($sgbl->is_this_master()) {
 		return master_get_data($object);
-	} 
+	}
 
 	$res = new Remote();
 	$res->var = $object;
@@ -362,7 +361,7 @@ function send_to_some_server($raddress, $var)
 
 function send_to_some_stream_server($type, $size, $raddress, $var, $fd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$exitchar = $sgbl->__var_exit_char;
 	$remotechar = $sgbl->__var_remote_char;
@@ -381,7 +380,9 @@ function send_to_some_stream_server($type, $size, $raddress, $var, $fd)
 
 	print_time('serverstart');
 	$rraddress = $raddress;
-	if (isLocalhost($raddress)) { $rraddress = "127.0.0.1"; }
+	if (isLocalhost($raddress)) {
+		$rraddress = "127.0.0.1";
+	}
 	$socket =  stream_socket_client("$con://$rraddress:$port");
 
 	//$socket =  fsockopen("$con://$raddress", $port);
@@ -454,7 +455,7 @@ function send_to_some_stream_server($type, $size, $raddress, $var, $fd)
 	fclose($socket);
 
 	if ($type === 'file' || $type === 'fileprint') {
-		return $totalsize ;
+		return $totalsize;
 	}
 
 	if (!$totalout) {
@@ -464,26 +465,25 @@ function send_to_some_stream_server($type, $size, $raddress, $var, $fd)
 	dprint("Got this much:" . strlen($totalout));
 	//dprint($totalout);
 	$totalout = trim($totalout);
-	$size = round(strlen($totalout)/1024, 4);
+	$size = round(strlen($totalout) / 1024, 4);
 
 	//dprint($totalout);
 	//$ee = unserialize(base64_decode($totalout));
 	return $totalout;
-
 }
 
 function createSslStream()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
-        // CHECK FIXME TESTME
-        // this only listens on ipv4
+	// CHECK FIXME TESTME
+	// this only listens on ipv4
 	//      $sockr = stream_socket_server("ssl://0.0.0.0:{$sgbl->__var_remote_port}");
 	// What will this cause on ipv4 only systems? 
 	$sockr = stream_socket_server("ssl://[::]:{$sgbl->__var_remote_port}");
-        
-                                
+
+
 	stream_context_set_option($sockr, 'ssl', 'verify_peer', false);
 	//stream_set_timeout($sockr, 30000000);
 	stream_context_set_option($sockr, 'ssl', 'allow_self_signed', true);
@@ -497,7 +497,7 @@ function createSslStream()
 
 function createLocalStream()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$sockl = stream_socket_server("tcp://127.0.0.1:{$sgbl->__var_local_port}");
 	//stream_set_timeout($sockl, 30000000);
 	if (!$sockl) {
@@ -508,7 +508,7 @@ function createLocalStream()
 
 function do_ssl()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$uid = posix_getpwnam("lxlabs");
 	if (!$uid) {
 		print("No lxlabs User... Cannot run Slave...\n");
@@ -522,7 +522,7 @@ function do_ssl()
 
 function do_local()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$sockl = createLocalStream();
 	do_socket(array($sockl), "process_server_input");
 }
@@ -547,12 +547,12 @@ function some_server()
 function do_socket($socklist, $processfunc)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$client = null;
 	$i = 0;
 	while (true) {
 		$read = null;
-		foreach($socklist as $sock) {
+		foreach ($socklist as $sock) {
 			$read[] = $sock;
 		}
 		$writea = null;
@@ -574,15 +574,17 @@ function do_socket($socklist, $processfunc)
 
 
 		// This means that sock - which is our main master socket - is ready for reading, which in turn signifies that a NEW connection has arrived. The other members of the read array 
-		foreach($socklist as $sock) {
+		foreach ($socklist as $sock) {
 			if (in_array($sock, $read)) {
 				//dprintr($sock);
 				$pid = pcntl_fork();
 				if ($pid === 0) {
 					$childsock = stream_socket_accept($sock);
-					if (!$childsock) { exit; }
+					if (!$childsock) {
+						exit;
+					}
 					stream_set_timeout($childsock, 30000000);
-					foreach($socklist as $msock) {
+					foreach ($socklist as $msock) {
 						fclose($msock);
 					}
 					process_single_command($childsock, $processfunc);
@@ -594,8 +596,6 @@ function do_socket($socklist, $processfunc)
 				}
 			}
 		}
-
-
 	} // end while
 
 	// Close the master sockets
@@ -604,7 +604,7 @@ function do_socket($socklist, $processfunc)
 
 function process_single_command($mchildsock, $processfunc)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$exitchar = $sgbl->__var_exit_char;
 
 	$total = null;
@@ -620,7 +620,7 @@ function process_single_command($mchildsock, $processfunc)
 		if (csa($total, $exitchar)) {
 			if (csa($total, "__file::")) {
 				$ret = file_server($mchildsock, $total);
-			} else if(csa($total, "__master::")) {
+			} else if (csa($total, "__master::")) {
 				$out = process_in_master($total);
 				fwrite($mchildsock, $out);
 				fwrite($mchildsock, "\n");
@@ -653,7 +653,9 @@ function process_nonlocal_input($total)
 
 function save_slave_name($o)
 {
-	if (!lxfile_exists("__path_slave_db")) { return; }
+	if (!lxfile_exists("__path_slave_db")) {
+		return;
+	}
 	$rmt = lfile_get_unserialize("__path_slave_db");
 	if (($o->machine && $rmt->myname !== $o->machine) || ($o->master_c && $rmt->master_c !== $o->master_c)) {
 		dprint("Saving slave info..\n");
@@ -666,7 +668,7 @@ function save_slave_name($o)
 
 function process_in_master($total)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$remotechar = $sgbl->__var_remote_char;
 
 	$total = strfrom($total, "__master::");
@@ -678,20 +680,19 @@ function process_in_master($total)
 	$res->ddata = $vv;
 	$out = base64_encode(serialize($res));
 	return $out;
-
 }
 
 function master_get_data($rmt)
 {
 	dprint("Got master request for {$rmt->cmd}\n");
-	if ($rmt->cmd === 'sendemail') { 
+	if ($rmt->cmd === 'sendemail') {
 		callInChild("send_mail_to_admin", array($rmt->subject, $rmt->message));
 	}
 }
 
 function do_master_get_data($var)
 {
-	switch($var) {
+	switch ($var) {
 		case "contactemail":
 			$sq = new Sqlite(null, 'client', true);
 			$vv = $sq->getRowsWhere("nname = 'admin'", array("contactemail"));
@@ -704,7 +705,7 @@ function do_master_get_data($var)
 
 function process_server_input($total)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$remotechar = $sgbl->__var_remote_char;
 
 
@@ -764,18 +765,16 @@ function do_local_action($rmt)
 			$class = $rmt->func[0];
 			$tmp = new $class(null, null, 'dummy');
 		}
-		if($rmt->arglist == NULL) $rmt->arglist= array();
+		if ($rmt->arglist == NULL) $rmt->arglist = array();
 		return call_user_func_array($rmt->func, $rmt->arglist);
-
 	}
-
 }
 
 
 
 function rl_exec_get($masterserver, $slaveserver, $func, $arglist = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	$rmt = new Remote();
@@ -804,15 +803,15 @@ function myclone($object)
 
 
 /** 
-* @return void 
-* @param 
-* @param 
-* @desc Remote or local exec. Either exectues it locally or calles remote exec depending on whether $syncserver is localhost or not.
-*/ 
+ * @return void 
+ * @param 
+ * @param 
+ * @desc Remote or local exec. Either exectues it locally or calles remote exec depending on whether $syncserver is localhost or not.
+ */
 function rl_exec($masterserver, $slaveserver, $cmd)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	// Convert to driverapp here. Only here do we have the full information (masterserver/syncserver) to to get the syntosystem class properly.
 
@@ -844,12 +843,12 @@ function rl_exec($masterserver, $slaveserver, $cmd)
 
 function reload_slave_password()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	static $time;
 
 	if (!lxfile_exists('__path_slave_db')) {
-		return ;
+		return;
 	}
 
 	$stat = llstat("__path_slave_db");
@@ -860,12 +859,11 @@ function reload_slave_password()
 		$login->password = $rmt->password;
 		$time = $cur;
 	}
-
 }
 
 function remote_main()
 {
-	global $gbl, $sgbl, $login, $ghtml, $g_dbf; 
+	global $gbl, $sgbl, $login, $ghtml, $g_dbf;
 
 	global $argv;
 
@@ -908,6 +906,4 @@ function remote_main()
 
 	print($val);
 	exit;
-
 }
-

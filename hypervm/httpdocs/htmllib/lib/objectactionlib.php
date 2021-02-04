@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 function webcommandline_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $argv;
 
 
@@ -57,7 +57,7 @@ function webcommandline_main()
 	}
 
 	$pk = array_keys($opt);
-	foreach($must as $m) {
+	foreach ($must as $m) {
 		if (!array_search_bool($m, $pk)) {
 			$string = implode("_", $must);
 			json_print("error", $opt, "__error_need_$string\n");
@@ -71,7 +71,7 @@ function webcommandline_main()
 	try {
 		$list = $func($opt);
 	} catch (exception $e) {
-		while(@ob_end_clean());
+		while (@ob_end_clean());
 		json_print("error", $opt, "__error_{$e->getMessage()}");
 		log_log("web_command", "__error_{$e->getMessage()}");
 		exit;
@@ -87,8 +87,6 @@ function webcommandline_main()
 	}
 	log_log("web_command", "__success_{$opt['action']}");
 	exit;
-
-
 }
 
 function json_print_result($opt, $result)
@@ -100,12 +98,12 @@ function json_print_result($opt, $result)
 		$out['return'] = "success";
 		$out = json_encode($out);
 	} else {
-		foreach($result as $k => $l) {
+		foreach ($result as $k => $l) {
 			$ret[] = "[$k]={$l}";
 		}
 		$out = implode("&", $ret);
 	}
-	while(@ob_end_clean());
+	while (@ob_end_clean());
 	print($out);
 }
 
@@ -119,14 +117,14 @@ function json_print($type, $opt, $message)
 	} else {
 		$out = $message;
 	}
-	while(@ob_end_clean());
+	while (@ob_end_clean());
 	print($out);
 }
 
 function webc_print_and_exit($opt, $out)
 {
 	log_log("web_command", "__success_{$opt['action']}_successful_on_{$opt['class']}_{$opt['name']}\n");
-	while(@ob_end_clean());
+	while (@ob_end_clean());
 	print($out);
 	print("\n");
 }
@@ -141,7 +139,7 @@ function exists_in_db($server, $class, $nname)
 
 function check_listpriv($parent, $class, $pvar, $v)
 {
-	foreach($v as $pk => $pv) {
+	foreach ($v as $pk => $pv) {
 		$pvar->$pk = $pv;
 	}
 	return;
@@ -167,7 +165,7 @@ function check_priv($parent, $class, $pvar, $v)
 {
 
 	if (cse($class, "template")) {
-		foreach($v as $pk => $pv) {
+		foreach ($v as $pk => $pv) {
 			$pvar->$pk = $pv;
 		}
 		return;
@@ -177,7 +175,7 @@ function check_priv($parent, $class, $pvar, $v)
 	$parent = $parent->getClientParentO();
 
 
-	foreach($v as $pk => $pv) {
+	foreach ($v as $pk => $pv) {
 		if (cse($pk, "_time")) {
 			$pvar->$pk = $pv;
 			continue;
@@ -196,7 +194,7 @@ function check_priv($parent, $class, $pvar, $v)
 			$pvar->$pk = $pv;
 			continue;
 		}
-				
+
 		if (cse($pk, "_num") || cse($pk, "_usage")) {
 			$tmp = $pv;
 
@@ -215,7 +213,9 @@ function check_priv($parent, $class, $pvar, $v)
 
 			if (is_unlimited($pv)) {
 				$desc = getNthToken(get_v_descr($parent, $pk), 2);
-				if (!$desc) { $desc = $pk; }
+				if (!$desc) {
+					$desc = $pk;
+				}
 				throw new lxException("quota_exceeded", "priv_s_$pk", $desc);
 			}
 
@@ -226,7 +226,9 @@ function check_priv($parent, $class, $pvar, $v)
 			if ($tmp > $parent->getEffectivePriv($pk, $class)) {
 				dprint("After throw");
 				$desc = getNthToken(get_v_descr($parent, $pk), 1);
-				if (!$desc) { $desc = $pk; }
+				if (!$desc) {
+					$desc = $pk;
+				}
 				throw new lxException("quota_exceeded", "priv_s_$pk", $desc);
 			}
 			dprint("No throw.. $tmp <br> ");
@@ -238,7 +240,6 @@ function check_priv($parent, $class, $pvar, $v)
 			$pvar->$pk = $pv;
 		}
 	}
-
 }
 
 function is_license_quota_variable($v)
@@ -276,7 +277,7 @@ function get_v_descr($stuff, $v = null)
 
 function createPrincipleObject()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$object = $login;
 	$parent = $login;
@@ -296,7 +297,7 @@ function createPrincipleObject()
 	}
 	if ($ghtml->frm_o_o) {
 		$p = $ghtml->frm_o_o;
-		foreach($p as $k => $v) {
+		foreach ($p as $k => $v) {
 			$__tparent = $object;
 			if (isset($v['nname'])) {
 				$object = $object->getFromList($v['class'], $v['nname']);
@@ -325,7 +326,7 @@ function createPrincipleObject()
 				}
 				$navig[$n]['frm_action'] = 'list';
 				$navigmenu[$n] = array('list', null);
-				for($i = 0; $i <= ($k - 1); $i++) {
+				for ($i = 0; $i <= ($k - 1); $i++) {
 					$navig[$n]['frm_o_o'][$i] = $p[$i];
 				}
 				$navig[$n]['frm_o_cname'] = $object->getClass();
@@ -345,7 +346,7 @@ function createPrincipleObject()
 				}
 				$navig[$n]['frm_action'] = 'show';
 				$navigmenu[$n] = array('show', $object);
-				for($i = 0; $i <= $k; $i++) {
+				for ($i = 0; $i <= $k; $i++) {
 					$navig[$n]['frm_o_o'][$i] = $p[$i];
 				}
 				$n++;
@@ -381,7 +382,7 @@ function createPrincipleObject()
 
 function do_desc_update($object, $subaction, $param)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$class = lget_class($object);
 
 
@@ -397,7 +398,7 @@ function do_desc_update($object, $subaction, $param)
 
 
 
-	
+
 	//Calling the generic update first... If any class wide security checks to be made (as in the case of templates, u can do it there...
 	$param = $object->update($subaction, $param);
 	if (method_exists($object, $update_func)) {
@@ -419,14 +420,14 @@ function do_desc_update($object, $subaction, $param)
 		//
 		//$ret = array_search('__Select One__', $param, true);
 		//if($param[$ret] == '__Select One__') $str_ = $param[$ret] ."  equals __Select One__ according to php...";
-                                                                	
+
 		throw new lxException("Select One is not an acceptable Value", '');
 	}
 
 
 	$nparam[$class]['nname'] = $object->nname;
 	// This code is very much suspect. Looks like I copied this from the addform and dumped it here. Should tkae a more detailed look in this. The issue is, the nnamevar is not needed, since this is inside a fully formed object, and nname need not be constructed. 
-	foreach($param as $k => $v) {
+	foreach ($param as $k => $v) {
 		$object->resolve_class_heirarchy($class, $k, $dclass, $dk);
 
 		$object->resolve_class_differences($class, $k, $ddclass, $ddk);
@@ -434,7 +435,7 @@ function do_desc_update($object, $subaction, $param)
 			$nnamevar = get_real_class_variable($ddclass, "__rewrite_nname_const");
 			if ($nnamevar) {
 				$nnamelist = null;
-				foreach($nnamevar as $n) {
+				foreach ($nnamevar as $n) {
 					$nnamelist[] = $param[$n];
 				}
 				$nparam[$dclass]['nname'] = implode($sgbl->__var_nname_impstr, $nnamelist);
@@ -444,13 +445,13 @@ function do_desc_update($object, $subaction, $param)
 	}
 
 
-	foreach($nparam as $k => $v) {
+	foreach ($nparam as $k => $v) {
 		if ($k === $class) {
 			continue;
 		}
 		if ($k === 'priv') {
 			$pvar = $object->priv;
-			$oldpvar = clone $pvar; 
+			$oldpvar = clone $pvar;
 			check_priv($qparent, $class, $pvar, $v);
 			$object->distributeChildQuota($oldpvar);
 			continue;
@@ -480,7 +481,7 @@ function do_desc_update($object, $subaction, $param)
 		$object->getParentO()->setUpdateSubaction('update_a_child');
 	}
 
-	
+
 
 	return $param;
 }
@@ -488,10 +489,10 @@ function do_desc_update($object, $subaction, $param)
 
 function do_desc_add($object, $class, $param)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
-	
+
 
 	$quotaclass = exec_class_method($class, "getquotaclass", $class);
 	$numvar = "{$quotaclass}_num";
@@ -525,7 +526,7 @@ function do_desc_add($object, $class, $param)
 
 
 
-	
+
 	// Setting it here itself so that the add can override if necessary. This is done in tickets, where the parent is always the admin.
 	$param['parent_clname'] = $object->getClName();
 
@@ -539,14 +540,14 @@ function do_desc_add($object, $class, $param)
 
 	// First loop to create a unique nname if applicable.... FOr the 'unique-nname-creation' to work in the second loop, the variables must be resolved before that... So this extra looping...
 
-	foreach($param as $k => $v) {
+	foreach ($param as $k => $v) {
 		if (csb($k, "__v_") || csb($k, "__m_")) {
 			continue;
 		}
 		$object->resolve_class_differences($class, $k, $dclass, $dk);
 	}
 
-	foreach($param as $k => $v) {
+	foreach ($param as $k => $v) {
 		if (csb($k, "__v_") || csb($k, "__m_")) {
 			continue;
 		}
@@ -556,17 +557,17 @@ function do_desc_add($object, $class, $param)
 		$nnamevar = get_real_class_variable($ddclass, "__rewrite_nname_const");
 		if ($nnamevar) {
 			$nnamelist = null;
-			foreach($nnamevar as $n) {
+			foreach ($nnamevar as $n) {
 				$nnamelist[] = $param[$n];
 			}
-			$nparam[$dclass]['nname'] =implode($sgbl->__var_nname_impstr, $nnamelist);
+			$nparam[$dclass]['nname'] = implode($sgbl->__var_nname_impstr, $nnamelist);
 		}
 		$nparam[$dclass][$dk] = $v;
 	}
 
 
 	// First Pass
-	foreach($nparam as $k => $v) {
+	foreach ($nparam as $k => $v) {
 		if (csa($k, "_s_")) {
 			continue;
 		}
@@ -586,7 +587,7 @@ function do_desc_add($object, $class, $param)
 			check_listpriv($object, $class, $olist[$k], $v);
 			continue;
 		}
-		
+
 		if (csa($k, "_b")) {
 			$olist[$k] = new $k($object->__masterserver, null, $nparam[$class]['nname']);
 		} else {
@@ -617,7 +618,7 @@ function do_desc_add($object, $class, $param)
 	}
 
 	//Second Pass...
-	foreach($nparam as $k => $v) {
+	foreach ($nparam as $k => $v) {
 		if (!csa($k, "_s_") && !csa($k, "-")) {
 			continue;
 		}
@@ -639,7 +640,7 @@ function do_desc_add($object, $class, $param)
 
 
 
-	foreach($olist as $k => $v) {
+	foreach ($olist as $k => $v) {
 		if (cse($k, "_b") || $k === 'used' || $k === 'priv' || $k === 'listpriv') {
 			$olist[$class]->$k = $v;
 			continue;
@@ -664,7 +665,7 @@ function do_desc_add($object, $class, $param)
 
 	$olist[$class]->__parent_o = $rparent;
 
-	
+
 
 	$olist[$class]->postAdd();
 
@@ -684,4 +685,3 @@ function do_desc_add($object, $class, $param)
 
 	dprint($olist[$class]->getParentO());
 }
-

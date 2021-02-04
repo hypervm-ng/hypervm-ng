@@ -1,12 +1,12 @@
-<?php 
+<?php
 
 function print_tab_for_feather($alist)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$img_path = $login->getSkinDir();
 	$imgtop = $img_path . "/top_line.gif";
 
-	foreach($alist as $k => $a) {
+	foreach ($alist as $k => $a) {
 		//$alist[$k] = $ghtml->getFullUrl($a);
 		//This will disable ajax, since the ajax is sent via __v_dialog in the key.
 		$nalist[] = $ghtml->getFullUrl($a);
@@ -18,54 +18,63 @@ function print_tab_for_feather($alist)
 		$ghtml->print_dialog($alist, $gbl->__c_object);
 	}
 
-	?> <link href="/img/skin/hypervm/feather/default/feather.css" rel="stylesheet" type="text/css" /> <?php 
+?>
+	<link href="/img/skin/hypervm/feather/default/feather.css" rel="stylesheet" type="text/css" /> <?php
 
 
-	?> 
+																									?>
 
-	<br> 
-<table width=100% cellpadding="0" cellspacing="0" border="0" style="vertical-align:top;  "><tr><td  colspan="2" >
-<table  cellpadding="0"  cellspacing="0" border="0"><tr>
-<td width=20 class=tabcomplete nowrap> <div class=tabcompletediv> &nbsp; &nbsp;  </div> </td>
-<?php 
+	<br>
+	<table width=100% cellpadding="0" cellspacing="0" border="0" style="vertical-align:top;  ">
+		<tr>
+			<td colspan="2">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td width=20 class=tabcomplete nowrap>
+							<div class=tabcompletediv> &nbsp; &nbsp; </div>
+						</td>
+						<?php
 
-	// This gives a list of key value pair, which shows which of the tab is selected. For instance, if the fifth tab is the selected on, then $list[5] will be true, while all the others will be false. This is necessary because, printing will need to know if the next tab is the selected one.
+						// This gives a list of key value pair, which shows which of the tab is selected. For instance, if the fifth tab is the selected on, then $list[5] will be true, while all the others will be false. This is necessary because, printing will need to know if the next tab is the selected one.
 
-	$list = $ghtml->whichTabSelect($alist);
-	$list[-1] = false;
-	$list[count($list) - 1] = false;
-	//dprintr($list);
-	foreach($alist as $k => $a) {
-		print_tab_button_for_feather($k, $a, $list);
-	}
-?> 
+						$list = $ghtml->whichTabSelect($alist);
+						$list[-1] = false;
+						$list[count($list) - 1] = false;
+						//dprintr($list);
+						foreach ($alist as $k => $a) {
+							print_tab_button_for_feather($k, $a, $list);
+						}
+						?>
 
-<td width=100%  class=tabcomplete> <div class=tabcompletediv> &nbsp; </div></td>
-</tr>
-</table> 
-<br> 
-</td></tr> 
-</table>
-</div>
-<?php 
+						<td width=100% class=tabcomplete>
+							<div class=tabcompletediv> &nbsp; </div>
+						</td>
+					</tr>
+				</table>
+				<br>
+			</td>
+		</tr>
+	</table>
+	</div>
+<?php
 }
 
 function print_tab_button_for_feather($key, $url, $list)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$cobject = $gbl->__c_object;
 	static $after_sel = false;
 
- 	$psuedourl = NULL;
+	$psuedourl = NULL;
 	$target = NULL;
 	$img_path = $login->getSkinDir();
 	$imgtop = $img_path . "/top_line.gif";
 
 	$buttonpath = get_image_path() . "/button/";
 	$bpath = $login->getSkinDir();
-	$bdpath=$login->getSkinColor();
+	$bdpath = $login->getSkinColor();
 	$button = $bpath . "/top_line_medium.gif";
 
 	$ghtml->resolve_int_ext($url, $psuedourl, $target);
@@ -89,7 +98,7 @@ function print_tab_button_for_feather($key, $url, $list)
 		$bgcolorstring = "bgcolor=#99aaff";
 		$sel = "_select";
 		$borderbottom = $borderbot;
-	} else { 
+	} else {
 		$sel = "_select";
 		$bgcolorstring = "bgcolor=#99aaff";
 		//$image = null;
@@ -130,7 +139,7 @@ function print_tab_button_for_feather($key, $url, $list)
 
 		//dprint("hello $lastkey $key hello");
 		//dprintr($list);
-		if ($key === $lastkey - 3 ) {
+		if ($key === $lastkey - 3) {
 			print("<td class='tabver'><img src='/img/skin/hypervm/feather/default/images/menulastrit20.jpg' border='0' /></td>");
 		} else {
 			print("<td class='tabver'><img src='/img/skin/hypervm/feather/default/images/menurit20.jpg' border='0' /></td>");
@@ -139,9 +148,9 @@ function print_tab_button_for_feather($key, $url, $list)
 		if (!$list[$key - 1]) {
 			print("<td class='tabver'><img src='/img/skin/hypervm/feather/default/images/menulft21.jpg' border='0' /></td>");
 		}
-		
+
 		print("<td class='tabnew1' ><div nowrap class='verb'><a href=\"$url\" $targetstring>$descstring</a></div></td>");
-		if ($key === $lastkey - 3 ) {
+		if ($key === $lastkey - 3) {
 			print("<td class='tabver'><img src='/img/skin/hypervm/feather/default/images/menulft21.jpg' border='0' /></td>");
 		}
 	}

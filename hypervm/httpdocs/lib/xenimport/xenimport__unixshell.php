@@ -1,5 +1,5 @@
-<?php 
-include_once "htmllib/lib/include.php"; 
+<?php
+include_once "htmllib/lib/include.php";
 
 __xenimport_get_data();
 
@@ -21,7 +21,7 @@ function isXencfgSkip($l)
 	if (csa($l, "windows.hvm")) {
 		return true;
 	}
-    return false;
+	return false;
 }
 
 
@@ -29,7 +29,7 @@ function __xenimport_get_data()
 {
 	lxfile_mkdir("/home/oldxenconfig-hypervm");
 	$list = lscandir_without_dot("/etc/xen");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (isXencfgSkip($l)) {
 			continue;
 		}
@@ -47,7 +47,7 @@ function __xenimport_parse_config($file)
 {
 	$list = lfile_trim($file);
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (!csa($l, "=")) {
 			continue;
 		}
@@ -56,7 +56,7 @@ function __xenimport_parse_config($file)
 		$var = trim($var);
 		$val = trim($val);
 
-		switch($var) {
+		switch ($var) {
 			case "memory":
 				$ret['memory'] = $val;
 				break;
@@ -78,12 +78,9 @@ function __xenimport_parse_config($file)
 			case "disk":
 				__xenimport_parsedisk($ret, $val);
 				break;
-
 		}
 	}
 	return $ret;
-
-
 }
 
 function __xenimport_parsedisk(&$ret, $val)
@@ -108,7 +105,4 @@ function __xenimport_parsedisk(&$ret, $val)
 	}
 
 	$ret['swapdiskname'] = $swapdiskname;
-
 }
-
-

@@ -35,7 +35,7 @@ print("using mysql to flush privileges and reset password\n");
 sleep(10);
 system("echo \"update user set password = Password('$pass') where User = 'root'\" | mysql -u root mysql ", $return);
 
-while($return) {
+while ($return) {
 	print("mysql could not connect, will sleep and try again\n");
 	sleep(10);
 	system("echo \"update user set password = Password('$pass') where User = 'root'\" | mysql -u root mysql", $return);
@@ -48,4 +48,3 @@ shell_exec("sleep 10");
 print("restarting the actual mysql service\n");
 system("service mysqld restart");
 print("Password successfully reset to \"$pass\"\n");
-

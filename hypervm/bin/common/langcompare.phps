@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 if (!isset($argv[1])) {
 	print("Usage: lphp.exe $argv[0] lang \nEg   : lphp.exe $argv[0] fr \n\n");
@@ -18,18 +18,18 @@ $__information = null;
 // Load the other language
 include_once "lang/$argv[1]/desclib.php";
 
-foreach($eng_description as $k => $v) {
+foreach ($eng_description as $k => $v) {
 	if (!isset($__description[$k])) {
 		print("__description $k doesn't exist\n");
-	} 
+	}
 }
 
 
 include_once "lang/$argv[1]/messagelib.php";
 
 
-foreach($eng_information as $k => $v) {
+foreach ($eng_information as $k => $v) {
 	if (!isset($__information[$k])) {
 		print("__information $k doesn't exist\n");
-	} 
+	}
 }

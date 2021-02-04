@@ -1,4 +1,4 @@
-<?php 
+<?php
 function get_plural($word)
 {
 	if ($word[strlen($word) - 1] === 's') {
@@ -28,5 +28,3 @@ function get_plural_alternate($word)
 
 	return "{$word}s";
 }
-
-

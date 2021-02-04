@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -23,7 +23,7 @@ function collectdata_main()
 function find_loadavg()
 {
 	$list = lfile("/proc/vz/vestat");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (csa($l, "Version")) {
 			continue;
 		}
@@ -44,7 +44,7 @@ function find_cpuusage()
 	$out = lxshell_output("xm", "list");
 	$list = explode("\n", $out);
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trimSpaces($l);
 		$val = explode(" ", $l);
 
@@ -57,7 +57,7 @@ function find_cpuusage()
 
 function interfacetraffic_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if (!lxfile_exists("__path_program_etc/xeninterface.list")) {
 		return;
@@ -65,7 +65,7 @@ function interfacetraffic_main()
 	$list = lfile_trim("__path_program_etc/xeninterface.list");
 
 	if (!lxfile_exists("__path_program_etc/newxeninterfacebw.data")) {
-		foreach($list as $k) {
+		foreach ($list as $k) {
 			$total[$k] = get_bytes_for_interface($k);
 		}
 		dprintr($total);
@@ -78,7 +78,7 @@ function interfacetraffic_main()
 	$total = null;
 
 
-	foreach($list as $k) {
+	foreach ($list as $k) {
 		$total[$k] = get_bytes_for_interface($k);
 
 		if (isset($data[$k])) {
@@ -116,7 +116,7 @@ function get_bytes_for_interface($l)
 		$net = explode("\n", $net);
 	}
 
-	foreach($net as $n) {
+	foreach ($net as $n) {
 		$n = trimSpaces($n);
 		if (!csb($n, "vif-$l:")) {
 			continue;
@@ -137,36 +137,34 @@ function iptraffic_main()
 	global $global_dontlogshell;
 
 	$retv6 = iptraffic_main_v6();
-	
+
 	$res = lxshell_output("iptables", "-nvx", "-L", "FORWARD");
 
 	$res = explode("\n", $res);
 
 
 	$outgoing = null;
-	foreach($res as $r) {
+	foreach ($res as $r) {
 		// First column may have spaces because of the number of digits in the column
-                $r = trim($r, ' ');
-                // Trim internal spaces
+		$r = trim($r, ' ');
+		// Trim internal spaces
 		$r = trimSpaces($r);
 
 		$list = explode(' ', $r);
 
-	        if(stripos($r, "source") !== false && stripos($r, "destination") !== false)
-	        {
-	          // header, get important columns number
-	          for ($i=0; $i<count($list);$i++)
-	          {
-	            if($list[$i] == "bytes") $byteIdx=$i;
-	            // Removing 1, because the header has an extra field cause of 'target' column
-	            // FIXME: any better idea? 
-	            if($list[$i] == "source") $srcIdx=$i-1;
-	            if($list[$i] == "destination") $dstIdx=$i-1;
-	          }
-	        }
+		if (stripos($r, "source") !== false && stripos($r, "destination") !== false) {
+			// header, get important columns number
+			for ($i = 0; $i < count($list); $i++) {
+				if ($list[$i] == "bytes") $byteIdx = $i;
+				// Removing 1, because the header has an extra field cause of 'target' column
+				// FIXME: any better idea? 
+				if ($list[$i] == "source") $srcIdx = $i - 1;
+				if ($list[$i] == "destination") $dstIdx = $i - 1;
+			}
+		}
 
 
-		if (count($list)-1>$dstIdx) {
+		if (count($list) - 1 > $dstIdx) {
 			continue;
 		}
 
@@ -177,7 +175,7 @@ function iptraffic_main()
 				$outgoing[$list[$srcIdx]][] = $list[$byteIdx];
 				$sourcelist[$list[$srcIdx]] = true;
 			}
-		} else if(csb($list[$srcIdx], "0.0.0")) {
+		} else if (csb($list[$srcIdx], "0.0.0")) {
 			if (!isset($dstlist[$list[$dstIdx]])) {
 				$incoming[$list[$dstIdx]][] = $list[$byteIdx];
 				$dstlist[$list[$dstIdx]] = true;
@@ -198,7 +196,7 @@ function iptraffic_main()
 	$realtotalincoming = calculateRealTotal($incoming);
 	$realtotaloutgoing = calculateRealTotal($outgoing);
 
-	foreach($realtotaloutgoing as $k => $v) {
+	foreach ($realtotaloutgoing as $k => $v) {
 
 		$vpsid = get_vpsid_from_ipaddress($k);
 
@@ -206,25 +204,26 @@ function iptraffic_main()
 			continue;
 		}
 
-		if (!isset($vpsoutgoing[$vpsid])) { $vpsoutgoing[$vpsid] = 0; }
-		if (!isset($vpsincoming[$vpsid])) { $vpsincoming[$vpsid] = 0; }
+		if (!isset($vpsoutgoing[$vpsid])) {
+			$vpsoutgoing[$vpsid] = 0;
+		}
+		if (!isset($vpsincoming[$vpsid])) {
+			$vpsincoming[$vpsid] = 0;
+		}
 
 		$vpsoutgoing[$vpsid] += $realtotaloutgoing[$k];
 		$vpsincoming[$vpsid] += $realtotalincoming[$k];
 	}
 
 
-	foreach($vpsincoming as $k => $v) {
-		if(isset($retv6)){
-			if(isset($retv6[$k]))
-			{
+	foreach ($vpsincoming as $k => $v) {
+		if (isset($retv6)) {
+			if (isset($retv6[$k])) {
 				// We collected IPv6 traffic info for this VM
 				// adding it here to total
 				$vpsincoming[$k] += $retv6[$k]['in'];
 				$vpsoutgoing[$k] += $retv6[$k]['out'];
-			
 			}
-		
 		}
 		$tot = $vpsincoming[$k] + $vpsoutgoing[$k];
 		execRrdTraffic("openvz-$k", $tot, "-$vpsincoming[$k]", $vpsoutgoing[$k]);
@@ -248,34 +247,32 @@ function iptraffic_main_v6()
 
 
 	$outgoing = null;
-	foreach($res as $r) {
+	foreach ($res as $r) {
 		// First column may have spaces because of the number of digits in the column
-                $r = trim($r, ' ');
-                // Trim internal spaces
+		$r = trim($r, ' ');
+		// Trim internal spaces
 		$r = trimSpaces($r);
 
 		$list = explode(' ', $r);
 
-	        if(stripos($r, "source") !== false && stripos($r, "destination") !== false)
-	        {
-	          // header, get important columns number
-	          for ($i=0; $i<count($list);$i++)
-	          {
-	            if($list[$i] == "bytes") $byteIdx=$i;
-	            // Removing 1, because the header has an extra field cause of 'target' column
-	            // FIXME: any better idea? 
-	            if($list[$i] == "source") $srcIdx=$i-1;
-	            if($list[$i] == "destination") $dstIdx=$i-1;
-	          }
-	        }
+		if (stripos($r, "source") !== false && stripos($r, "destination") !== false) {
+			// header, get important columns number
+			for ($i = 0; $i < count($list); $i++) {
+				if ($list[$i] == "bytes") $byteIdx = $i;
+				// Removing 1, because the header has an extra field cause of 'target' column
+				// FIXME: any better idea? 
+				if ($list[$i] == "source") $srcIdx = $i - 1;
+				if ($list[$i] == "destination") $dstIdx = $i - 1;
+			}
+		}
 
 
-		if (count($list) !=7) {
+		if (count($list) != 7) {
 			continue;
 		}
-                $list[$dstIdx] = explode("/", $list[$dstIdx])[0];
-                $list[$srcIdx] = explode("/", $list[$srcIdx])[0];
-                
+		$list[$dstIdx] = explode("/", $list[$dstIdx])[0];
+		$list[$srcIdx] = explode("/", $list[$srcIdx])[0];
+
 		if (csb($list[$dstIdx], "::")) {
 			// Just make sure that we don't calculate this goddamn thing twice, which would happen if there are multiple copies of the same rule. So mark that we have already read it in the sourcelist.
 			// OA: Since we dont care lines that have a rule set (fixed above), this wont happen
@@ -283,7 +280,7 @@ function iptraffic_main_v6()
 				$outgoing[$list[$srcIdx]][] = $list[$byteIdx];
 				$sourcelist[$list[$srcIdx]] = true;
 			}
-		} else if(csb($list[$srcIdx], "::")) {
+		} else if (csb($list[$srcIdx], "::")) {
 			if (!isset($dstlist[$list[$dstIdx]])) {
 				$incoming[$list[$dstIdx]][] = $list[$byteIdx];
 				$dstlist[$list[$dstIdx]] = true;
@@ -304,7 +301,7 @@ function iptraffic_main_v6()
 	$realtotalincoming = calculateRealTotal($incoming);
 	$realtotaloutgoing = calculateRealTotal($outgoing);
 
-	foreach($realtotaloutgoing as $k => $v) {
+	foreach ($realtotaloutgoing as $k => $v) {
 
 		$vpsid = get_vpsid_from_ipaddress($k);
 
@@ -312,18 +309,22 @@ function iptraffic_main_v6()
 			continue;
 		}
 
-		if (!isset($vpsoutgoing[$vpsid])) { $vpsoutgoing[$vpsid] = 0; }
-		if (!isset($vpsincoming[$vpsid])) { $vpsincoming[$vpsid] = 0; }
+		if (!isset($vpsoutgoing[$vpsid])) {
+			$vpsoutgoing[$vpsid] = 0;
+		}
+		if (!isset($vpsincoming[$vpsid])) {
+			$vpsincoming[$vpsid] = 0;
+		}
 
 		$vpsoutgoing[$vpsid] += $realtotaloutgoing[$k];
 		$vpsincoming[$vpsid] += $realtotalincoming[$k];
 	}
 
-	$ret= array();
-	foreach($vpsincoming as $k => $v) {
+	$ret = array();
+	foreach ($vpsincoming as $k => $v) {
 		$ret[$k]['in'] = $vpsincoming[$k];
 		$ret[$k]['out'] = $vpsoutgoing[$k];
-		
+
 		$tot = $vpsincoming[$k] + $vpsoutgoing[$k];
 		execRrdTraffic("openvzv6-$k", $tot, "-$vpsincoming[$k]", $vpsoutgoing[$k]);
 		$stringa[] = time() . " " . date("d-M-Y:H:i") . " openvzv6-$k $tot $vpsincoming[$k] $vpsoutgoing[$k]";
@@ -331,7 +332,7 @@ function iptraffic_main_v6()
 
 	if ($stringa) {
 		$string = implode("\n", $stringa);
-		lfile_put_contents("__path_iptraffic_file"."v6", "$string\n", FILE_APPEND);
+		lfile_put_contents("__path_iptraffic_file" . "v6", "$string\n", FILE_APPEND);
 	}
 	lxshell_return("ip6tables", "-Z", "FORWARD");
 	return $ret;
@@ -381,7 +382,7 @@ function get_vpsid_from_ipaddress($ip)
 	}
 
 	$list = explode("\n", $res);
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trimSpaces($l);
 		if (csa($l, $ip)) {
 			list($vpsid) = explode(" ", $l);
@@ -390,4 +391,3 @@ function get_vpsid_from_ipaddress($ip)
 	}
 	return 0;
 }
-

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // This file starts the upcp/cleanup process
 

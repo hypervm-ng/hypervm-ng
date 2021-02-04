@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 
@@ -30,12 +30,9 @@ if ($r) {
 	print("slave $nslave already exists\n");
 	exit;
 }
-$sq->rawQuery("update driver set nname = '$nslave' where nname = '$oslave'"); 
+$sq->rawQuery("update driver set nname = '$nslave' where nname = '$oslave'");
 $sq->rawQuery("update vps set syncserver = '$nslave' where syncserver = '$oslave'");
 $sq->rawQuery("update pserver set syncserver = '$nslave' where nname = '$oslave'");
 $sq->rawQuery("update pserver set nname = '$nslave' where nname = '$oslave'");
 $sq->rawQuery("update dirlocation set nname = '$nslave' where nname = '$oslave'");
 $sq->rawQuery("update ipaddress set syncserver = '$nslave' where syncserver = '$oslave'");
-
-
-

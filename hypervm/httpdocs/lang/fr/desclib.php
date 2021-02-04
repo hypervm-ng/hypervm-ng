@@ -1035,4 +1035,3 @@ $__description["update_home"] = array("Mise � jour");
 $__description["desktop"] = array("Bureau");
 $__description["list_service"] = array("List Service");
 $__description["update_kloxo_now"] = array("Mettre � jour Kloxo");
-

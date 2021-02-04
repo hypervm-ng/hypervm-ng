@@ -1,18 +1,21 @@
-<?php 
+<?php
 
-class Vpstraffic extends Lxdb {
+class Vpstraffic extends Lxdb
+{
 
-//Core
+    //Core
 
-//Data
-static $__desc =  Array("", "",  "traffic_history");
-static $__desc_nname =  Array("", "",  "device_name");
-static $__desc_parent_name =  Array("", "",  "device_name");
-static $__desc_month    =   Array("", "",  "month");
-static $__desc_traffic_usage     =  Array("", "",  "total_(mb)");
+    //Data
+    static $__desc =  array("", "",  "traffic_history");
+    static $__desc_nname =  array("", "",  "device_name");
+    static $__desc_parent_name =  array("", "",  "device_name");
+    static $__desc_month    =   array("", "",  "month");
+    static $__desc_traffic_usage     =  array("", "",  "total_(mb)");
 
-//Objects
+    //Objects
 
-function isSync() { return false; }
-
+    function isSync()
+    {
+        return false;
+    }
 }

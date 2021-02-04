@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/coredisplaylib.php";
 
@@ -16,4 +16,3 @@ print_time("start", "Start");
 //dprintr($gbl->__c_object->ls);
 //dprintr($gbl->__c_object->priv);
 display_exec();
-

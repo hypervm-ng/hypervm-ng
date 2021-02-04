@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 if (!os_isSelfSystemUser()) {
 	print("Not enough privileges\n");
@@ -11,7 +11,7 @@ if (!os_isSelfSystemUser()) {
 
 $list = get_all_pserver();
 
-foreach($list as $l) {
+foreach ($list as $l) {
 	try {
 		$res = rl_exec_get(null, $l, "exec_with_all_closed_output", $argv[1]);
 		print("Got this from server $l\n");
@@ -21,5 +21,3 @@ foreach($list as $l) {
 		print("Got error from $l $e->__full_message\n");
 	}
 }
-
-

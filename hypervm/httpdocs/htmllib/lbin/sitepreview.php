@@ -1,12 +1,12 @@
-<?php 
+<?php
 chdir("../../");
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 
 function parse_etc_mime()
 {
 	$list = lfile_trim("/etc/mime.types");
-	foreach($list as $s) {
+	foreach ($list as $s) {
 		if (!$s) {
 			continue;
 		}
@@ -16,7 +16,7 @@ function parse_etc_mime()
 		$s = trimSpaces($s);
 		$s = explode(" ", $s);
 		$type = array_shift($s);
-		foreach($s as $ss) {
+		foreach ($s as $ss) {
 			$res[$ss] = $type;
 		}
 	}
@@ -72,6 +72,3 @@ $rewrite = new hn_urlrewrite();
 
 $page = $rewrite->_rewrite_page($domain, $file);
 print($page);
-
-
-

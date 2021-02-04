@@ -1,4 +1,4 @@
-<?php 
+<?php
 $__description["owner"] = array("Owner");
 $__description["command_center"] = array("Command Center");
 $__description["Command"] = array("Command");
@@ -1042,4 +1042,3 @@ $__description["update_home"] = array("Update Home");
 $__description["desktop"] = array("Desktop");
 $__description["list_service"] = array("List Service");
 $__description["update_kloxo_now"] = array("Update Kloxo Now");
-

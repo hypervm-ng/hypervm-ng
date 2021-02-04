@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -36,4 +36,3 @@ function storeinGblvariables()
 {
 	return null;
 }
-

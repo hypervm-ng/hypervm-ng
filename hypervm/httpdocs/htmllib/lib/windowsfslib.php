@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function lxshell_getzipcontent($path)
 {
@@ -13,7 +13,7 @@ function lxfile_dirsize($path)
 {
 	$path = expand_real_root($path);
 	$t = 10000;
-	return round($t/(1024), 1);
+	return round($t / (1024), 1);
 }
 
 function lxfile_symlink($src, $dst)
@@ -62,18 +62,23 @@ function lxfile_rm_rec($file)
 	}
 }
 
-function lxfile_generic_chmod($file, $mod) { 
-}
-function lxfile_generic_chmod_rec($file, $mod) { }
-
-function lxfile_generic_chown($file, $mod) { 
-}
-
-function lxfile_generic_chown_rec($file, $mod) { 
-}
-function lxfile_unix_chmod($file, $mod) 
+function lxfile_generic_chmod($file, $mod)
 {
-	
+}
+function lxfile_generic_chmod_rec($file, $mod)
+{
+}
+
+function lxfile_generic_chown($file, $mod)
+{
+}
+
+function lxfile_generic_chown_rec($file, $mod)
+{
+}
+function lxfile_unix_chmod($file, $mod)
+{
+
 	throw new lxException('unix_chmod_not_allowed_in_windows', '');
 }
 
@@ -112,8 +117,8 @@ function lxfile_mv_rec($dirsource, $dirdest)
 }
 
 function lxfile_cp_rec($dirsource, $dirdest)
-{ 
-	
+{
+
 	dprint("<b> I am here </b> ");
 	$obj = new COM("Scripting.FilesystemObject");
 	$username = "__system__";
@@ -129,21 +134,21 @@ function lxfile_cp_rec($dirsource, $dirdest)
 		log_filesys("copyFile $dirsource $dirdest");
 		$obj->CopyFile($dirsource, $dirdest);
 	}
-} 
+}
 
 
 function lxshell_background($cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$username = '__system__';
 	$start = 1;
-        $arglist = array();
-        for ($i = $start; $i < func_num_args(); $i++) {
-                if (isset($transforming_func)) {
-                        $arglist[] = $transforming_func(func_get_arg($i));
-                } else {
-                        $arglist[] = func_get_arg($i);
-        	}
+	$arglist = array();
+	for ($i = $start; $i < func_num_args(); $i++) {
+		if (isset($transforming_func)) {
+			$arglist[] = $transforming_func(func_get_arg($i));
+		} else {
+			$arglist[] = func_get_arg($i);
+		}
 	}
 
 	$cmd = getShellCommand($cmd, $arglist);
@@ -152,10 +157,10 @@ function lxshell_background($cmd)
 	return true;
 }
 
-function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input) 
+function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $global_shell_out, $global_shell_error, $global_shell_ret;
 	dprint("<hr> $dir <br> $cmd <hr> ");
 
@@ -187,7 +192,7 @@ function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 	$err = null;
 	dprint("\n ** mmmmmm $dir $cmd **\n");
 
-	
+
 	$cmdobject = $sh->Exec($cmd);
 	if ($input) {
 		$cmdobject->StdIn->Write($input);
@@ -197,9 +202,9 @@ function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 	$ret = 0;
 
 	$sh->currentDirectory = $sgbl->__path_program_htmlbase;
-	
 
-/*
+
+	/*
 	function ReadAllFromAny($ret)
     {
 		if (!($ret->StdOut->AtEndOfStream)){
@@ -222,6 +227,4 @@ function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 	$global_shell_ret = $ret;
 	$global_shell_out = $out;
 	$global_shell_error = $err;
-
-
 }

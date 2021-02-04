@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/displayinclude.php";
 
@@ -60,7 +60,7 @@ if (csa($lightout, "1.4.") && csa($out, "cgi-fcgi") && $sgbl->isKloxo() && $ret 
 	$php_st .= "cgi.assign	=						   (\".php\" => \"/usr/local/lxlabs/ext/php/bin/php_cgi\" )\n";
 }
 
-foreach($list as &$l) {
+foreach ($list as &$l) {
 
 	$l = preg_replace("/__cgi_or_fcgi__/", $php_st, $l);
 	$l = preg_replace("/__program_name__/", $sgbl->__var_program_name, $l);

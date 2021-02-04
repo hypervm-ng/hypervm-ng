@@ -1,19 +1,20 @@
-<?php 
+<?php
 
 
 function parse_category($cat)
 {
-	foreach($cat->category as $v) {
+	foreach ($cat->category as $v) {
 		dprint("Category: $v\n");
 	}
 }
 function parse_entry($entry)
 {
-	if (!$entry) { return ; }
-	foreach($entry->entry as  $v) {
+	if (!$entry) {
+		return;
+	}
+	foreach ($entry->entry as  $v) {
 		dprintr("$v->label $v->path \n");
 	}
-
 }
 function parse_requirement($requirement)
 {
@@ -26,7 +27,9 @@ function aps_check_if_db($s)
 
 	$db = $rq->children('http://apstandard.com/ns/1/db');
 
-	if ($db) { return true; }
+	if ($db) {
+		return true;
+	}
 	return false;
 }
 
@@ -49,8 +52,7 @@ function parse_mapping($root, $m, $parent_path)
 	}
 
 
-	foreach($m->mapping as $mp) {
+	foreach ($m->mapping as $mp) {
 		parse_mapping($root, $mp, $parent_path);
 	}
-
 }

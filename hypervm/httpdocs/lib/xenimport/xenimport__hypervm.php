@@ -1,4 +1,4 @@
-<?php 
+<?php
 //include_once "lib/include.php";
 
 //__xenimport_get_data();
@@ -7,7 +7,7 @@ function __xenimport_get_data()
 {
 	lxfile_mkdir("/home/oldxenconfig-hypervm");
 	$list = lscandir_without_dot("/home/xen");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (!cse($l, ".vm")) {
 			continue;
 		}
@@ -23,7 +23,7 @@ function __xenimport_parse_config($file)
 {
 	$list = lfile_trim($file);
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (!csa($l, "=")) {
 			continue;
 		}
@@ -34,7 +34,7 @@ function __xenimport_parse_config($file)
 
 		$val = trim($val, "'");
 
-		switch($var) {
+		switch ($var) {
 			case "memory":
 				$ret['memory'] = $val;
 				break;
@@ -47,12 +47,9 @@ function __xenimport_parse_config($file)
 			case "disk":
 				__xenimport_parsedisk($ret, $val);
 				break;
-
 		}
 	}
 	return $ret;
-
-
 }
 
 function __xenimport_parsedisk(&$ret, $val)
@@ -71,7 +68,9 @@ function __xenimport_parsedisk(&$ret, $val)
 	$diskstring = $matches[1];
 	$disk = explode(",", $matches[1]);
 
-	if (csb($disk[0], "/dev/")) { $disk[0] = strfrom($disk[0], "/dev/"); }
+	if (csb($disk[0], "/dev/")) {
+		$disk[0] = strfrom($disk[0], "/dev/");
+	}
 
 	if ($ret['type'] === 'file') {
 		$location = "/home/xen";
@@ -85,7 +84,9 @@ function __xenimport_parsedisk(&$ret, $val)
 	$ret['maindiskname'] = $maindiskname;
 
 	$swap = explode(",", $matches[2]);
-	if (csb($swap[0], "/dev/")) { $swap[0] = strfrom($swap[0], "/dev/"); }
+	if (csb($swap[0], "/dev/")) {
+		$swap[0] = strfrom($swap[0], "/dev/");
+	}
 
 	if ($ret['type'] === 'file') {
 		$location = "/home/xen";
@@ -100,7 +101,4 @@ function __xenimport_parsedisk(&$ret, $val)
 	}
 
 	$ret['swapdiskname'] = $swapdiskname;
-
 }
-
-

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 initProgram('admin');
@@ -13,13 +13,13 @@ $login->loadAllObjects($class);
 
 $list = $login->getList($class);
 
-foreach($list as $l) {
+foreach ($list as $l) {
 	$l->createSyncClass();
 }
 
 $pserverlist = $login->getList('pserver');
 
-foreach($pserverlist as $ps) {
+foreach ($pserverlist as $ps) {
 	$ps->createSyncClass();
 }
 

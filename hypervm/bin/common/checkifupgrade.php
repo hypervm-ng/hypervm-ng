@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "htmllib/lib/include.php";
 include_once "htmllib/lib/updatelib.php";
 
@@ -10,4 +10,3 @@ if ($v[0] === $sgbl->__ver_major_minor_release) {
 	exit(8);
 }
 exit(0);
-

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $gl_class_array["dnsbase"] = "htmllib/lib/dns/dnsbaselib.php";
 $gl_class_array["dnstemplate"] = "htmllib/lib/dns//dnstemplatelib.php";
@@ -43,7 +43,7 @@ $gl_class_array["sp_childspecialplay"] = "htmllib/phplib/lib/client/appearanceli
 $gl_class_array["sp_specialplay"] = "htmllib/phplib/lib/client/appearancelib.php";
 $gl_class_array["sp_basespecialplay"] = "htmllib/phplib/lib/client/appearancelib.php";
 $gl_class_array["specialplay_b"] = "htmllib/phplib/lib/client/appearancelib.php";
-$gl_class_array["tree"] = "htmllib/phplib/lib/treelib.php" ;
+$gl_class_array["tree"] = "htmllib/phplib/lib/treelib.php";
 $gl_class_array["sqlite"] = "htmllib/phplib/lib/sqlite.php";
 $gl_class_array["lxclient"] = "htmllib/phplib/lib/client/lxclient.php";
 $gl_class_array["general"] = "htmllib/phplib/lib/generallib.php";
@@ -116,4 +116,3 @@ $gl_class_array['customaction'] = "htmllib/lib/customactionlib.php";
 $gl_class_array['custombutton'] = "htmllib/lib/custombuttonlib.php";
 $gl_class_array['lxguardwhitelist'] = "htmllib/lib/pserver/lxguardwhitelistlib.php";
 $gl_class_array['browsebackup'] = "htmllib/lib/browsebackuplib.php";
-

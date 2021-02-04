@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -8,7 +8,7 @@ function switchserver_main()
 {
 
 	global $argc, $argv;
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	//sleep(60);
 	initProgram("admin");
@@ -36,19 +36,19 @@ function switchserver_main()
 		$object = new $class(null, 'localhost', $name);
 		$object->get();
 		if ($object->dbaction === 'add') {
-			throw new lxException ("no_object", '', '');
+			throw new lxException("no_object", '', '');
 			exit;
 		}
 
 		if (!$object->syncserver) {
 			print("No_synserver...\n");
-			throw new lxException ("no_syncserver", '', '');
+			throw new lxException("no_syncserver", '', '');
 			exit;
 		}
 
 		if ($param['syncserver'] === $object->syncserver) {
 			print("No Change...\n");
-			throw new lxException ("no_change", '', '');
+			throw new lxException("no_change", '', '');
 			exit;
 		}
 
@@ -79,7 +79,6 @@ function switchserver_main()
 		exit;
 	}
 	mail($login->contactemail, "Switch Succeeded", "Switch Succeeded {$object->get__table()}:$object->nname to {$param['syncserver']}\n");
-
 }
 
 

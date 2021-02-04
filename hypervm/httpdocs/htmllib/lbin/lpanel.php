@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 chdir("../../");
 include_once "htmllib/lib/displayinclude.php";
@@ -8,7 +8,7 @@ lpanel_main();
 
 function lpanel_main()
 {
-	global $gbl, $login, $ghtml; 
+	global $gbl, $login, $ghtml;
 
 	initProgram();
 	initLanguage();
@@ -41,54 +41,51 @@ function lpanel_main()
 	} catch (exception $e) {
 		print("The Resource List could not gathered....{$e->getMessage()}<br> \n");
 	}
-
-
 }
 
 
 
 function print_ext_tree($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$icondir = get_image_path('/button/');
 	$icon = "$icondir/{$object->getClass()}_list.gif";
 
-	?> 
+?>
 
 
 	<script>
-	Ext.onReady(function(){
-    // shorthand
-    var Tree = Ext.tree;
-    
-    var tree = new Tree.TreePanel('tree-div', {
-        animate:true, 
-        loader: new Tree.TreeLoader({
-            //dataUrl:'get-nodes.php'
-            dataUrl:'/ajax.php?frm_action=tree'
-        }),
-        enableDD:true,
-        containerScroll: true
-    });
+		Ext.onReady(function() {
+			// shorthand
+			var Tree = Ext.tree;
 
-    // set the root node
-    var root = new Tree.AsyncTreeNode({
-        text: '<?=$object->getId()?>',
-		href: '<?=$ghtml->getFullUrl('a=show')?>',
-		hrefTarget: 'mainframe',
-		icon: '<?=$icon?>',
-        draggable:false,
-        id:'/'
-    });
-    tree.setRootNode(root);
+			var tree = new Tree.TreePanel('tree-div', {
+				animate: true,
+				loader: new Tree.TreeLoader({
+					//dataUrl:'get-nodes.php'
+					dataUrl: '/ajax.php?frm_action=tree'
+				}),
+				enableDD: true,
+				containerScroll: true
+			});
 
-    // render the tree
-    tree.render();
-    root.expand();
-});
-</script>
-<?php 
+			// set the root node
+			var root = new Tree.AsyncTreeNode({
+				text: '<?= $object->getId() ?>',
+				href: '<?= $ghtml->getFullUrl('a=show') ?>',
+				hrefTarget: 'mainframe',
+				icon: '<?= $icon ?>',
+				draggable: false,
+				id: '/'
+			});
+			tree.setRootNode(root);
+
+			// render the tree
+			tree.render();
+			root.expand();
+		});
+	</script>
+<?php
 
 }
-

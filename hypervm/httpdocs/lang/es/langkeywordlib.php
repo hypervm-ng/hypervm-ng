@@ -49,4 +49,3 @@ $__keyword['virtual'] = 'virtual';
 $__keyword['continue_without_plan'] = 'Seguir sin Plan';
 $__keyword['add'] = 'agregar';
 $__keyword['continue'] = 'continuar';
-

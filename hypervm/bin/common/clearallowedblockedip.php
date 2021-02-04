@@ -1,5 +1,5 @@
-<?php 
-include_once "htmllib/lib/include.php"; 
+<?php
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 
@@ -17,16 +17,15 @@ $object = new $class(null, null, $name);
 
 $list = $object->getList('allowedip');
 
-foreach($list as $l) {
+foreach ($list as $l) {
 	$l->delete();
 	$l->write();
 }
 
 $list = $object->getList('blockedip');
-foreach($list as $l) {
+foreach ($list as $l) {
 	$l->delete();
 	$l->write();
 }
 
 print("AllowedIp Sucessfully cleared for $class:$name\n");
-

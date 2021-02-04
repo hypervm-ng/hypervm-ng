@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 function shell_recurse_dir($dir, $func, $arglist = null)
 {
 
 	$list = lscandir_without_dot($dir);
 	if (!$list) return;
-	foreach($list as $file) {
+	foreach ($list as $file) {
 		$path = $dir . "/" . $file;
 		if (lis_dir($path)) {
 			shell_recurse_dir($path, $func, $arglist);
@@ -13,7 +13,7 @@ function shell_recurse_dir($dir, $func, $arglist = null)
 		/// After a successfuul recursion, you have to call the $func on the directory itself. So $func is called whether $path is both directory OR a file.
 		$narglist = null;
 		$narglist[] = $path;
-		foreach((array) $arglist as $a) {
+		foreach ((array) $arglist as $a) {
 			$narglist[] = $a;
 		}
 		//dprint("calling with :");
@@ -32,7 +32,7 @@ function lxfile_disk_free_space($dir)
 	$dir = expand_real_root($dir);
 	lxfile_mkdir($dir);
 	$ret = disk_free_space($dir);
-	$ret = round($ret/(1024 * 1024), 1);
+	$ret = round($ret / (1024 * 1024), 1);
 	log_shell("Disk Space $dir $ret");
 	return $ret;
 }
@@ -55,14 +55,14 @@ function lxshell_unzip_with_throw($dir, $file, $list = null)
 
 function lxshell_redirect($file, $cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$start = 2;
 	$arglist = array();
 	$nargs = @func_num_args();
-	if($nargs > 0)
+	if ($nargs > 0)
 		for ($i = $start; $i < $nargs; $i++)
 			$arglist[] = (isset($transforming_func)) ? $transforming_func(func_get_arg($i)) : func_get_arg($i);
-	
+
 	$cmd = getShellCommand($cmd, $arglist);
 	$return = null;
 	system("$cmd > $file 3</dev/null 4</dev/null 5</dev/null 6</dev/null", $return);
@@ -71,7 +71,7 @@ function lxshell_redirect($file, $cmd)
 
 function lxshell_directory($dir, $cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$dir = expand_real_root($dir);
 	$username = '__system__';
@@ -79,29 +79,28 @@ function lxshell_directory($dir, $cmd)
 	$start = 2;
 	$arglist = array();
 	$nargs = @func_num_args();
-	if($nargs > 0)
+	if ($nargs > 0)
 		for ($i = $start; $i < $nargs; $i++)
 			$arglist[] = (isset($transforming_func)) ? $transforming_func(func_get_arg($i)) : func_get_arg($i);
-	
+
 	$cmd = getShellCommand($cmd, $arglist);
 	do_exec_system($username, $dir, $cmd, $out, $err, $ret, null);
 	return $out;
-
 }
 function lxshell_output($cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$username = '__system__';
 
 	$start = 1;
-	
+
 	$arglist = array();
 	$nargs = @func_num_args();
-	if($nargs > 0)
+	if ($nargs > 0)
 		for ($i = $start; $i < $nargs; $i++)
 			$arglist[] = (isset($transforming_func)) ? $transforming_func(func_get_arg($i)) : func_get_arg($i);
-	
+
 	$cmd = getShellCommand($cmd, $arglist);
 	do_exec_system($username, null, $cmd, $out, $err, $ret, null);
 	return $out;
@@ -114,10 +113,10 @@ function lxshell_user_return($username, $cmd)
 	$start = 2;
 	$arglist = array();
 	$nargs = @func_num_args();
-	if($nargs > 0)
+	if ($nargs > 0)
 		for ($i = $start; $i < $nargs; $i++)
 			$arglist[] = (isset($transforming_func)) ? $transforming_func(func_get_arg($i)) : func_get_arg($i);
-	
+
 	$cmd = getShellCommand($cmd, $arglist);
 	$ret = new_process_cmd($username, null, $cmd);
 	return $ret;
@@ -131,10 +130,10 @@ function lxshell_return($cmd)
 	$start = 1;
 	$arglist = array();
 	$nargs = @func_num_args();
-	if($nargs > 0)
+	if ($nargs > 0)
 		for ($i = $start; $i < $nargs; $i++)
 			$arglist[] = (isset($transforming_func)) ? $transforming_func(func_get_arg($i)) : func_get_arg($i);
-	
+
 
 	$cmd = getShellCommand($cmd, $arglist);
 	do_exec_system($username, null, $cmd, $out, $err, $ret, null);
@@ -155,10 +154,10 @@ function lxshell_input($input, $cmd)
 	$start = 2;
 	$arglist = array();
 	$nargs = @func_num_args();
-	if($nargs > 0)
+	if ($nargs > 0)
 		for ($i = $start; $i < $nargs; $i++)
 			$arglist[] = (isset($transforming_func)) ? $transforming_func(func_get_arg($i)) : func_get_arg($i);
-	
+
 	$cmd = getShellCommand($cmd, $arglist);
 	do_exec_system($username, null, $cmd, $out, $err, $ret, $input);
 	return $ret;
@@ -180,7 +179,7 @@ function lxfile_rm($file)
 
 function lxfile_mv($src, $dst)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$src = expand_real_root($src);
 	$dst = expand_real_root($dst);
 	if (is_dir($dst)) {
@@ -197,7 +196,6 @@ function lxfile_mv($src, $dst)
 		return true;
 	}
 	return false;
-	
 }
 
 function lxfile_exists($file)
@@ -236,7 +234,7 @@ function lxfile_mkdir($dir)
 
 function lxfile_cp($src, $dst)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$src = expand_real_root($src);
 	$dst = expand_real_root($dst);
 	if (is_dir($dst)) {
@@ -244,7 +242,6 @@ function lxfile_cp($src, $dst)
 	}
 	log_filesys("Copying $src $dst");
 	return system("cp $src $dst");
-
 }
 
 function lxfile_stat($file, $duflag)
@@ -259,7 +256,6 @@ function lxfile_stat($file, $duflag)
 
 	get_file_type($file, $list);
 	return $list;
-
 }
 
 function get_file_type($file, &$stat)
@@ -294,7 +290,7 @@ function get_file_type($file, &$stat)
 	$list = pathinfo($file);
 
 	$ext = null;
-	if (isset($list['extension']))  {
+	if (isset($list['extension'])) {
 		$ext = $list['extension'];
 	}
 
@@ -313,7 +309,6 @@ function get_file_type($file, &$stat)
 		return;
 	}
 	$stat['ttype'] = "file";
-
 }
 
 function lxfile_dstat($dir, $duflag)
@@ -321,7 +316,7 @@ function lxfile_dstat($dir, $duflag)
 	$dir = expand_real_root($dir);
 	$list = lscandir_without_dot($dir);
 	$ret = null;
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$stat = lstat("$dir/$l");
 		get_file_type("$dir/$l", $stat);
 
@@ -345,7 +340,7 @@ function lxfile_getfile($file, $bytes = null)
 
 	$file = expand_real_root($file);
 	$stat = stat($file);
-	if ($stat['size'] > 5* 1000 * 1000) {
+	if ($stat['size'] > 5 * 1000 * 1000) {
 		dprint("File size too high. Taking only the last 200 lines\n");
 		$lines = 200;
 	}
@@ -372,11 +367,10 @@ function lxfile_tail($file, $getsize)
 	fseek($fp, $size - $getsize);
 
 	$ret = null;
-	while(!feof($fp)) {
+	while (!feof($fp)) {
 		$ret .= fread($fp, 1024);
 	}
 	return $ret;
-	
 }
 
 function lxfile_touch($file)
@@ -385,4 +379,3 @@ function lxfile_touch($file)
 	$ret = touch($file);
 	return $ret;
 }
-

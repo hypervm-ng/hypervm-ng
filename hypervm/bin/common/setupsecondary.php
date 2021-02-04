@@ -1,12 +1,12 @@
-<?php 
-include_once "htmllib/lib/include.php"; 
+<?php
+include_once "htmllib/lib/include.php";
 
 setupsecondary_main();
 
 
 function setupsecondary_main()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $argv;
 	$dbf = $sgbl->__var_dbf;
 	$prgm = $sgbl->__var_program_name;
@@ -33,14 +33,14 @@ function setupsecondary_main()
 	print("Setting up mysql to receive data from master\n");
 	add_line_to_secondary_mycnf($master, $slavepass);
 	$pass = slave_get_db_pass();
-    // TODO: REPLACE MYSQL_CONNECT
+	// TODO: REPLACE MYSQL_CONNECT
 	$dblink = mysqli_connect("localhost", "root", $pass, $dbf);
-	mysqli_query($dblink,"STOP SLAVE");
+	mysqli_query($dblink, "STOP SLAVE");
 	print("Getting initial data from the master\n");
 	system("ssh -p $sshport $master \"(cd /usr/local/lxlabs/$prgm/httpdocs ; lphp.exe ../bin/common/setupprimarymaster.php --slavepass=$slavepass)\" | mysql -u root -p$pass $dbf");
 	print("starting mysql data getting process\n");
-	mysqli_query($dblink,"CHANGE MASTER TO master_host='$master', master_password='$slavepass'");
-	mysqli_query($dblink,"START SLAVE");
+	mysqli_query($dblink, "CHANGE MASTER TO master_host='$master', master_password='$slavepass'");
+	mysqli_query($dblink, "START SLAVE");
 	lxfile_touch("../etc/secondary_master");
 	lxfile_touch("../etc/running_secondary");
 }
@@ -48,24 +48,23 @@ function setupsecondary_main()
 function check_if_skip($l)
 {
 	$vlist = array("server-id", "master-host", "master-user", "master-password");
-	foreach($vlist as $v) {
+	foreach ($vlist as $v) {
 		if (csb($l, $v)) {
 			return true;
 		}
 	}
 	return false;
-
 }
 function add_line_to_secondary_mycnf($master, $slavepass)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	if (!lxfile_exists("/etc/secondary_master.copy.my.cnf")) {
 		lxfile_cp("/etc/my.cnf", "/etc/secondary_master.copy.my.cnf");
 	}
 
 	$list = lfile_trim("/etc/my.cnf");
 
-	foreach($list as $k => $l) {
+	foreach ($list as $k => $l) {
 		if (check_if_skip($l)) {
 			continue;
 		}
@@ -80,5 +79,4 @@ function add_line_to_secondary_mycnf($master, $slavepass)
 
 	lfile_put_contents("/etc/my.cnf", implode("\n", $ll));
 	system("service mysqld restart");
-
 }

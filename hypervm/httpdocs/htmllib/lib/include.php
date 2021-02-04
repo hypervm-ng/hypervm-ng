@@ -1,18 +1,18 @@
-<?php 
+<?php
 
 $path = __FILE__;
 $dir = dirname(dirname(dirname($path)));
 include_once "$dir/htmllib/lib/includecore.php";
 
 print_time("include");
-include_once "htmllib/phplib/lib/lxclass.php"  ;
+include_once "htmllib/phplib/lib/lxclass.php";
 include_once "htmllib/lib/commonfslib.php";
 include_once "htmllib/lib/objectactionlib.php";
 include_once "htmllib/lib/commandlinelib.php";
 include_once "lib/sgbl.php";
 include_once "lib/gbl.php";
 include_once "htmllib/lib/lib.php";
-include_once "htmllib/phplib/lxlib.php" ;
+include_once "htmllib/phplib/lxlib.php";
 include_once "htmllib/phplib/common.inc";
 include_once "htmllib/lib/remotelib.php";
 include_once "htmllib/phplib/lib/lxdb.php";
@@ -26,7 +26,7 @@ include_once "lib/programlib.php";
 
 if (lxfile_exists("../etc/classdefine")) {
 	$list = lscandir_without_dot("../etc/classdefine");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (cse($l, "phps")) {
 			include_once "../etc/classdefine/$l";
 		}

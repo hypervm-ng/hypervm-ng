@@ -1,5 +1,5 @@
-<?php 
-include_once "htmllib/lib/include.php"; 
+<?php
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 $slave = $argv[1];
@@ -12,12 +12,14 @@ trafficperslave($slave, $oldtime, $newtime);
 function trafficperslave($slave, $oldtime, $newtime)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$sq = new Sqlite(null, 'vps');
 
 	$res = $sq->getRowswhere("syncserver = '$slave'", array('nname'));
-	if (!$res) { return; }
-	foreach($res as $r) {
+	if (!$res) {
+		return;
+	}
+	foreach ($res as $r) {
 		$vps = new Vps(null, null, $r['nname']);
 		$vps->get();
 		$vpslist[] = $vps;
@@ -25,7 +27,7 @@ function trafficperslave($slave, $oldtime, $newtime)
 
 
 	$list = null;
-	foreach($vpslist as $d) {
+	foreach ($vpslist as $d) {
 		$rt = new Remote();
 		if ($d->isXen()) {
 			$rt->viflist = $d->getViflist();
@@ -38,18 +40,18 @@ function trafficperslave($slave, $oldtime, $newtime)
 
 	$driverapp = $gbl->getSyncClass(null, $slave, 'vps');
 	try {
-		$vps_usage = rl_exec_get(null, $slave, array("vpstraffic__$driverapp", 'findTotaltrafficUsage'), array($list, $oldtime, $newtime)); 
+		$vps_usage = rl_exec_get(null, $slave, array("vpstraffic__$driverapp", 'findTotaltrafficUsage'), array($list, $oldtime, $newtime));
 	} catch (exception $e) {
 		exit;
 	}
 
 	dprintr($vps_usage);
-	$res="";
-	foreach($vpslist as $d) {
+	$res = "";
+	foreach ($vpslist as $d) {
 		$res['nname'] = "$d->nname:$oldtime:$newtime";
 		$domt = new Vpstraffic(null, null, $res['nname']);
-		$res['timestamp'] =    @ strftime("%c", $newtime);
-		$res['oldtimestamp'] = @ strftime("%c", $oldtime);
+		$res['timestamp'] =    @strftime("%c", $newtime);
+		$res['oldtimestamp'] = @strftime("%c", $oldtime);
 		$res['ddate'] = time();
 		$res['comment'] = null;
 		$res['parent_list'] = null;
@@ -63,10 +65,10 @@ function trafficperslave($slave, $oldtime, $newtime)
 	}
 
 
-	$firstofmonth  = @ mktime(00, 01, 00, @ date("n"), 1, @ date("Y"));
+	$firstofmonth  = @mktime(00, 01, 00, @date("n"), 1, @date("Y"));
 	$today = time() + 2 * 24 * 60 * 60;
 
-	if ($vpslist) foreach($vpslist as $vps) {
+	if ($vpslist) foreach ($vpslist as $vps) {
 		$vpst  = $vps->getList("vpstraffic");
 		$list = get_namelist_from_objectlist($vpst);
 		$tu = trafficGetIndividualObjectTotal($vpst, $firstofmonth, $today, $vps->nname);
@@ -85,6 +87,4 @@ function trafficperslave($slave, $oldtime, $newtime)
 		}
 	*/
 	}
-
 }
-

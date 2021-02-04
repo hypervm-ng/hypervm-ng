@@ -29,43 +29,43 @@ function init_global()
 	$gbl = new Gbl();
 	$gbl->get();
 
-    date_default_timezone_set("UTC");
+	date_default_timezone_set("UTC");
 
-//
-// Turn on demo version by putting a empty file called demo in the etc dir.
-// More info about enable a demo server soon at our wiki
-//
+	//
+	// Turn on demo version by putting a empty file called demo in the etc dir.
+	// More info about enable a demo server soon at our wiki
+	//
 	if (lfile_exists("__path_program_etc/demo")) {
 		$g_demo = 1;
 	}
 
 	check_for_debug("/usr/local/lxlabs/hypervm/httpdocs/commands.php");
-    $sgbl->method = ($sgbl->dbg >= 1) ? "get" : "post";
+	$sgbl->method = ($sgbl->dbg >= 1) ? "get" : "post";
 
-//
-// ### LxCenter
-//
-// Check for Development/Debug version
-// If file not exists, Production mode (-1)
-// If file exists it can have the following numbers to enable
-// 1  = Debug mode 1
-// 2  = Debug mode 2
-// 3  = Debug mode 3
-// 4  = Debug mode 4
-// 5  = Debug mode 5
-// -1 = Turn Off and go to production mode
+	//
+	// ### LxCenter
+	//
+	// Check for Development/Debug version
+	// If file not exists, Production mode (-1)
+	// If file exists it can have the following numbers to enable
+	// 1  = Debug mode 1
+	// 2  = Debug mode 2
+	// 3  = Debug mode 3
+	// 4  = Debug mode 4
+	// 5  = Debug mode 5
+	// -1 = Turn Off and go to production mode
 
 }
 
 function debug_for_backend()
 {
 	global $gbl, $sgbl, $login, $ghtml;
-    check_for_debug("/usr/local/lxlabs/hypervm/httpdocs/commands.php");
+	check_for_debug("/usr/local/lxlabs/hypervm/httpdocs/commands.php");
 	if ($sgbl->isDebug()) {
 		return null;
 	}
-    check_for_debug("/usr/local/lxlabs/hypervm/httpdocs/backend.php");
-    return null;
+	check_for_debug("/usr/local/lxlabs/hypervm/httpdocs/backend.php");
+	return null;
 }
 
 function check_for_debug($file)
@@ -89,7 +89,7 @@ function check_for_debug($file)
 		ini_set("display_errors", "Off");
 		ini_set("log_errors", "On");
 	}
-    return null;
+	return null;
 }
 
 function isUpdating()
@@ -175,7 +175,7 @@ function findOperatingSystem($type = null)
 
 function find_os_pointversion()
 {
-/*
+	/*
 	if (file_exists("/etc/fedora-release")) {
 		$release = trim(file_get_contents("/etc/fedora-release"));
 		$osv = explode(" ", $release);
@@ -204,51 +204,49 @@ function find_os_pointversion()
 
 function find_os_selecttype($select)
 {
-        // list os support
-        $ossup = array('redhat' => 'rhel', 'fedora' => 'fedora', 'centos' => 'centos');
+	// list os support
+	$ossup = array('redhat' => 'rhel', 'fedora' => 'fedora', 'centos' => 'centos');
 
-        foreach(array_keys($ossup) as $k) {
-                $osrel = file_get_contents("/etc/{$k}-release");
+	foreach (array_keys($ossup) as $k) {
+		$osrel = file_get_contents("/etc/{$k}-release");
 
-                if ($osrel) {
-                                if ($select === 'release') {
-                                        return $osrel;
-                                }
+		if ($osrel) {
+			if ($select === 'release') {
+				return $osrel;
+			}
 
-                                $osrel = strtolower(trim($osrel));
+			$osrel = strtolower(trim($osrel));
 
-                                break;
-                }
-        }
+			break;
+		}
+	}
 
-        // specific for 'red hat'
-        $osrel = str_replace('red hat', 'redhat', $osrel);
+	// specific for 'red hat'
+	$osrel = str_replace('red hat', 'redhat', $osrel);
 
-        $osver = explode(" ", $osrel);
+	$osver = explode(" ", $osrel);
 
-        $verpos = sizeof($osver) - 2;
+	$verpos = sizeof($osver) - 2;
 
-        if (array_key_exists($osver[0], $ossup)) {
-                // specific for 'red hat'
-                if ($osrel === 'redhat') {
-                        $oss = $osver[$verpos];
-                }
-                else {
-                        $mapos = explode(".", $osver[$verpos]);
-                        $oss = $mapos[0];
-                }
+	if (array_key_exists($osver[0], $ossup)) {
+		// specific for 'red hat'
+		if ($osrel === 'redhat') {
+			$oss = $osver[$verpos];
+		} else {
+			$mapos = explode(".", $osver[$verpos]);
+			$oss = $mapos[0];
+		}
 
-                if ($select === 'distro') {
-                        return $ossup[$osver[0]];
-                }
-                else if ($select === 'pointversion') {
-                        return $ossup[$osver[0]]."-".$oss;
-                }
-        }
+		if ($select === 'distro') {
+			return $ossup[$osver[0]];
+		} else if ($select === 'pointversion') {
+			return $ossup[$osver[0]] . "-" . $oss;
+		}
+	}
 }
 
 function lscandir_without_dot($arg, $dotflag = false)
-{  
+{
 	$list = lscandir($arg);
 
 	if (!$list) {
@@ -256,7 +254,7 @@ function lscandir_without_dot($arg, $dotflag = false)
 	}
 
 	foreach ($list as $k => $v) {
-		if ($v === ".." || $v === "." || $v === '.svn' || $v === '.git')  {
+		if ($v === ".." || $v === "." || $v === '.svn' || $v === '.git') {
 			unset($list[$k]);
 		}
 		if ($dotflag && csb($v, '.')) {
@@ -511,12 +509,12 @@ function new_process_cmd($user, $dir, $cmd)
 function lfile_put_contents($file, $data, $flag = null)
 {
 	$file = expand_real_root($file);
-	
+
 	if (is_soft_or_hardlink($file)) {
 		log_log("link_error", "$file is hard or symlink. Not writing\n");
 		return;
 	}
-	
+
 	if (char_search_a($data, "__path_")) {
 		dprint("<font color=red>Warning : Trying to write __path into a file $file: </font> $data <br> \n", 3);
 	}
@@ -524,44 +522,36 @@ function lfile_put_contents($file, $data, $flag = null)
 
 	lxfile_mkdir(dirname($file));
 
-	if(file_exists($file))
-	{
-		if(is_readable($file))
-		{
-			if(is_writable($file)){
+	if (file_exists($file)) {
+		if (is_readable($file)) {
+			if (is_writable($file)) {
 				$result = file_put_contents($file, $data, $flag);
 				chown($file, 'lxlabs');
 				return $result;
-			}
-			else{
+			} else {
 				$posix_data = posix_getpwuid(fileowner($file));
 				$error_msg = 'Could not write the file \'' . $file . '\' with permissions: ' .
-				substr(sprintf('%o', fileperms($file)), -4) .
-                ' UID: ' . $posix_data['name'] .  ':' . $posix_data['uid'] .
-                ' GID: ' . $posix_data['gecos'] .  ':' . $posix_data['gid'] .
-				( PHP_SAPI !== 'cgi-fcgi' ? PHP_EOL : '<br />');
+					substr(sprintf('%o', fileperms($file)), -4) .
+					' UID: ' . $posix_data['name'] .  ':' . $posix_data['uid'] .
+					' GID: ' . $posix_data['gecos'] .  ':' . $posix_data['gid'] .
+					(PHP_SAPI !== 'cgi-fcgi' ? PHP_EOL : '<br />');
 
 				dprint($error_msg);
 				//log_log('filesys', $error_msg);
 				return false;
 			}
-		}
-		else
-		{
-			$error_msg = 'Could not read the file \''.$file.'\' with permissions: '.substr(sprintf('%o', fileperms($file)), -4) . ( PHP_SAPI !== 'cgi-fcgi' ? PHP_EOL : '<br />');
+		} else {
+			$error_msg = 'Could not read the file \'' . $file . '\' with permissions: ' . substr(sprintf('%o', fileperms($file)), -4) . (PHP_SAPI !== 'cgi-fcgi' ? PHP_EOL : '<br />');
 			dprint($error_msg);
 			//log_log('filesys', $error_msg);
 			return false;
 		}
-	}
-	else
-	{
+	} else {
 		$result = file_put_contents($file, $data, $flag);
 		chown($file, 'lxlabs');
-		 
-		if($result === false)
-		{
-			$error_msg = 'File \''.$file.'\' could not be created.';
+
+		if ($result === false) {
+			$error_msg = 'File \'' . $file . '\' could not be created.';
 			dprint($error_msg);
 			//log_log('filesys', $error_msg);
 			return false;
@@ -571,11 +561,11 @@ function lfile_put_contents($file, $data, $flag = null)
 }
 
 /**
-* @return void
-* @param unknown
-* @param unknown
-* @desc Redefining php functions ... sort of.. Stupid php doesn't allow that. So we do the next best thing.. We add an 'l' to all system functions and then use these functions instead of the php ones... In a way, is a better idea too, since, there might always be some cases where we might want to override this crap. :-)
-*/
+ * @return void
+ * @param unknown
+ * @param unknown
+ * @desc Redefining php functions ... sort of.. Stupid php doesn't allow that. So we do the next best thing.. We add an 'l' to all system functions and then use these functions instead of the php ones... In a way, is a better idea too, since, there might always be some cases where we might want to override this crap. :-)
+ */
 function lmkdir($dir)
 {
 	return lx_redefine_func("mkdir", $dir);
@@ -653,7 +643,7 @@ function lx_merge_good($arg)
 
 	$arglist = array();
 	for ($i = 0; $i < func_num_args(); $i++)
-	$arglist[] = func_get_arg($i);
+		$arglist[] = func_get_arg($i);
 
 	//dprintr($arglist);
 
@@ -753,7 +743,7 @@ function log_log($file, $mess, $id = null)
 	$mess = trim($mess);
 	$rf = "__path_program_root/log/$file";
 
-	lfile_put_contents($rf, @ date("H:i M/d/Y") . ": $mess" . PHP_EOL, FILE_APPEND);
+	lfile_put_contents($rf, @date("H:i M/d/Y") . ": $mess" . PHP_EOL, FILE_APPEND);
 }
 
 function log_ajax($mess, $id = 1)
@@ -776,13 +766,12 @@ function log_security($mess, $id = 1)
 	// get IP
 	if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	}
-	else {
+	} else {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 
 	$user_agent = $_SERVER["HTTP_USER_AGENT"];
-	
+
 	if (empty($_SERVER["HTTP_USER_AGENT"])) {
 		$user_agent = "Not a browser";
 	}
@@ -850,11 +839,11 @@ function lsqlite_open($file)
 }
 
 /**
-* @return void
-* @param unknown
-* @param unknown
-* @desc This function is the core of the the path abstraction. It converts the paths of the form '__path.../dir' to '$sgbl->__path.../dir'. This is used in all the redefined functions to convert their arguments.
-*/
+ * @return void
+ * @param unknown
+ * @param unknown
+ * @desc This function is the core of the the path abstraction. It converts the paths of the form '__path.../dir' to '$sgbl->__path.../dir'. This is used in all the redefined functions to convert their arguments.
+ */
 function expand_real_root($root)
 {
 	global $gbl, $sgbl, $login, $ghtml;
@@ -871,11 +860,11 @@ function expand_real_root($root)
 }
 
 /**
-* @return void
-* @param unknown
-* @param unknown
-* @desc the function that does the redefining of fundamental file access functions. Note the double use of 'eval'. hey hey, nothing is impossible in php. Never ever repeat the code; Make it unreadable instead. :-)
-*/
+ * @return void
+ * @param unknown
+ * @param unknown
+ * @desc the function that does the redefining of fundamental file access functions. Note the double use of 'eval'. hey hey, nothing is impossible in php. Never ever repeat the code; Make it unreadable instead. :-)
+ */
 function kill_and_save_pid($name)
 {
 	kill_pid($name);
@@ -899,11 +888,11 @@ function lx_redefine_func($func)
 	global $gbl, $sgbl, $login, $ghtml;
 
 	global $gbl, $sgbl, $login, $ghtml;
-	
+
 	$arglist = array();
 	for ($i = 1; $i < func_num_args(); $i++)
-	$arglist[] = expand_real_root(func_get_arg($i));
-	
+		$arglist[] = expand_real_root(func_get_arg($i));
+
 	return call_user_func_array($func, $arglist);
 }
 
@@ -980,7 +969,7 @@ function dprinto($var, $type = 0)
 		return;
 	}
 
-	$newob = clone($var);
+	$newob = clone ($var);
 	$newob->__parent_o = null;
 	dprintr($newob);
 }
@@ -1043,7 +1032,7 @@ function dprint_r($var, $type = 0)
 
 function lx_local_socket_read($socket)
 {
-	return @ socket_read($socket, 2048);
+	return @socket_read($socket, 2048);
 	//$res=socket_recv($MsgSock,$buffer,1024,0);
 }
 
@@ -1156,7 +1145,7 @@ function char_search_end($haystack, $needle, $insensitive = 1)
 	}
 }
 
-function array_search_bool($needle, $haystack, $strict=false)
+function array_search_bool($needle, $haystack, $strict = false)
 {
 	if (!$haystack) {
 		return false;
@@ -1450,7 +1439,7 @@ function is_unlimited($resource)
 function if_demo_throw()
 {
 	if (if_demo()) {
-		throw new lxException ("demo", '');
+		throw new lxException("demo", '');
 	}
 }
 
@@ -1527,11 +1516,11 @@ function get_general_image_path($v = null)
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc  part of the getting-image-through-http (to enable caching) madness.
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc  part of the getting-image-through-http (to enable caching) madness.
+ */
 function add_http_host($elem)
 {
 	return $elem;
@@ -1717,7 +1706,6 @@ function lx_strip_tags($str)
 
 class Language_Mes
 {
-
 }
 
 function get_language()
@@ -1734,7 +1722,7 @@ function get_language()
 function get_charset()
 {
 	$lang = get_language();
-	$charset = @ lfile_get_contents("lang/$lang/charset");
+	$charset = @lfile_get_contents("lang/$lang/charset");
 	$charset = trim($charset);
 	return $charset;
 }
@@ -1743,7 +1731,7 @@ function initLanguageCharset()
 {
 	global $gbl, $sgbl, $login, $ghtml;
 	$lan = get_language();
-	$charset = @ lfile_get_contents("lang/$lan/charset");
+	$charset = @lfile_get_contents("lang/$lan/charset");
 	$charset = trim($charset);
 	print("<head>");
 	if ($charset) {
@@ -1760,29 +1748,29 @@ function initLanguage()
 
 	$language = get_language();
 
-		if (lxfile_exists("lang/$language/messagelib.php")) {
-			include_once("lang/$language/messagelib.php");
-		} else {
-			include_once("lang/en/messagelib.php");
-		}
+	if (lxfile_exists("lang/$language/messagelib.php")) {
+		include_once("lang/$language/messagelib.php");
+	} else {
+		include_once("lang/en/messagelib.php");
+	}
 
-		if (lxfile_exists("lang/$language/langfunctionlib.php")) {
-			include_once("lang/$language/langfunctionlib.php");
-		} else {
-			include_once("lang/en/langfunctionlib.php");
-		}
+	if (lxfile_exists("lang/$language/langfunctionlib.php")) {
+		include_once("lang/$language/langfunctionlib.php");
+	} else {
+		include_once("lang/en/langfunctionlib.php");
+	}
 
-		if (lxfile_exists("lang/$language/langkeywordlib.php")) {
-			include_once("lang/$language/langkeywordlib.php");
-		} else {
-			include_once("lang/en/langkeywordlib.php");
-		}
+	if (lxfile_exists("lang/$language/langkeywordlib.php")) {
+		include_once("lang/$language/langkeywordlib.php");
+	} else {
+		include_once("lang/en/langkeywordlib.php");
+	}
 
-		if (lxfile_exists("lang/$language/desclib.php")) {
-			include_once("lang/$language/desclib.php");
-		} else {
-			include_once("lang/en/desclib.php");
-		}
+	if (lxfile_exists("lang/$language/desclib.php")) {
+		include_once("lang/$language/desclib.php");
+	} else {
+		include_once("lang/en/desclib.php");
+	}
 
 	include_once("htmllib/lib/commonmessagelib.php");
 
@@ -1791,15 +1779,14 @@ function initLanguage()
 	$g_language_mes->__information = $__information;
 	$g_language_mes->__emessage = $__emessage;
 	$g_language_mes->__keyword = $__keyword;
-	if(!isset($__help))  $__help = NULL;
+	if (!isset($__help))  $__help = NULL;
 	$g_language_mes->__help = $__help;
-	if(!isset($__helpvar))  $__helpvar = NULL;
+	if (!isset($__helpvar))  $__helpvar = NULL;
 	$g_language_mes->__helpvar = $__helpvar;
 	$g_language_mes->__commonhelp = $g_commonhelp;
 
 	$g_language_desc = new Remote();
 	$g_language_desc->__description = $__description;
-
 }
 
 function lx_error_handler($errno, $errstr, $file, $line)
@@ -1824,17 +1811,17 @@ function lx_error_handler($errno, $errstr, $file, $line)
 
 	dprint("\n### PHP Error detected\n");
 	dprint("### Notice: $errstr\n");
-		dprint("### File:$file\n");
-		dprint("### Line number: $line\n");
+	dprint("### File:$file\n");
+	dprint("### Line number: $line\n");
 	dprint("### End PHP Error information\n\n");
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc Truly random and insane way to encrypt the image/form names so that hackers won't easily understand teh program structure, (which is clearly visible in these names...)
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc Truly random and insane way to encrypt the image/form names so that hackers won't easily understand teh program structure, (which is clearly visible in these names...)
+ */
 function createEncName($name)
 {
 	return $name;
@@ -1878,15 +1865,15 @@ function lx_exception_handler($e)
 function check_raw_password($class, $client, $pass)
 {
 	//return true;
-	
+
 	if (!$class || !$client || !$pass) {
 		return false;
 	}
 
 	$rawdb = new Sqlite(null, $class);
-        $password = $rawdb->rawquery("select password from ".$rawdb->real_escape_string($class)." where nname = '".$rawdb->real_escape_string($client)."'");
+	$password = $rawdb->rawquery("select password from " . $rawdb->real_escape_string($class) . " where nname = '" . $rawdb->real_escape_string($client) . "'");
 	$enp = $password[0]['password'];
-	
+
 	if ($enp && check_password($pass, $enp)) {
 		return true;
 	}
@@ -1895,11 +1882,11 @@ function check_raw_password($class, $client, $pass)
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc  Checks if the client is disabled and exits immedeiately showing a message.
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc  Checks if the client is disabled and exits immedeiately showing a message.
+ */
 function check_if_disabled_and_exit()
 {
 	global $gbl, $sgbl, $login, $ghtml;
@@ -1965,11 +1952,11 @@ function createTreeObject($name, $img, $imgstr, $url, $open, $help, $alt)
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc A generic function, that can be used by all programs. Does all the basic login stuff.
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc A generic function, that can be used by all programs. Does all the basic login stuff.
+ */
 function initProgramlib($ctype = null)
 {
 	global $gbl, $sgbl, $login, $ghtml;
@@ -1980,7 +1967,7 @@ function initProgramlib($ctype = null)
 	}
 	static $var = 0;
 	$var++;
-	
+
 	$progname = $sgbl->__var_program_name;
 	lfile_put_contents($sgbl->__var_error_file, "");
 	set_exception_handler("lx_exception_handler");
@@ -1988,7 +1975,7 @@ function initProgramlib($ctype = null)
 	set_error_handler("lx_error_handler");
 
 	//setcookie("XDEBUG_SESSION", "sess");
-	
+
 	if ($var >= 2) {
 		dprint("initProgramlib called twice \n <br> ");
 	}
@@ -2005,12 +1992,12 @@ function initProgramlib($ctype = null)
 		$login->get();
 		return;
 	} else if ($ctype != "") {
-		
+
 		$login = new Client(null, null, $ctype, "login", "forced");
 		$login->get();
 		return;
 	}
-	
+
 	$sessobj = null;
 	if ($ghtml->frm_consumedlogin === 'true') {
 		$clientname = $_COOKIE["$progname-consumed-clientname"];
@@ -2020,7 +2007,7 @@ function initProgramlib($ctype = null)
 		$login->__session_id = $session_id;
 		$sessobj = $login->getObject('ssession');
 	} else {
-		
+
 		if (isset($_COOKIE["$progname-session-id"])) {
 			$clientname = $_COOKIE["$progname-clientname"];
 			$classname = $_COOKIE["$progname-classname"];
@@ -2041,7 +2028,7 @@ function initProgramlib($ctype = null)
 			}
 		}
 	}
-	
+
 	if (!$sessobj || $sessobj->dbaction === 'add') {
 		if ($ghtml->frm_ssl) {
 			$ssl = unserialize(base64_decode($ghtml->frm_ssl));
@@ -2061,16 +2048,16 @@ function initProgramlib($ctype = null)
 			$sessobj->dbaction = 'clean';
 		}
 	}
-	
+
 	//get_savedlogin($classname, $clientname);
 	//print_time('login_get', "Login Get");
 	//dprintr($login);
 
-//avoid some php warnings
-if (isset($login)) {
-	$gbl->client = $login->nname;
-	$gbl->client_ttype = $login->cttype;
-}
+	//avoid some php warnings
+	if (isset($login)) {
+		$gbl->client = $login->nname;
+		$gbl->client_ttype = $login->cttype;
+	}
 
 	//dprintr($login->hpfilter);
 
@@ -2080,7 +2067,7 @@ if (isset($login)) {
 		clear_all_cookie();
 		$ghtml->print_redirect_self("/login/");
 	}
-	
+
 	$gbl->c_session = $sessobj;
 
 	if ($login->getClName() !== $sessobj->parent_clname) {
@@ -2090,7 +2077,7 @@ if (isset($login)) {
 		clear_all_cookie();
 		$ghtml->print_redirect_self("/login/?frm_emessage=sessionname_not_client");
 	}
-	
+
 	$gen = $login->getObject('general')->generalmisc_b;
 
 	if (!$gen->isOn('disableipcheck') && $_SERVER['REMOTE_ADDR'] != $sessobj->ip_address) {
@@ -2109,7 +2096,7 @@ if (isset($login)) {
 			}
 		}
 	}
-	
+
 	if (intval($login->getSpecialObject('sp_specialplay')->ssession_timeout) <= 100) {
 		$login->getSpecialObject('sp_specialplay')->ssession_timeout = 100;
 		$login->setUpdateSubaction();
@@ -2120,7 +2107,7 @@ if (isset($login)) {
 	//$timeout  =  $sessobj->last_access + 4;
 	$sessobj->last_access = time();
 	$sessobj->setUpdateSubaction();
-	
+
 	if ($sessobj->auxiliary_id) {
 		$aux = new Auxiliary(null, null, $sessobj->auxiliary_id);
 		$aux->get();
@@ -2137,7 +2124,7 @@ if (isset($login)) {
 			$ghtml->print_redirect_self("/login/?frm_emessage=session_timeout");
 		}
 	}
-	
+
 	addToUtmp($sessobj, 'update');
 }
 
@@ -2319,11 +2306,11 @@ function delete_login()
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc  Saves teh whole login info. Login is 'Was'ed; (Write and synced). Any exception is caught and the script is returned to the previous web page, with the error message string returned by the exception. Works EXceptionally well.. :-)
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc  Saves teh whole login info. Login is 'Was'ed; (Write and synced). Any exception is caught and the script is returned to the previous web page, with the error message string returned by the exception. Works EXceptionally well.. :-)
+ */
 function save_login()
 {
 	// Function removed by Ligesh earlier. (was saving login info)
@@ -2389,11 +2376,11 @@ function create_name($word)
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc  Remove unsavoury characters from a string so that it can be used as a variable.
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc  Remove unsavoury characters from a string so that it can be used as a variable.
+ */
 function fix_nname_to_be_variable($var)
 {
 	if (!$var) {
@@ -2546,11 +2533,11 @@ function createZeroString($n)
 }
 
 /**
-* @return void
-* @param
-* @param
-* @desc  Execs a method inside a class. Passes all the variables to it. See the use of 2 evals.. Check documentation for lx_redefine_func;
-*/
+ * @return void
+ * @param
+ * @param
+ * @desc  Execs a method inside a class. Passes all the variables to it. See the use of 2 evals.. Check documentation for lx_redefine_func;
+ */
 function exec_class_method($class, $func)
 {
 	global $gbl, $sgbl, $login, $ghtml;
@@ -2565,7 +2552,7 @@ function exec_class_method($class, $func)
 
 	$arglist = array();
 	for ($i = $start; $i < func_num_args(); $i++)
-	$arglist[] = func_get_arg($i);
+		$arglist[] = func_get_arg($i);
 
 	// workaround for the following php bug:
 	//   http://bugs.php.net/bug.php?id=47948
@@ -2577,8 +2564,8 @@ function exec_class_method($class, $func)
 
 function lxgettimewithoutyear($time)
 {
-	$curd = @ getdate(time());
-	$date = @ getdate($time);
+	$curd = @getdate(time());
+	$date = @getdate($time);
 
 	//$month = ($date['month'] === $curd['month'])? "this Month": $date['month'];
 	$month = substr($date['month'], 0, 3);
@@ -2605,8 +2592,8 @@ function lxgettimewithoutyear($time)
 
 function lxgettime($time)
 {
-	$curd = @ getdate(time());
-	$date = @ getdate($time);
+	$curd = @getdate(time());
+	$date = @getdate($time);
 
 	$year = ($date['year'] === $curd['year']) ? "" : $date['year'];
 	//$month = ($date['month'] === $curd['month'])? "this Month": $date['month'];
@@ -2802,11 +2789,11 @@ function getNthToken($string, $num, $delim = ':')
 }
 
 /**
-* @return void
-* @param unknown
-* @param unknown
-* @desc Recurses a dir tree and execs the '$func' on all the files AND the directories.
-*/
+ * @return void
+ * @param unknown
+ * @param unknown
+ * @desc Recurses a dir tree and execs the '$func' on all the files AND the directories.
+ */
 function recurse_dir($dir, $func, $arglist = null)
 {
 	$list = lscandir($dir);
@@ -2937,10 +2924,10 @@ function critical_change_db_pass()
 			change_db_pass();
 		} catch (exception $e) {
 		}
-        return true;
+		return true;
 	}
 
-    return false;
+	return false;
 }
 
 function change_db_pass()
@@ -2959,12 +2946,12 @@ function change_db_pass()
 	if ($return) {
 		$out = implode(" ", $out);
 		log_log("admin_error", "mysql change password Failed $out");
-		throw new lxException ("could_not_change_admin_pass", '', $out);
+		throw new lxException("could_not_change_admin_pass", '', $out);
 	}
 	$return = lfile_put_contents("__path_admin_pass", $newp);
 	if (!$return) {
 		log_log("admin_error", "Admin pass change failed  $last_error");
-		throw new lxException ("could_not_change_admin_pass", '', $last_error);
+		throw new lxException("could_not_change_admin_pass", '', $last_error);
 	}
 }
 

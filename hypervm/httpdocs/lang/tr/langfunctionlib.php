@@ -34,5 +34,3 @@ function get_plural($word)
 	$ret = "{$word}ler";
 	return ucfirst($ret);
 }
-
-

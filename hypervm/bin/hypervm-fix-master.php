@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -23,4 +23,3 @@ if (!$res) {
 
 $sq->rawQuery("update vps set syncserver = '$oldmaster' where syncserver = 'localhost'");
 print("Converted all the vpses from localhost to $oldmaster\n");
-

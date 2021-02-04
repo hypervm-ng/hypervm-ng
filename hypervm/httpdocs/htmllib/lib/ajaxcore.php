@@ -18,13 +18,13 @@ $cgi_action = "__ajax_desc_{$ghtml->frm_action}";
 
 //sleep(6);
 $ret = $cgi_action();
-while(@ob_end_clean());
+while (@ob_end_clean());
 print(json_encode($ret));
 flush();
 
 function convert_tree_to_frm_o()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$cid = $ghtml->node;
 
 	if (!csa($cid, "&")) {
@@ -36,7 +36,7 @@ function convert_tree_to_frm_o()
 	$i = 0;
 	$ghtml->__title_function = false;
 	$ghtml->__resource_class = false;
-	foreach((array)$dlist as $d) {
+	foreach ((array)$dlist as $d) {
 		//if (csa($d, "_s_vv_p_")) {
 		if (csb($d, "__title_")) {
 			$ghtml->__title_function = $d;
@@ -63,7 +63,7 @@ function convert_tree_to_frm_o()
 
 function __ajax_desc_tree()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$object = $gbl->__c_object;
 	$icondir = get_image_path('/button/');
 	$rclist = $object->getResourceChildList();
@@ -73,7 +73,7 @@ function __ajax_desc_tree()
 		$u = "a=show&k[class]=ffile&k[nname]=/";
 		$u = $ghtml->getFullUrl($u);
 		$v = createClName('ffile', '/');
-		$ret[] = array('text'=> "File", 'icon' => "{$icondir}/ffile_show.gif", 'hrefTarget' => 'mainframe', 'href' => $u, 'id'=> "{$cid}&{$v}");
+		$ret[] = array('text' => "File", 'icon' => "{$icondir}/ffile_show.gif", 'hrefTarget' => 'mainframe', 'href' => $u, 'id' => "{$cid}&{$v}");
 	}
 
 
@@ -82,18 +82,17 @@ function __ajax_desc_tree()
 		if (cse($c, "_l")) {
 			$clname = $object->getChildNameFromDes($c);
 			$list = $object->getList($clname, $totalcount);
-			foreach($list as $o) {
+			foreach ($list as $o) {
 				$u = "a=show&k[class]={$o->getClass()}&k[nname]={$o->nname}";
 				$u = $ghtml->getFullUrl($u);
-				$ret[] = array('text' => basename($o->nname), 'icon' => "$icondir/{$o->getClass()}_list.gif", 'hrefTarget' => 'mainframe', 'href' => $u, 'id'=> "{$cid}&{$o->getClName()}");
+				$ret[] = array('text' => basename($o->nname), 'icon' => "$icondir/{$o->getClass()}_list.gif", 'hrefTarget' => 'mainframe', 'href' => $u, 'id' => "{$cid}&{$o->getClName()}");
 			}
-
 		} else if (cse($c, "_o")) {
 			$clname = $object->getChildNameFromDes($c);
 			$o = $object->getObject($clname);
 			$u = "a=show&o={$o->getClass()}";
 			$u = $ghtml->getFullUrl($u);
-			$ret[] = array('text' => $o->getClass(), 'icon' => "{$icondir}/{$o->getClass()}_show.gif", 'hrefTarget' => 'mainframe', 'href' => $u, 'id'=> "{$cid}&{$o->getClass()}");
+			$ret[] = array('text' => $o->getClass(), 'icon' => "{$icondir}/{$o->getClass()}_show.gif", 'hrefTarget' => 'mainframe', 'href' => $u, 'id' => "{$cid}&{$o->getClass()}");
 		}
 		return $ret;
 	}
@@ -101,7 +100,7 @@ function __ajax_desc_tree()
 	if ($ghtml->__title_function) {
 		$t = $ghtml->__title_function;
 		$alist = $object->createShowAlist($alist);
-		foreach($alist as $k => $v) {
+		foreach ($alist as $k => $v) {
 			if (csb($k, "__title")) {
 				if ($k !== $t) {
 					if ($insidetitle) {
@@ -109,15 +108,17 @@ function __ajax_desc_tree()
 						break;
 					}
 					continue;
-				} 
+				}
 				$insidetitle = true;
 				continue;
 			}
 			if ($insidetitle) {
 				$url = $ghtml->getFullUrl($v);
-				if ($ghtml->is_special_url($url)) { continue; }
+				if ($ghtml->is_special_url($url)) {
+					continue;
+				}
 				$urlinfo = $ghtml->getUrlInfo($url);
-				$ret[] = array('text' => $urlinfo['description']['desc'], 'icon' => $urlinfo['image'], 'hrefTarget' => 'mainframe', 'leaf' => true, 'href' => $url, 'id'=> "&end");
+				$ret[] = array('text' => $urlinfo['description']['desc'], 'icon' => $urlinfo['image'], 'hrefTarget' => 'mainframe', 'leaf' => true, 'href' => $url, 'id' => "&end");
 			}
 		}
 
@@ -126,28 +127,32 @@ function __ajax_desc_tree()
 
 	if ($object->hasFunctions()) {
 		$alist = $object->createShowAlist($alist);
-		foreach($alist as $k => $v) {
+		foreach ($alist as $k => $v) {
 			if (!csb($k, "__title")) {
 				continue;
 			}
 			$title = strfrom($k, "__title_");
-			if ($title === 'mailaccount') { continue; }
-			if ($title === 'custom') { continue; }
+			if ($title === 'mailaccount') {
+				continue;
+			}
+			if ($title === 'custom') {
+				continue;
+			}
 			$icon = "{$icondir}/__title_$title.gif";
-			if (!lxfile_exists("__path_program_htmlbase/$icon")) { 
+			if (!lxfile_exists("__path_program_htmlbase/$icon")) {
 				//lfile_put_contents("title.img", "$title.gif\n", FILE_APPEND);
 				$icon = null;
 			}
-			$ret[] = array('text' => $v, 'icon' => $icon, 'hrefTarget' => '', 'href' => null, 'id'=> "{$cid}&$k");
+			$ret[] = array('text' => $v, 'icon' => $icon, 'hrefTarget' => '', 'href' => null, 'id' => "{$cid}&$k");
 		}
 	}
 
-	foreach($rclist as $c) {
+	foreach ($rclist as $c) {
 		$clname = $object->getChildNameFromDes($c);
 		$desc = get_description($clname);
 		$desc = get_plural($desc);
 		$url = $ghtml->getFullUrl("a=list&c=$clname");
-		$ret[] = array('text' => $desc, 'icon' => "$icondir/{$clname}_list.gif", 'hrefTarget' => 'mainframe', 'href' => $url, 'id'=> "{$cid}&__resource_$c");
+		$ret[] = array('text' => $desc, 'icon' => "$icondir/{$clname}_list.gif", 'hrefTarget' => 'mainframe', 'href' => $url, 'id' => "{$cid}&__resource_$c");
 	}
 
 	return $ret;
@@ -155,7 +160,7 @@ function __ajax_desc_tree()
 
 function __ajax_desc_list()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$buttonpath = get_image_path("/button");
 
@@ -172,7 +177,7 @@ function __ajax_desc_list()
 
 function __ajax_desc_addform()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$object = $gbl->__c_object;
 	$ghtml->print_message();
 	$buttonpath = get_image_path("/button");
@@ -191,7 +196,7 @@ function __ajax_desc_addform()
 
 function __ajax_desc_updateform()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$object = $gbl->__c_object;
 	$ghtml->print_message();
 	$buttonpath = get_image_path("/button");
@@ -206,14 +211,14 @@ function __ajax_desc_updateform()
 
 function __ajax_desc_add()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$gbl->__ajax_refresh = true;
 	return __ajax_desc_update();
 }
 
 function __ajax_desc_update()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$caction = $ghtml->frm_action;
 	$cgi_action = "__ac_desc_{$ghtml->frm_action}";
 
@@ -247,9 +252,6 @@ function __ajax_desc_update()
 		}
 		$url = $ghtml->get_get_from_post(null, $post);
 		$ret = array('returnvalue' => 'failure', 'refresh' => false, 'url' => "{$url}&frm_ev_list={$evlist}&frm_emessage={$e->getMessage()}&frm_m_emessage_data=$e->value");
-
 	}
 	return $ret;
 }
-
-

@@ -124,9 +124,7 @@ function lxins_main()
                 // This can be a endless loop, needs another check!
                 print("Yum Gave Error... Trying Again...\n");
             }
-
         }
-
     } else {
         run_package_installer($list);
     }
@@ -138,8 +136,8 @@ function lxins_main()
 
     $xenfailed = false;
 
-//  why is that?
-//	exec("killall wget");
+    //  why is that?
+    //	exec("killall wget");
 
     system("mkdir -p /usr/local/lxlabs/hypervm");
     chdir("/usr/local/lxlabs/hypervm");
@@ -147,7 +145,7 @@ function lxins_main()
 
     // Prevents deleting the development package
     if (!file_exists('/usr/local/lxlabs/.git')) {
-        @ unlink("hypervm-current.zip");
+        @unlink("hypervm-current.zip");
     }
 
     if (file_exists('/usr/local/lxlabs/.git')) {
@@ -169,8 +167,8 @@ function lxins_main()
     fix_network_forwarding();
 
     system("mkdir -p /usr/local/lxlabs/hypervm/etc/");
-    @ unlink("/usr/local/lxlabs/hypervm/etc/install_xen");
-    @ unlink("/usr/local/lxlabs/hypervm/etc/install_openvz");
+    @unlink("/usr/local/lxlabs/hypervm/etc/install_xen");
+    @unlink("/usr/local/lxlabs/hypervm/etc/install_openvz");
     touch("/usr/local/lxlabs/hypervm/etc/install_$virtualization");
     chdir("/usr/local/lxlabs/hypervm/httpdocs/");
     system("/bin/cp /usr/local/lxlabs/hypervm/httpdocs/htmllib/filecore/php.ini /usr/local/lxlabs/ext/php/etc/php.ini");
@@ -191,9 +189,9 @@ function lxins_main()
         print("Virtualization is $virtualization. Installing $virtualization Components\n");
     }
 
-//
-// call script to install base OS templates and OpenVZ repo
-//
+    //
+    // call script to install base OS templates and OpenVZ repo
+    //
     passthru("/usr/local/lxlabs/ext/php/php ../bin/install/virt-install.php --install-type=$installtype --virtualization-type=$virtualization $skiparg");
 
 
@@ -225,8 +223,6 @@ function lxins_main()
     if (file_exists('/usr/local/lxlabs/.git')) {
         echo smart_wordwrap("Remember, you installed a Development version. Do not use it on production servers!\n\n");
     }
-
-
 }
 
 function fix_network_forwarding()

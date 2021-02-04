@@ -1,124 +1,122 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/pserver/driver/ffile__commonlib.php";
 
-class ffile__linux extends lxDriverClass {
-
-function dbactionUpdate($subaction)
+class ffile__linux extends lxDriverClass
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
-	if_demo_throw_exception('ffile');
+	function dbactionUpdate($subaction)
+	{
 
-	$this->aux = new Ffile__common(null, null, $this->nname);
-	$this->aux->main = $this->main;
+		global $gbl, $sgbl, $login, $ghtml;
+		if_demo_throw_exception('ffile');
 
-	if ($this->main->isOn('readonly')) {
-		throw new lxexception('file_manager_is_readonly', '');
-	}
+		$this->aux = new Ffile__common(null, null, $this->nname);
+		$this->aux->main = $this->main;
 
-	$chownug = "{$this->main->__username_o}:{$this->main->__username_o}";
+		if ($this->main->isOn('readonly')) {
+			throw new lxexception('file_manager_is_readonly', '');
+		}
 
-	switch($subaction) {
+		$chownug = "{$this->main->__username_o}:{$this->main->__username_o}";
 
-		case "fancyedit":
-		case "edit":
-			check_file_if_owned_by_and_throw($this->main->getFullPath(), $this->main->__username_o);
-			lfile_write_content($this->main->getFullPath(), $this->main->content, $chownug);
-			lxshell_return("dos2unix", $this->main->getFullPath());
-			lxfile_unix_chmod($this->main->getFullPath(), "0644");
-			break;
+		switch ($subaction) {
 
-		case "upload_s":
-			$filename = $this->aux->uploadDirect();
-			lxfile_unix_chown($filename, "{$this->main->__username_o}:{$this->main->__username_o}");
-			lxfile_unix_chmod($filename, "0644");
-			break;
+			case "fancyedit":
+			case "edit":
+				check_file_if_owned_by_and_throw($this->main->getFullPath(), $this->main->__username_o);
+				lfile_write_content($this->main->getFullPath(), $this->main->content, $chownug);
+				lxshell_return("dos2unix", $this->main->getFullPath());
+				lxfile_unix_chmod($this->main->getFullPath(), "0644");
+				break;
 
-		case "rename":
-			$this->aux->reName();
-			//lxfile_unix_chown($new, $this->main->__username_o);
-			break;
+			case "upload_s":
+				$filename = $this->aux->uploadDirect();
+				lxfile_unix_chown($filename, "{$this->main->__username_o}:{$this->main->__username_o}");
+				lxfile_unix_chmod($filename, "0644");
+				break;
 
-		case "paste":
-			$this->aux->filePaste();
-			break;
+			case "rename":
+				$this->aux->reName();
+				//lxfile_unix_chown($new, $this->main->__username_o);
+				break;
 
-		case "perm":
-			$arg = null;
-			$perm = $this->main->newperm;
-			$perm = 0 . $perm ;
-			if ($this->main->isOn('recursive_f')) {
-				new_process_chmod_rec($this->main->__username_o, $this->main->fullpath, $perm);
-			} else {
-				lxfile_unix_chmod($this->main->fullpath, "$perm");
-			}
-			break;
+			case "paste":
+				$this->aux->filePaste();
+				break;
 
-		case "newdir":
-			$path = $this->aux->newDir();
-			lxfile_unix_chown($path, $this->main->__username_o);
-			lxfile_unix_chown($path, $chownug);
-			break;
+			case "perm":
+				$arg = null;
+				$perm = $this->main->newperm;
+				$perm = 0 . $perm;
+				if ($this->main->isOn('recursive_f')) {
+					new_process_chmod_rec($this->main->__username_o, $this->main->fullpath, $perm);
+				} else {
+					lxfile_unix_chmod($this->main->fullpath, "$perm");
+				}
+				break;
 
-		case "content":
-			if ($this->main->is_image()) {
-				$this->aux->resizeImage();
-			} else {
-				throw new lxexception('cannot_save_content', '');
-			}
-			break;
+			case "newdir":
+				$path = $this->aux->newDir();
+				lxfile_unix_chown($path, $this->main->__username_o);
+				lxfile_unix_chown($path, $chownug);
+				break;
 
-		case "thumbnail":
-			$this->aux->createThumbnail();
-			break;
+			case "content":
+				if ($this->main->is_image()) {
+					$this->aux->resizeImage();
+				} else {
+					throw new lxexception('cannot_save_content', '');
+				}
+				break;
 
-		case "convert_image":
-			$this->aux->convertImage();
-			break;
+			case "thumbnail":
+				$this->aux->createThumbnail();
+				break;
 
-		case "zip_file":
-			$zipfile = $this->aux->zipFile();
-			lxfile_unix_chown($zipfile, $this->main->__username_o);
-			lxfile_unix_chown($zipfile, $chownug);
-			break;
+			case "convert_image":
+				$this->aux->convertImage();
+				break;
 
-		case "filedelete":
-			$this->aux->moveAllToTrash();
-			break;
+			case "zip_file":
+				$zipfile = $this->aux->zipFile();
+				lxfile_unix_chown($zipfile, $this->main->__username_o);
+				lxfile_unix_chown($zipfile, $chownug);
+				break;
 
-		case "filerealdelete":
-			$this->aux->fileRealDelete();
-			break;
+			case "filedelete":
+				$this->aux->moveAllToTrash();
+				break;
 
-		case "restore_trash":
-			$this->aux->restoreTrash();
-			break;
+			case "filerealdelete":
+				$this->aux->fileRealDelete();
+				break;
 
-		case "clear_trash":
-			$this->aux->clearTrash();
-			break;
+			case "restore_trash":
+				$this->aux->restoreTrash();
+				break;
 
-		case "download_from_http":
-			$fullpath = $this->aux->downloadFromHttp();
-			lxfile_unix_chown($fullpath, $this->main->__username_o);
-			break;
+			case "clear_trash":
+				$this->aux->clearTrash();
+				break;
 
-		case "download_from_ftp":
-			$fullpath = $this->aux->downloadFromFtp();
-			lxfile_unix_chown($fullpath, $this->main->__username_o);
-			break;
+			case "download_from_http":
+				$fullpath = $this->aux->downloadFromHttp();
+				lxfile_unix_chown($fullpath, $this->main->__username_o);
+				break;
 
-		case "zipextract":
-			$dir = $this->aux->zipExtract();
-			if ($sgbl->isKloxo() && $this->main->__username_o !== 'root') {
-				//lxfile_unix_chown_rec($dir, "{$this->main->__username_o}");
-				//lxfile_unix_chown_rec($dir, $chownug);
-			}
-			break;
+			case "download_from_ftp":
+				$fullpath = $this->aux->downloadFromFtp();
+				lxfile_unix_chown($fullpath, $this->main->__username_o);
+				break;
+
+			case "zipextract":
+				$dir = $this->aux->zipExtract();
+				if ($sgbl->isKloxo() && $this->main->__username_o !== 'root') {
+					//lxfile_unix_chown_rec($dir, "{$this->main->__username_o}");
+					//lxfile_unix_chown_rec($dir, $chownug);
+				}
+				break;
+		}
 	}
 }
-
-
-}
-

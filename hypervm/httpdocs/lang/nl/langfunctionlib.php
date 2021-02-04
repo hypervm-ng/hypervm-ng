@@ -47,4 +47,3 @@ function get_plural_alternate($word)
 
 	return "{$word}";
 }
-

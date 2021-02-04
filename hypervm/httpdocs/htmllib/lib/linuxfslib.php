@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 function lxshell_expect($strtype, $cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$a = array("ntfsresize" => "expect \"Are you sure you want to proceed (y/[n])? \"\nsend \"y\\r\"\n\n");
 	$t = lx_tmp_file("expect");
@@ -15,7 +15,7 @@ function lxshell_expect($strtype, $cmd)
 
 function lxshell_getzipcontent($path)
 {
-	
+
 	$type = os_getZipType($path);
 	if ($type === 'zip') {
 		return lxshell_output("unzip", "-l", $path);
@@ -32,9 +32,10 @@ function lxshell_exists_in_zip($archive, $file)
 	$ret = lxshell_unzip($dir, $archive, array($file));
 	lxfile_tmp_rm_rec($dir);
 
-	if (!$ret) { return true; }
+	if (!$ret) {
+		return true;
+	}
 	return false;
-
 }
 
 // Normally the value is returned in MBs, but if you want to, you can force it to be bytes.
@@ -61,7 +62,7 @@ function lxfile_dirsize($path, $byteflag = false)
 	if ($byteflag) {
 		return round($t * (1024), 1);
 	} else {
-		return round($t/(1024), 1);
+		return round($t / (1024), 1);
 	}
 }
 
@@ -72,10 +73,10 @@ function lxfile_symlink($src, $dst)
 	if (is_dir($dst)) {
 		$dst = "$dst/" . basename($src);
 	}
-    if (!lxfile_exists($dst)) {
-	log_filesys("Linking $src to $dst");
-	symlink($src, $dst);
-    }
+	if (!lxfile_exists($dst)) {
+		log_filesys("Linking $src to $dst");
+		symlink($src, $dst);
+	}
 }
 
 
@@ -148,7 +149,7 @@ function lxshell_tar($dir, $zipname, $filelist)
 function lxshell_zip_core($updateflag, $dir, $zipname, $filelist)
 {
 	$dir = expand_real_root($dir);
-	foreach($filelist as &$__f) {
+	foreach ($filelist as &$__f) {
 		$__f = expand_real_root($__f);
 	}
 	$zipname = expand_real_root($zipname);
@@ -157,7 +158,7 @@ function lxshell_zip_core($updateflag, $dir, $zipname, $filelist)
 	$files = null;
 
 	if ($filelist) {
-		foreach($filelist as &$__nf) {
+		foreach ($filelist as &$__nf) {
 			$__nf = "'$__nf'";
 		}
 		$files = implode(" ", $filelist);
@@ -166,7 +167,7 @@ function lxshell_zip_core($updateflag, $dir, $zipname, $filelist)
 
 	if ($updateflag === 'zipadd') {
 		$command = "zip -y -rq -u";
-	} else if ($updateflag === 'zip'){
+	} else if ($updateflag === 'zip') {
 		$command = "zip -y -rq";
 	} else if ($updateflag === 'tar') {
 		$command = "tar -cf";
@@ -202,7 +203,7 @@ function lxshell_unzip($dir, $file, $filelist = null)
 	$files = null;
 
 	if ($filelist) {
-		foreach($filelist as &$__nf) {
+		foreach ($filelist as &$__nf) {
 			$__nf = "'$__nf'";
 		}
 		$files = implode(" ", $filelist);
@@ -239,7 +240,7 @@ function lxshell_unzip_numeric($dir, $file, $filelist = null)
 	$files = null;
 
 	if ($filelist) {
-		foreach($filelist as &$__nf) {
+		foreach ($filelist as &$__nf) {
 			$__nf = "'$__nf'";
 		}
 		$files = implode(" ", $filelist);
@@ -322,7 +323,7 @@ function lxfile_rm_content($dir)
 
 	$list = lscandir_without_dot($dir);
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		lxfile_rm("$dir/$l");
 	}
 }
@@ -343,11 +344,12 @@ function lxfile_rm_rec_content($file)
 
 	$list = lscandir_without_dot($file);
 
-	foreach($list as $l) {
-		if (!$l) { continue; }
+	foreach ($list as $l) {
+		if (!$l) {
+			continue;
+		}
 		lxshell_return("rm", "-r", "$file/$l");
 	}
-
 }
 
 function lxfile_rm_rec($file)
@@ -364,7 +366,6 @@ function lxfile_rm_rec($file)
 		throw new lxException('no_stars_allowed', '');
 	}
 	lxshell_return("rm", "-r", $file);
-	
 }
 
 function lxfile_generic_chmod($file, $mod)
@@ -374,7 +375,9 @@ function lxfile_generic_chmod($file, $mod)
 
 function lxfile_generic_chmod_rec($file, $mod)
 {
-	if (!$file) { return; }
+	if (!$file) {
+		return;
+	}
 	lxfile_unix_chmod_rec($file, $mod);
 }
 
@@ -385,18 +388,21 @@ function lxfile_generic_chown($file, $mod)
 
 function lxfile_generic_chown_rec($file, $mod)
 {
-	if (!$file) { return; }
+	if (!$file) {
+		return;
+	}
 	lxfile_unix_chown_rec($file, $mod);
 }
 
 function lxfile_is_symlink($file)
 {
 	return lis_link($file);
-
 }
 function lxfile_unix_chown_rec($file, $mod)
 {
-	if (!$file) { return; }
+	if (!$file) {
+		return;
+	}
 	$file = expand_real_root($file);
 	if (lxfile_is_symlink($file)) {
 		lxshell_return("chown", $mod, $file);
@@ -407,7 +413,9 @@ function lxfile_unix_chown_rec($file, $mod)
 
 function lxfile_unix_chmod_rec($file, $mod)
 {
-	if (!$file) { return; }
+	if (!$file) {
+		return;
+	}
 	$file = expand_real_root($file);
 	if (lxfile_is_symlink($file)) {
 		lxshell_return("chmod",  $mod, $file);
@@ -441,13 +449,13 @@ function lxfile_cp_content_file($dirsource, $dirdest)
 
 	$list = lscandir_without_dot($dirsource);
 
-    if (isset($list)) {
-	    foreach($list as $l) {
-		    if (!is_dir("$dirsource/$l")) {
-			    lxfile_cp("$dirsource/$l", "$dirdest/$l");
-		    }
-	    }
-    }
+	if (isset($list)) {
+		foreach ($list as $l) {
+			if (!is_dir("$dirsource/$l")) {
+				lxfile_cp("$dirsource/$l", "$dirdest/$l");
+			}
+		}
+	}
 }
 
 
@@ -463,21 +471,21 @@ function lxfile_cp_content($dirsource, $dirdest)
 
 	$list = lscandir_without_dot($dirsource);
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		lxfile_cp_rec("$dirsource/$l", "$dirdest/$l");
 	}
 }
 
 function lxfile_cp_rec($dirsource, $dirdest)
-{ 
-	
+{
+
 	$username = "__system__";
 	$dirdest = expand_real_root($dirdest);
 	$dirsource = expand_real_root($dirsource);
 	$arglist = array("-a", $dirsource, $dirdest);
 	$cmd = getShellCommand("cp", $arglist);
 	return do_exec_system($username, null, $cmd, $out, $err, $ret, null);
-} 
+}
 
 
 function lxfile_size($file)
@@ -486,11 +494,11 @@ function lxfile_size($file)
 		return 0;
 	}
 	$file = expand_real_root($file);
-	$size = (float) exec('stat -c %s '. escapeshellarg($file));
+	$size = (float) exec('stat -c %s ' . escapeshellarg($file));
 	return $size;
 }
 
-function lxfile_unix_chmod($file, $mod) 
+function lxfile_unix_chmod($file, $mod)
 {
 	$file = expand_real_root($file);
 	/*
@@ -504,7 +512,6 @@ function lxfile_unix_chmod($file, $mod)
 	if ($ret) {
 		dprint("Chmod Error in file $file\n");
 	}
-
 }
 
 function lxfile_unix_chown($file, $mod)
@@ -520,7 +527,7 @@ function lxfile_unix_chown($file, $mod)
 		return;
 	}
 
-	if(lis_link($file)) {
+	if (lis_link($file)) {
 		log_log("link_error", "$file is link so no chown to $mod");
 		return;
 	}
@@ -547,23 +554,22 @@ function lxfile_unix_chown($file, $mod)
 		dprint("Chown Error in file $file\n");
 	}
 	return $ret;
-	
 }
 
 function lxshell_background($cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $global_dontlogshell;
 	$username = '__system__';
 	$start = 1;
-        $arglist = array();
-        for ($i = $start; $i < func_num_args(); $i++) {
-                if (isset($transforming_func)) {
-                        $arglist[] = $transforming_func(func_get_arg($i));
-                } else {
-                        $arglist[] = func_get_arg($i);
-        }
-}
+	$arglist = array();
+	for ($i = $start; $i < func_num_args(); $i++) {
+		if (isset($transforming_func)) {
+			$arglist[] = $transforming_func(func_get_arg($i));
+		} else {
+			$arglist[] = func_get_arg($i);
+		}
+	}
 
 	$cmd = getShellCommand($cmd, $arglist);
 	$cmd .= " >/dev/null 2>&1 &";
@@ -608,10 +614,10 @@ function lxshell_background_pid_return($cmd)
 	return $pid;
 }
 
-function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input) 
+function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 {
 	//dprint("<hr>$dir <hr> ");
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $global_shell_out, $global_shell_error, $global_shell_ret;
 
 	global $global_dontlogshell;
@@ -626,7 +632,7 @@ function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 	}
 
 
-	$descriptorspec = array( 0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("file", $fename, "a"));
+	$descriptorspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("file", $fename, "a"));
 
 	os_set_path();
 	$process = proc_open("$cmd", $descriptorspec, $pipes);
@@ -642,13 +648,13 @@ function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 		}
 		fclose($pipes[0]);
 
-//		while (!feof($pipes[1])) {
-//			$out .= fgets($pipes[1], 1024);
-//		}
+		//		while (!feof($pipes[1])) {
+		//			$out .= fgets($pipes[1], 1024);
+		//		}
 
-                // OA 20130920 Current solution from php.net
-		$out= stream_get_contents($pipes[1]);
-                                
+		// OA 20130920 Current solution from php.net
+		$out = stream_get_contents($pipes[1]);
+
 		fclose($pipes[1]);
 		// It is important that you close any pipes before calling
 		// proc_close in order to avoid a deadlock
@@ -677,5 +683,4 @@ function do_exec_system($username, $dir, $cmd, &$out, &$err, &$ret, $input)
 	if ($oldpath) {
 		chdir($oldpath);
 	}
-
 }

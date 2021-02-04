@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 chdir("../../");
 include_once "htmllib/lib/displayinclude.php";
@@ -24,12 +24,8 @@ if ($res['ip'] !== $ip) {
 
 $size = $filepass['size'];
 
-while (@ob_end_clean());                                 
+while (@ob_end_clean());
 header("Content-Disposition: attachment; filename={$filepass['realname']}");
 header('Content-Type: application/octet-stream');
 header("Content-Length: $size");
 printFromFileServ('localhost', $filepass);
-
-
-
-

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function port_send_email($portstatus)
 {
@@ -17,9 +17,9 @@ function do_send_email()
 {
 	global $global_reminder;
 	//fprint($global_reminder, 0);
-	foreach($global_reminder as $k => $v) {
+	foreach ($global_reminder as $k => $v) {
 		$string = null;
-		foreach($v as $kk => $vv) {
+		foreach ($v as $kk => $vv) {
 			$string .= "{$vv[1]}\n";
 		}
 		lx_mail(null, $k, "Message from hyperVM alert system", $string);
@@ -30,7 +30,7 @@ function do_send_email()
 function process_port($eidlist, $plist)
 {
 	$downlist = null;
-	foreach($plist as $p) {
+	foreach ($plist as $p) {
 		$statlist = $p->getList('portstatus');
 		$match = false;
 		if (!$statlist) {
@@ -39,7 +39,7 @@ function process_port($eidlist, $plist)
 		}
 
 		$rcount = 0;
-		foreach($statlist as $k => $s) {
+		foreach ($statlist as $k => $s) {
 			$mingstatus = $s->getObject('monitoringserverstatus');
 			if ($mingstatus->updatetime > (time() - 900)) {
 				$rcount++;
@@ -59,7 +59,7 @@ function process_port($eidlist, $plist)
 		$upcount = 0;
 		$totalerr = null;
 		$downcount = 0;
-		foreach($statlist as $s) {
+		foreach ($statlist as $s) {
 			if ($s->isOn('portstatus')) {
 				$upcount++;
 				$totalerr[] = "{$s->servername}, success";
@@ -116,7 +116,6 @@ function process_port($eidlist, $plist)
 			$porthist->errorstring = $totalerr;
 			$porthist->dbaction = 'add';
 			$porthist->write();
-
 		}
 	}
 	return $downlist;
@@ -135,14 +134,13 @@ function send_mails_to_all($eidlist, $p, $gap, $servername)
 	$text = lfile_get_contents("__path_program_root/file/statechange.txt");
 	$text = str_replace("%port%", $p->portnumber, $text);
 	$text = str_replace("%oldstate%", $oldstate, $text);
-	$text = str_replace( "%gap%", round($gap/60, 1), $text);
+	$text = str_replace("%gap%", round($gap / 60, 1), $text);
 	$text = str_replace("%newstate%", $newstate, $text);
-	$text = str_replace("%server%", $servername , $text);
-	foreach($eidlist as $eid) {
+	$text = str_replace("%server%", $servername, $text);
+	foreach ($eidlist as $eid) {
 		$global_reminder[$eid->emailid][] = array("p", $text);
 		$eid->last_sent = time();
 		$eid->setUpdateSubaction();
 		$eid->write();
 	}
 }
-

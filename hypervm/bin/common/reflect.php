@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 initLanguage();
@@ -30,7 +30,6 @@ if ($type === 'update') {
 	}
 	$param = null;
 	$param = $object->updateform($subaction, $param);
-
 } else if ($type === 'add') {
 	$pc = $list['parent-class'];
 	$pn = $list['parent-name'];
@@ -41,8 +40,12 @@ if ($type === 'update') {
 		exit;
 	}
 	$typtd = null;
-	if (isset($list['v-val'])) { $typtd['val'] = $list['v-val']; }
-	if (isset($list['v-var'])) { $typtd['var'] = $list['v-var']; }
+	if (isset($list['v-val'])) {
+		$typtd['val'] = $list['v-val'];
+	}
+	if (isset($list['v-var'])) {
+		$typtd['var'] = $list['v-var'];
+	}
 	$parent->priv = new Priv(null, null, $pn);
 	$param = exec_class_method($class, 'addform', $parent, $class, $typtd);
 	$param = $param['variable'];
@@ -50,13 +53,15 @@ if ($type === 'update') {
 	printProperty($class, $type);
 }
 
-foreach($param as $k => $v) {
-	if (csb($k, "__v") || csb($k, "__c") || csb($k, "__m")) { continue; }
+foreach ($param as $k => $v) {
+	if (csb($k, "__v") || csb($k, "__c") || csb($k, "__m")) {
+		continue;
+	}
 	$desc = get_classvar_description($class, $k);
 	$c = null;
 	$prep = null;
 	if ($v && is_array($v)) {
-		if ($v[0] === 'M') { 
+		if ($v[0] === 'M') {
 			$c = "Static: {$v[1]}";
 		}
 	}
@@ -72,7 +77,7 @@ foreach($param as $k => $v) {
 function printProperty($class, $type)
 {
 	$r = new ReflectionClass($class);
-	foreach($r->getProperties() as $s) {
+	foreach ($r->getProperties() as $s) {
 		if ($type === 'action') {
 			$istr = "__acdesc_";
 			if (!csb($s->name, "__acdesc_"))
@@ -86,12 +91,18 @@ function printProperty($class, $type)
 
 		$descr = get_classvar_description($class, $s->name);
 		$name = strfrom($s->name, $istr);
-		if (csa($descr[0], "q")) { continue; }
-		if (cse($name, "_f")) {continue; }
-		if (cse($name, "_l")) {continue; }
-		if (cse($name, "_o")) {continue; }
+		if (csa($descr[0], "q")) {
+			continue;
+		}
+		if (cse($name, "_f")) {
+			continue;
+		}
+		if (cse($name, "_l")) {
+			continue;
+		}
+		if (cse($name, "_o")) {
+			continue;
+		}
 		printf("%30s %s\n", $name, $descr['help']);
-
 	}
 }
-

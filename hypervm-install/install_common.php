@@ -18,7 +18,9 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class remote { }
+class remote
+{
+}
 // PHp4, without the lxlabs infrastructure...
 
 //There is one inside the installall.ph too. The problem is that installall seems to be using the entire lxadmin library. We must detach installall from the mains sytem and make it a standalone one.
@@ -27,7 +29,9 @@ class remote { }
 function slave_get_db_pass($program = "lxadmin")
 {
 	$file = "/usr/local/lxlabs/$program/etc/slavedb/dbadmin";
-	if (!file_exists($file)) { return null; }
+	if (!file_exists($file)) {
+		return null;
+	}
 	$var = file_get_contents($file);
 	$rmt = unserialize($var);
 	return $rmt->data['mysql']['dbpassword'];
@@ -37,27 +41,24 @@ function addLineIfNotExistTemp($filename, $pattern, $comment)
 {
 	$cont = our_file_get_contents($filename);
 
-	if(!preg_match("+$pattern+i", $cont)) {
+	if (!preg_match("+$pattern+i", $cont)) {
 		our_file_put_contents($filename, "\n$comment \n\n", true);
 		our_file_put_contents($filename, $pattern, true);
 		our_file_put_contents($filename, "\n\n\n", true);
 	} else {
 		print("Pattern '$pattern' Already present in $filename\n");
 	}
-
-
-
 }
 
 function check_default_mysql($dbroot, $dbpass)
 {
-    $osversion = find_os_version();
+	$osversion = find_os_version();
 
-    if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
-        system("service mariadb restart");
-    } else {
-        system("service mysqld restart");
-    }
+	if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
+		system("service mariadb restart");
+	} else {
+		system("service mysqld restart");
+	}
 	if ($dbpass) {
 		exec("echo \"show tables\" | mysql -u $dbroot -p\"$dbpass\" mysql", $out, $return);
 	} else {
@@ -68,15 +69,14 @@ function check_default_mysql($dbroot, $dbpass)
 		print("Fatal Error: Could not connect to Mysql Localhost using user $dbroot and password \"$dbpass\"\n");
 		print("If this is a brand new install, you can completely remove mysql by running the commands below\n");
 		print("            rm -rf /var/lib/mysql\n");
-        if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
-            print("            rpm -e mariadb-server\n");
-        } else {
-            print("            rpm -e mysql-server\n");
-        }
+		if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
+			print("            rpm -e mariadb-server\n");
+		} else {
+			print("            rpm -e mysql-server\n");
+		}
 		print("And then run the installer again\n");
 		exit;
 	}
-
 }
 
 function parse_opt($argv)
@@ -85,7 +85,7 @@ function parse_opt($argv)
 	if (!$argv) {
 		return  null;
 	}
-	foreach($argv as $v) {
+	foreach ($argv as $v) {
 		if (strstr($v, "=") === false || strstr($v, "--") === false) {
 			continue;
 		}
@@ -107,12 +107,11 @@ function our_file_get_contents($file)
 	}
 
 
-	while(!feof($fp)) {
+	while (!feof($fp)) {
 		$string .= fread($fp, 8192);
 	}
 	fclose($fp);
 	return $string;
-
 }
 
 function our_file_put_contents($file, $contents, $appendflag = false)
@@ -136,8 +135,8 @@ function our_file_put_contents($file, $contents, $appendflag = false)
 }
 function password_gen()
 {
-	$data=mt_rand(2,30);
-	$pass="lx".$data;
+	$data = mt_rand(2, 30);
+	$pass = "lx" . $data;
 	return $pass;
 }
 
@@ -184,12 +183,12 @@ function install_rhn_sources($osversion)
 	}
 
 	$data = our_file_get_contents("/etc/sysconfig/rhn/sources");
-	if(!preg_match('/lxcenter/i', $data)) {
+	if (!preg_match('/lxcenter/i', $data)) {
 		$ndata = "yum lxcenter-base http://download.hypervm-ng.org/update/$osversion/\$ARCH/\n";
 		//append it to the file...
-		our_file_put_contents("/etc/sysconfig/rhn/sources","\n\n", true);
+		our_file_put_contents("/etc/sysconfig/rhn/sources", "\n\n", true);
 		our_file_put_contents("/etc/sysconfig/rhn/sources", $ndata, true);
-		our_file_put_contents("/etc/sysconfig/rhn/sources","\n\n", true);
+		our_file_put_contents("/etc/sysconfig/rhn/sources", "\n\n", true);
 	}
 }
 
@@ -199,15 +198,14 @@ function install_yum_repo($osversion)
 		return;
 	}
 
-    if (!file_exists("../lxcenter.repo.template")) {
-        $cont = our_file_get_contents("../hypervm-linux/lxcenter.repo.template");
-        } else {
-        $cont = our_file_get_contents("../lxcenter.repo.template");
-    }
+	if (!file_exists("../lxcenter.repo.template")) {
+		$cont = our_file_get_contents("../hypervm-linux/lxcenter.repo.template");
+	} else {
+		$cont = our_file_get_contents("../lxcenter.repo.template");
+	}
 
 	$cont = str_replace("%distro%", $osversion, $cont);
 	our_file_put_contents("/etc/yum.repos.d/lxcenter.repo", $cont);
-
 }
 
 function find_os_version()
@@ -216,61 +214,61 @@ function find_os_version()
 		$release = trim(file_get_contents("/etc/fedora-release"));
 		$osv = explode(" ", $release);
 		if (strtolower($osv[1]) === 'core') {
-			$osversion = "fedora-" . $osv[3]; 
+			$osversion = "fedora-" . $osv[3];
 		} else {
-			$osversion = "fedora-" . $osv[2]; 
+			$osversion = "fedora-" . $osv[2];
 		}
 
 		return $osversion;
 	}
 
-    if (file_exists("/etc/redhat-release")) {
-        $release = trim(file_get_contents("/etc/redhat-release"));
-        $osv = explode(" ", $release);
-        if(isset($osv[6])) {
-            $osversion = "rhel-" . $osv[6];
-        } elseif (isset($osv[3]) && $osv[3] != "(Final)" )  {
-            $oss = explode(".", $osv[3]);
-            if (($osv[0]) == "CentOS") {
-                $osversion = "centos-" . $oss[0];
-            } else {
-                $osversion = "virtuozzo-" . $oss[0];
-            }
-        } else {
-            $oss = explode(".", $osv[2]);
-            $osversion = "centos-" . $oss[0];
-        }
-        return $osversion;
-    }
+	if (file_exists("/etc/redhat-release")) {
+		$release = trim(file_get_contents("/etc/redhat-release"));
+		$osv = explode(" ", $release);
+		if (isset($osv[6])) {
+			$osversion = "rhel-" . $osv[6];
+		} elseif (isset($osv[3]) && $osv[3] != "(Final)") {
+			$oss = explode(".", $osv[3]);
+			if (($osv[0]) == "CentOS") {
+				$osversion = "centos-" . $oss[0];
+			} else {
+				$osversion = "virtuozzo-" . $oss[0];
+			}
+		} else {
+			$oss = explode(".", $osv[2]);
+			$osversion = "centos-" . $oss[0];
+		}
+		return $osversion;
+	}
 
 	print("This Operating System is Currently Not supported.\n");
 	exit;
-
 }
 
-function smart_wordwrap($string, $width = 70, $break = "\n") {
-    // split on problem words over the line length
-    $pattern = sprintf('/([^ ]{%d,})/', $width);
-    $output = '';
-    $words = preg_split($pattern, $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+function smart_wordwrap($string, $width = 70, $break = "\n")
+{
+	// split on problem words over the line length
+	$pattern = sprintf('/([^ ]{%d,})/', $width);
+	$output = '';
+	$words = preg_split($pattern, $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
-    foreach ($words as $word) {
-        if (false !== strpos($word, ' ')) {
-            // normal behaviour, rebuild the string
-            $output .= $word;
-        } else {
-            // work out how many characters would be on the current line
-            $wrapped = explode($break, wordwrap($output, $width, $break));
-            $count = $width - (strlen(end($wrapped)) % $width);
+	foreach ($words as $word) {
+		if (false !== strpos($word, ' ')) {
+			// normal behaviour, rebuild the string
+			$output .= $word;
+		} else {
+			// work out how many characters would be on the current line
+			$wrapped = explode($break, wordwrap($output, $width, $break));
+			$count = $width - (strlen(end($wrapped)) % $width);
 
-            // fill the current line and add a break
-            $output .= substr($word, 0, $count) . $break;
+			// fill the current line and add a break
+			$output .= substr($word, 0, $count) . $break;
 
-            // wrap any remaining characters from the problem word
-            $output .= wordwrap(substr($word, $count), $width, $break, true);
-        }
-    }
+			// wrap any remaining characters from the problem word
+			$output .= wordwrap(substr($word, $count), $width, $break, true);
+		}
+	}
 
-    // wrap the final output
-    return wordwrap($output, $width, $break);
+	// wrap the final output
+	return wordwrap($output, $width, $break);
 }

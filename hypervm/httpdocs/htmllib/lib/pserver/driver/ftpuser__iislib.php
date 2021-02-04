@@ -1,20 +1,21 @@
-<?php 
+<?php
 
-class ftpuser__iis extends lxDriverClass {
-
-
-
-function dbactionAdd()
+class ftpuser__iis extends lxDriverClass
 {
 
-	 $msftpsvc = new COM("IIS://LocalHost/MSFTPSVC");
+
+
+	function dbactionAdd()
+	{
+
+		$msftpsvc = new COM("IIS://LocalHost/MSFTPSVC");
 
 
 
-	 
-	 //Creating FTP Virtual Directory
 
-	 /*
+		//Creating FTP Virtual Directory
+
+		/*
      $newFtpServer= msftpsvc->(new COM("IIsFtpServer", $this->main->nname);
 	 $RootDir=newFtpServer->(new COM("IIsFtpVirtualDir","ROOT");
 	 $VirtualDir=RootDir->Creat("IIsFtpVirtualDir",$this->main->directory);
@@ -23,29 +24,22 @@ function dbactionAdd()
 	 $VirtualDir->AccessFlags = array(513);
      $VirtualDir->SetInfo();
 	 */
-}
+	}
 
-function dbactionDelete()
-{
-	 $newFtpServer= new COM("IIsFtpServer",  $this->main->nname);
-	 $RootDir= $newFtpServer->a("IIsFtpVirtualDir","ROOT");
-	 $VirtualDir=$RootDir->Delete("IIsFtpVirtualDir",$this->main->directory);
-}
+	function dbactionDelete()
+	{
+		$newFtpServer = new COM("IIsFtpServer",  $this->main->nname);
+		$RootDir = $newFtpServer->a("IIsFtpVirtualDir", "ROOT");
+		$VirtualDir = $RootDir->Delete("IIsFtpVirtualDir", $this->main->directory);
+	}
 
-function dbactionUpdate()
-{
-	  switch($subaction) {
+	function dbactionUpdate()
+	{
+		switch ($subaction) {
 
-		case "password":
-			{
-				break;
-			}
-
+			case "password": {
+					break;
+				}
+		}
 	}
 }
-
-
-
-
-}
-

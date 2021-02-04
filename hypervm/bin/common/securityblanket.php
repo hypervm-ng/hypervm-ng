@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include "htmllib/lib/include.php";
 
@@ -11,7 +11,9 @@ function security_blanket_main()
 	//sleep(100);
 	$rem = unserialize(lfile_get_contents($argv[1]));
 	unlink($argv[1]);
-	if (!$rem) { exit; }
+	if (!$rem) {
+		exit;
+	}
 
 	// Merged from 6.1.x/kloxo/bin/common/securityblanket.php	(revision 472)
 	// workaround for the following php bug:
@@ -30,6 +32,4 @@ function security_blanket_main()
 	if ($res[0][$rem->flagvariable] === 'doing') {
 		$sq->rawQuery("update $rem->table set $rem->flagvariable = 'Program Got aborted in the midst. Please try again.' where nname = '$rem->nname'");
 	}
-
-
 }

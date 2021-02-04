@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 chdir("../../");
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 
 if ($ghtml->frm_clientname !== 'admin') {
@@ -23,4 +23,3 @@ try {
 }
 
 print("__success_upgrade\n");
-

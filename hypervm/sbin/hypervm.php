@@ -14,7 +14,7 @@ system("iptables -t nat -nvL");
 vpstraffic__openvz::iptables_delete();
 vpstraffic__openvz::iptables_create();
 
-if($argv[1] === 'master'){
+if ($argv[1] === 'master') {
 	start_portmonitor();
 }
 dprint("Starting Server\n");
@@ -31,17 +31,12 @@ lxshell_php("../bin/fix/fixippool.php");
 $global_dontlogshell = false;
 lxserver_main();
 
-
-
-
-
-
 function timed_execution()
 {
 	global $global_dontlogshell;
 	$global_dontlogshell = true;
 	timed_exec(2,  "checkRestart");
-	timed_exec(2 * 5, "execSisinfoc"); 
+	timed_exec(2 * 5, "execSisinfoc");
 	$global_dontlogshell = false;
 }
 

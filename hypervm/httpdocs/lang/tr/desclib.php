@@ -701,4 +701,3 @@ $__description["maximum_held"] = array("Maksimum Kullanılan");
 $__description["barrier"] = array("Bariyer");
 $__description["fail_count"] = array("Problem Sayısı");
 $__description["Qos"] = array("Qos");
-

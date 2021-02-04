@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include "lib/include.php";
 
@@ -14,7 +14,7 @@ $opt = parse_opt($argv);
 try {
 	checkIfVariablesSet($opt, array('basename', 'count', 'admin-password'));
 } catch (exception $e) {
-	print($e->getMessage(). "\n");
+	print($e->getMessage() . "\n");
 	exit;
 }
 
@@ -23,7 +23,7 @@ $count = $opt['count'];
 $temp = $opt['v-template_name'];
 $admin_passowrd = $opt['admin-password'];
 
-for($i = 1; $i <= $count; $i++) {
+for ($i = 1; $i <= $count; $i++) {
 	$name = "$base$i.vm";
 	$ip = "$ipbase.$i";
 	print("Creating $name with ip $ip with password admin from template $temp\n");
@@ -33,4 +33,3 @@ for($i = 1; $i <= $count; $i++) {
 		exit;
 	}
 }
-

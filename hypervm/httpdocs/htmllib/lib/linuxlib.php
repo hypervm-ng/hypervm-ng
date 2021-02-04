@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "htmllib/phplib/lib/linuxcorelib.php";
 include_once "htmllib/lib/linuxfslib.php";
 
@@ -33,7 +33,9 @@ function os_getLoadAvg($flag = false)
 	$v = trimSpaces($v);
 	$vv = explode(" ", $v);
 
-	if ($flag) { return $vv[2]; }
+	if ($flag) {
+		return $vv[2];
+	}
 
 	return  "{$vv[0]} {$vv[1]} {$vv[2]}";
 }
@@ -42,7 +44,7 @@ function os_fix_fstab()
 {
 	$list = lfile_trim("/etc/fstab");
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$nl = trimSpaces($l);
 
 		$n = explode(" ", $nl);
@@ -64,10 +66,9 @@ function os_fix_fstab()
 	dprint($out);
 	lfile_put_contents("/etc/fstab", $out);
 	dprintr($mount);
-	foreach($mount as $m) {
+	foreach ($mount as $m) {
 		system("mount $m -o remount");
 	}
-
 }
 
 
@@ -104,7 +105,7 @@ function os_get_allips()
 {
 	$out = lxshell_output("ifconfig");
 	$list = explode("\n", $out);
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trim($l);
 		if (!csa($l, "inet addr:")) {
 			continue;
@@ -149,7 +150,7 @@ function os_create_default_slave_driver_db()
 
 function os_fix_lxlabs_permission()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	lxfile_mkdir("__path_program_root/session");
 	lxfile_unix_chown_rec("__path_program_root", "lxlabs");
 	lxfile_unix_chmod_rec("__path_program_root/sbin/", "0755");
@@ -158,7 +159,6 @@ function os_fix_lxlabs_permission()
 	lxfile_unix_chmod("__path_program_root/log", "0700");
 	lxfile_unix_chmod("__path_program_root/session", "0700");
 	lxfile_symlink("__path_php_path", "/usr/bin/lphp.exe");
-	
 }
 
 
@@ -191,7 +191,6 @@ function os_create_system_user($basename, $password, $id, $shell, $dir = "/tmp")
 		throw new lxexception("could_not_create_user", '', $name);
 	}
 	return $name;
-
 }
 
 function os_service_manage($serv, $act)
@@ -201,41 +200,41 @@ function os_service_manage($serv, $act)
 
 function os_create_program_service()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$CoreInit = '__path_program_htmlbase/htmllib/filecore/hypervm.init.program';
-    lxfile_cp($CoreInit, '/etc/init.d/hypervm');
-    lxfile_unix_chmod('/etc/init.d/hypervm', '0755');
+	lxfile_cp($CoreInit, '/etc/init.d/hypervm');
+	lxfile_unix_chmod('/etc/init.d/hypervm', '0755');
 
-    $CorePHP = '__path_program_htmlbase/htmllib/filecore/php.ini';
+	$CorePHP = '__path_program_htmlbase/htmllib/filecore/php.ini';
 	lxfile_cp($CorePHP, '__path_lxlabs_base/ext/php/etc/php.ini');
 }
 
 
 function os_is_arch_sixfour()
 {
-    if (!lxfile_exists("/proc/xen")) {
-	$arch = trim(`arch`);
-	return $arch === 'x86_64';
-    } else {
-	$q = lfile_get_contents("/etc/rpm/platform");
-	if ($q === "i686-redhat-linux") {
-	    return false;
+	if (!lxfile_exists("/proc/xen")) {
+		$arch = trim(`arch`);
+		return $arch === 'x86_64';
+	} else {
+		$q = lfile_get_contents("/etc/rpm/platform");
+		if ($q === "i686-redhat-linux") {
+			return false;
+		}
+		return true;
 	}
-	return true;
-    }
 }
 
 function os_is_php_six_four()
 {
-    $v = lxshell_output("rpm -q --queryformat '%{ARCH}' php");
-    $v = trim($v);
-    return ($v === "x86_64");
+	$v = lxshell_output("rpm -q --queryformat '%{ARCH}' php");
+	$v = trim($v);
+	return ($v === "x86_64");
 }
 
 function os_restart_program()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$pgm = $sgbl->__var_program_name;
 	// We just need to kill the main server, and leave the wrapper alone.
 	exec_with_all_closed("/etc/init.d/$pgm lxrestart");
@@ -246,7 +245,7 @@ function os_get_network_gateway()
 	$res = lxshell_output("route", "-n");
 	$re = explode("\n", $res);
 
-	foreach($re as $r) {
+	foreach ($re as $r) {
 		if (csb($r, "0.0.0.0")) {
 			$r = trimSpaces($r);
 			$o = explode(" ", $r);
@@ -254,7 +253,6 @@ function os_get_network_gateway()
 		}
 	}
 	return null;
-
 }
 
 function os_get_default_ethernet()
@@ -263,7 +261,7 @@ function os_get_default_ethernet()
 	$res = lxshell_output("route", "-n");
 	$re = explode("\n", $res);
 
-	foreach($re as $r) {
+	foreach ($re as $r) {
 		if (csb($r, "0.0.0.0")) {
 			$r = trimSpaces($r);
 			$o = explode(" ", $r);
@@ -271,7 +269,6 @@ function os_get_default_ethernet()
 		}
 	}
 	return null;
-
 }
 
 function os_getCpuNum()
@@ -280,13 +277,12 @@ function os_getCpuNum()
 
 	$i = 0;
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (csa($l, "processor")) {
 			$i++;
 		}
 	}
 	return $i;
-
 }
 function os_get_hostname()
 {
@@ -298,7 +294,7 @@ function os_get_user_from_uid($uid)
 {
 	$pwd = posix_getpwuid($uid);
 
-	if ($pwd['name']) 
+	if ($pwd['name'])
 		return $pwd['name'];
 
 	return $uid;
@@ -308,7 +304,7 @@ function os_get_uid_from_user($user)
 {
 	$pwd = posix_getpwnam($user);
 
-	if ($pwd['uid']) 
+	if ($pwd['uid'])
 		return $pwd['uid'];
 	// If the user doesn't exist return a very large number.
 	return 10000000;
@@ -318,7 +314,7 @@ function os_get_gid_from_user($user)
 {
 	$pwd = posix_getpwnam($user);
 
-	if ($pwd['gid']) 
+	if ($pwd['gid'])
 		return $pwd['gid'];
 	// If the user doesn't exist return a very large number.
 	return 10000000;
@@ -343,8 +339,8 @@ function os_get_commandname($pid)
 
 
 // If pcntl is enabled, then sigterm is automatically defined. Silll
-@ define('SIGTERM', 15);
-@ define('SIGKILL', 9);
+@define('SIGTERM', 15);
+@define('SIGKILL', 9);
 
 function os_killpid_by_name($name)
 {
@@ -367,10 +363,6 @@ function os_killpid($pid)
 
 function os_set_path()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	putenv("PATH=/sbin/:/usr/sbin/:/bin/:/usr/bin:/usr/local/bin/:/usr/local/sbin:$sgbl->__path_program_root/bin:$sgbl->__path_program_root/sbin:");
 }
-
-
-
-

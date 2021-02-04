@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -8,7 +8,7 @@ function switchserver_main()
 {
 
 	global $argc, $argv;
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	//sleep(60);
 	initProgram("admin");
@@ -36,19 +36,19 @@ function switchserver_main()
 		$object = new $class(null, 'localhost', $name);
 		$object->get();
 		if ($object->dbaction === 'add') {
-			throw new lxException ("no_object", '', '');
+			throw new lxException("no_object", '', '');
 			exit;
 		}
 
 		if (!$object->syncserver) {
 			print("No_synserver...\n");
-			throw new lxException ("no_syncserver", '', '');
+			throw new lxException("no_syncserver", '', '');
 			exit;
 		}
 
 		if ($param['syncserver'] === $object->syncserver) {
 			print("No Change...\n");
-			throw new lxException ("no_change", '', '');
+			throw new lxException("no_change", '', '');
 			exit;
 		}
 
@@ -61,7 +61,7 @@ function switchserver_main()
 		$newserver = $param['syncserver'];
 
 		if ($driverapp_new !== $driverapp_old) {
-			throw new lxException ("the_drivers_are_different_in_two_servers", '', '');
+			throw new lxException("the_drivers_are_different_in_two_servers", '', '');
 		}
 
 		$actualserver = getFQDNforServer($newserver);
@@ -70,7 +70,9 @@ function switchserver_main()
 
 
 		$ssh_port = db_get_value("sshconfig", $newserver, "ssh_port");
-		if (!$ssh_port) { $ssh_port = "22" ; }
+		if (!$ssh_port) {
+			$ssh_port = "22";
+		}
 
 		$res = rl_exec_get(null, $oldserver, "exec_vzmigrate", array($object->vpsid, $actualserver, $ssh_port));
 
@@ -78,7 +80,7 @@ function switchserver_main()
 
 
 		if ($ret !== 0) {
-			throw new lxException ("vzmigrate_failed_due_to:$error", '', '');
+			throw new lxException("vzmigrate_failed_due_to:$error", '', '');
 		}
 
 		$object->olddeleteflag = 'done';
@@ -88,8 +90,6 @@ function switchserver_main()
 		$object->makeSureTheUserExists();
 		$object->setUpdateSubaction();
 		$object->write();
-
-		
 	} catch (exception $e) {
 		print($e->getMessage());
 		/// hcak ahck... Chnage only the olddelete variable which is the mutex used for locking in the process of switch. The problem is we want to totally bail out if the switchserver fails. The corect way would be save after reverting the syncserve to the old value, but that's a bit risky. So we just use a hack to change only the olddeleteflag; Not a real hack.. This is the better way.
@@ -107,7 +107,6 @@ function switchserver_main()
 		exit;
 	}
 	mail($login->contactemail, "Switch Succeeded", "Switch Succeeded {$object->getClass()}:$object->nname to {$param['syncserver']}\n");
-
 }
 
 

@@ -1,5 +1,5 @@
-<?php 
-function print_time($var, $mess = null, $dbg = 2) 
+<?php
+function print_time($var, $mess = null, $dbg = 2)
 {
 	static $last;
 
@@ -26,7 +26,7 @@ function print_time($var, $mess = null, $dbg = 2)
 
 print_time('full');
 
-function windowsOs() 
+function windowsOs()
 {
 	if (getOs() == "Windows") {
 		return true;
@@ -36,14 +36,14 @@ function windowsOs()
 
 function getOs()
 {
-	return (substr(php_uname(), 0, 7) == "Windows")? "Windows": "Linux";
+	return (substr(php_uname(), 0, 7) == "Windows") ? "Windows" : "Linux";
 }
 
-if(!isset($_SERVER['DOCUMENT_ROOT'])) {
+if (!isset($_SERVER['DOCUMENT_ROOT'])) {
 	if (isset($_SERVER['SCRIPT_NAME'])) {
 		$n = $_SERVER['SCRIPT_NAME'];
-		$f = ereg_replace('\\\\', '/',$_SERVER['SCRIPT_FILENAME']);
-		$f = str_replace('//','/',$f);
+		$f = ereg_replace('\\\\', '/', $_SERVER['SCRIPT_FILENAME']);
+		$f = str_replace('//', '/', $f);
 		$_SERVER['DOCUMENT_ROOT'] = eregi_replace($n, "", $f);
 	}
 }
@@ -60,10 +60,10 @@ if (WindowsOs()) {
 
 function getreal($vpath)
 {
-     return  $_SERVER["DOCUMENT_ROOT"] . "/". $vpath; 
+	return  $_SERVER["DOCUMENT_ROOT"] . "/" . $vpath;
 }
 
 function readvirtual($vpath)
 {
-     readfile($_SERVER["DOCUMENT_ROOT"] . $vpath);
+	readfile($_SERVER["DOCUMENT_ROOT"] . $vpath);
 }

@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 
@@ -14,9 +14,8 @@ if (!$list['class']) {
 $login->loadAllObjects('domain');
 $list = $login->getList($class);
 
-foreach($list as $l) {
+foreach ($list as $l) {
 	$l->setUpdateSubaction('full_update');
 	$l->was();
 }
 print("\n\n");
-

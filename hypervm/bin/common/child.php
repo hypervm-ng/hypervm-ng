@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/lib/include.php";
 
@@ -12,7 +12,9 @@ function child_main()
 	$rem = unserialize(lfile_get_contents($argv[1]));
 	unlink($argv[1]);
 
-	if (!$rem) { exit; }
+	if (!$rem) {
+		exit;
+	}
 
 	if (isset($rem->sleep)) {
 		sleep($rem->sleep);
@@ -40,5 +42,3 @@ function child_main()
 	print($var);
 	exit;
 }
-
-

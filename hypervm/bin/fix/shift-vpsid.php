@@ -1,5 +1,5 @@
-<?php 
-include_once "htmllib/lib/include.php"; 
+<?php
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 
@@ -17,12 +17,14 @@ if ($driverapp !== 'openvz') {
 }
 
 $shift = $argv[2];
-if (!$shift) { $shift = 1000; }
+if (!$shift) {
+	$shift = 1000;
+}
 
 $sq = new Sqlite(null, 'vps');
 $res = $sq->getRowsWhere("syncserver = '$slave'", array('nname'));
 $list = get_namelist_from_arraylist($res);
-foreach($list as $l) {
+foreach ($list as $l) {
 	$o = new Vps(null, $slave, $l);
 	$o->get();
 	$param['vpsid'] = $o->vpsid + $shift;

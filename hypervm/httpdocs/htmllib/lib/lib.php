@@ -1,9 +1,9 @@
-<?php 
-	
+<?php
+
 function getNumForString($name)
 {
 	$num = 0;
-	for($i = 0; $i < strlen($name); $i++) {
+	for ($i = 0; $i < strlen($name); $i++) {
 		$num += ord($name[$i]) * $i;
 	}
 	$num = $num % 99999999;
@@ -13,13 +13,13 @@ function getNumForString($name)
 
 function is_openvz()
 {
-	return lxfile_exists("/proc/user_beancounters");  
+	return lxfile_exists("/proc/user_beancounters");
 }
 
 
 function auto_update()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$gen = $login->getObject('general');
 	if ($gen->generalmisc_b->isOn('autoupdate')) {
 		dprint("Auto Updating\n");
@@ -33,15 +33,15 @@ function auto_update()
 			send_mail_to_admin($msg, $msg);
 		}
 	}
-
-	
 }
 
 function print_head_image()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
-	if ($sgbl->isBlackBackground()) { return; }
+	if ($sgbl->isBlackBackground()) {
+		return;
+	}
 	if ($sgbl->isKloxo() && $gbl->c_session->ssl_param) {
 		return;
 	}
@@ -49,7 +49,9 @@ function print_head_image()
 		return;
 	}
 
-	?> <link href="/img/skin/hypervm/feather/default/feather.css" rel="stylesheet" type="text/css" /> <?php 
+?>
+	<link href="/img/skin/hypervm/feather/default/feather.css" rel="stylesheet" type="text/css" />
+<?php
 	print("<table class='bgtop3' width=100% cellpadding=0 cellspacing=0 style=\"background:url(/img/skin/hypervm/feather/default/invertfeather.jpg)\"> ");
 	print("<tr  ><td width=100% id='td1' > </td> ");
 
@@ -76,20 +78,19 @@ function getIncrementedValueFromTable($table, $column)
 function http_is_self_ssl()
 {
 	return (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on'));
-
 }
 
 function core_installWithVersion($path, $file, $ver)
 {
-    global $sgbl;
-    $prgm = $sgbl->__var_program_name;
-    lxfile_mkdir("/var/cache/$prgm");
-    if (!lxfile_real("/var/cache/$prgm/$file.$ver.zip")) {
-        while (lxshell_return("unzip", "-t", "/var/cache/$prgm/$file.$ver.zip")) {
-            system("cd /var/cache/$prgm/ ; rm -f $file*.zip; wget http://download.hypervm-ng.org/download/$file.$ver.zip");
-        }
-        system("cd $path ; unzip -oq /var/cache/$prgm/$file.$ver.zip");
-    }
+	global $sgbl;
+	$prgm = $sgbl->__var_program_name;
+	lxfile_mkdir("/var/cache/$prgm");
+	if (!lxfile_real("/var/cache/$prgm/$file.$ver.zip")) {
+		while (lxshell_return("unzip", "-t", "/var/cache/$prgm/$file.$ver.zip")) {
+			system("cd /var/cache/$prgm/ ; rm -f $file*.zip; wget http://download.hypervm-ng.org/download/$file.$ver.zip");
+		}
+		system("cd $path ; unzip -oq /var/cache/$prgm/$file.$ver.zip");
+	}
 }
 
 function get_other_driver($class, $driverapp)
@@ -97,18 +98,17 @@ function get_other_driver($class, $driverapp)
 	include "../file/driver/rhel.inc";
 	$ret = null;
 	if (is_array($driver[$class])) {
-		foreach($driver[$class] as $l) {
+		foreach ($driver[$class] as $l) {
 			if ($l !== $driverapp) {
 				$ret[] = $l;
 			}
 		}
 	}
 	return $ret;
-
 }
-function csainlist($string, $ssl) 
+function csainlist($string, $ssl)
 {
-	foreach($ssl as $ss) {
+	foreach ($ssl as $ss) {
 		if (csa($string, $ss)) {
 			return true;
 		}
@@ -118,7 +118,7 @@ function csainlist($string, $ssl)
 
 function file_put_between_comments($stlist, $endlist, $startstring, $endstring, $file, $string)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$prgm = $sgbl->__var_program_name;
 
@@ -131,7 +131,7 @@ function file_put_between_comments($stlist, $endlist, $startstring, $endstring, 
 	if (lxfile_exists($file)) {
 		$list = lfile_trim($file);
 		$inside = false;
-		foreach($list as $l) {
+		foreach ($list as $l) {
 			if (csainlist($l, $stlist)) {
 				$inside = true;
 			}
@@ -179,15 +179,21 @@ function db_get_value($table, $nname, $var)
 
 function monitor_load()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$val = os_getLoadAvg(true);
-	
+
 	$rmt = lfile_get_unserialize("../etc/data/loadmonitor");
 	$threshold = 0;
-	if ($rmt) { $threshold = $rmt->load_threshold; }
-	if (!$threshold) { $threshold = 20; }
+	if ($rmt) {
+		$threshold = $rmt->load_threshold;
+	}
+	if (!$threshold) {
+		$threshold = 20;
+	}
 
-	if ($val < $threshold) { return; }
+	if ($val < $threshold) {
+		return;
+	}
 
 	dprint("load $val is greater than $threshold\n");
 
@@ -211,7 +217,7 @@ function log_load()
 {
 
 	$mess = os_getLoadAvg();
-	
+
 	if (!is_string($mess)) {
 		$mess = var_export($mess, true);
 	}
@@ -222,13 +228,12 @@ function log_load()
 	} else {
 		$endstr = "\n";
 	}
-	lfile_put_contents("/var/log/loadvg.log", time() . ' ' . @ date("H:i:M/d/Y") . ": $mess$endstr", FILE_APPEND);
-	
+	lfile_put_contents("/var/log/loadvg.log", time() . ' ' . @date("H:i:M/d/Y") . ": $mess$endstr", FILE_APPEND);
 }
 
 function lxGetTimeFromString($line)
 {
-	
+
 	///2006-03-10 07:00:01
 	$line = trimSpaces($line);
 	$list = explode(" ", $line);
@@ -245,9 +250,11 @@ function recursively_get_file($dir, $file)
 	}
 	$list = lscandir_without_dot($dir);
 
-	if (!$list) { return null; }
+	if (!$list) {
+		return null;
+	}
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (lxfile_exists("$dir/$l/$file")) {
 			return "$dir/$l/$file";
 		}
@@ -274,12 +281,12 @@ function make_hidden_if_one($dlist)
 
 function get_quick_action_list($object)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$class = $object->getClass();
 
 	$object->createShowAlist($alist);
-	foreach($alist as $k => $v) {
+	foreach ($alist as $k => $v) {
 		if (csb($k, "__title")) {
 			$nalist[$k] = $v;
 			continue;
@@ -301,13 +308,13 @@ function get_quick_action_list($object)
 
 function get_favorite($class)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$shortcut = $login->getVirtualList($class, $count);
 	$back = $login->getSkinDir();
 	$res = null;
 	$ret = null;
 	$iconpath = get_image_path() . "/button/";
-	if ($shortcut) foreach($shortcut as $k => $h) {
+	if ($shortcut) foreach ($shortcut as $k => $h) {
 		if (!is_object($h)) {
 			continue;
 		}
@@ -323,7 +330,7 @@ function get_favorite($class)
 
 		$url = base64_decode($h->url);
 		// If the link is from kloxo, it shouldn't throw up a lot of errors. Needs to fix this properly..
-		$ac_descr = @ $ghtml->getActionDetails($url, null, $iconpath, $path, $post, $_t_file, $_t_name, $_t_image, $__t_identity);
+		$ac_descr = @$ghtml->getActionDetails($url, null, $iconpath, $path, $post, $_t_file, $_t_name, $_t_image, $__t_identity);
 		if ($sgbl->isHyperVM() && $h->vpsparent_clname) {
 			$url = kloxo::generateKloxoUrl($h->vpsparent_clname, null, $url);
 			$tag = "(l)";
@@ -347,12 +354,11 @@ function get_favorite($class)
 			$target = "_blank";
 		}
 
-		$vvar_list = array('_t_image' , 'url' , 'target' , '__t_identity' , 'ac_descr' , 'str' , 'tag', 'fullstr');
-		foreach($vvar_list as $vvar) {
+		$vvar_list = array('_t_image', 'url', 'target', '__t_identity', 'ac_descr', 'str', 'tag', 'fullstr');
+		foreach ($vvar_list as $vvar) {
 			$res[$vvar] = $$vvar;
 		}
 		$ret[] = $res;
-		
 	}
 	return $ret;
 }
@@ -360,16 +366,16 @@ function get_favorite($class)
 
 function print_favorites()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$back = $login->getSkinDir();
 	$list = get_favorite("ndskshortcut");
 
-	$vvar_list = array('_t_image' , 'url' , 'target' , '__t_identity' , 'ac_descr' , 'str' , 'tag');
+	$vvar_list = array('_t_image', 'url', 'target', '__t_identity', 'ac_descr', 'str', 'tag');
 
 	$res = null;
-	foreach((array)$list as $l) {
+	foreach ((array)$list as $l) {
 
-		foreach($vvar_list as $vvar) {
+		foreach ($vvar_list as $vvar) {
 			$$vvar = $l[$vvar];
 		}
 		$res .= "<tr valign=top style=\"border-width:1; background:url($back/a.gif);\"> <td > <span title=\"$ac_descr[2] for $__t_identity\"> <img width=16 height=16 src=$_t_image> <a href=$url target=$target>  $str $tag</a></span></td> </tr>";
@@ -380,7 +386,7 @@ function print_favorites()
 
 function print_quick_action($class)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$iconpath = get_image_path() . "/button/";
 	if ($class === 'self') {
@@ -397,7 +403,7 @@ function print_quick_action($class)
 	$namelist = get_namelist_from_objectlist($list);
 
 	$alist = get_quick_action_list($object);
-	foreach($alist as $a) {
+	foreach ($alist as $a) {
 		$ac_descr = $ghtml->getActionDetails($a, null, $iconpath, $path, $post, $_t_file, $_t_name, $_t_image, $__t_identity);
 	}
 	$stylestr = "style=\"font-size: 10px\"";
@@ -407,14 +413,14 @@ function print_quick_action($class)
 	//$res .= "$desc[2] <br> ";
 	if (!$object->isLogin()) {
 		$res .= "<select $stylestr name=frm_redirectname>";
-		foreach($namelist as $l) {
+		foreach ($namelist as $l) {
 			$pl = substr($l, 0, 26);
 			$res .= "<option $stylestr value=$l> $pl </option>";
 		}
 		$res .= "</select> </td> </tr>  ";
 	}
 	$res .= " <tr style=\"background:#d6dff7\"> <td ><select $stylestr name=frm_redirectaction>";
-	foreach($alist as $k => $a) {
+	foreach ($alist as $k => $a) {
 		if (csb($k, "__title")) {
 			$res .= "<option value=>------$a----</option>";
 			continue;
@@ -428,7 +434,6 @@ function print_quick_action($class)
 	$res .= "</select> </td> </tr> ";
 	$res .= "</form> <tr > <td align=right> <a href=javascript:quickaction.submit() > Go </a> </td> </tr> ";
 	return $res;
-	
 }
 
 function addtoEtcHost($request, $ip)
@@ -441,7 +446,7 @@ function addtoEtcHost($request, $ip)
 
 function fill_string($string, $num = 33)
 {
-	for($i = strlen($string); $i < $num; $i++) {
+	for ($i = strlen($string); $i < $num; $i++) {
 		$string .= ".";
 	}
 
@@ -453,7 +458,7 @@ function removeFromEtcHost($request)
 	$comment = "added by kloxo dnsless preview";
 	$list = lfile_trim("/etc/hosts");
 	$nlist = null;
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (csa($l, "$request #$comment")) {
 			continue;
 		}
@@ -485,7 +490,7 @@ function createHtpasswordFile($object, $sdir, $list)
 		lxfile_unix_chown($dir, $object->main->__var_username);
 	}
 	$fstr = null;
-	foreach($list as $k => $p) {
+	foreach ($list as $k => $p) {
 		$cr = crypt($p);
 		$fstr .= "$k:$cr\n";
 	}
@@ -529,7 +534,7 @@ function fix_meta_character($v)
 
 function changeDriver($server, $class, $pgm)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	// Temporary hack. Somehow mysql doesnt' work in the backend.
 
@@ -556,7 +561,7 @@ function changeDriver($server, $class, $pgm)
 function changeDriverFunc($server, $class, $pgm)
 {
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$server = $login->getFromList('pserver', $server);
 
@@ -604,12 +609,15 @@ function slave_get_driver($class)
 
 function PrepareRoundCubeDb()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$pass = slave_get_db_pass();
 
 	//system("yum -y install lxroundcube");
-	$pstring = null; if ($pass) { $pstring = "-p\"$pass\""; }
+	$pstring = null;
+	if ($pass) {
+		$pstring = "-p\"$pass\"";
+	}
 	//$cmd = "echo \"drop database roundcubemail \" | mysql -u root $pstring 2>/dev/null";
 	//system($cmd);
 	$cmd = " echo \"create database roundcubemail ; grant all on roundcubemail.* to roundcube@localhost identified by 'pass' \" | mysql -u root $pstring 2>/dev/null";
@@ -622,7 +630,7 @@ function PrepareRoundCubeDb()
 
 function run_mail_to_ticket()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if (!$sgbl->is_this_master()) {
 		return;
@@ -668,16 +676,15 @@ FTC;
 
 function send_system_monitor_message_to_admin($prog)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$hst = trim(`hostname`);
-	$dt = @ date('M-d h:i');
+	$dt = @date('M-d h:i');
 	$mess = "Host: $hst\nDate: $dt\n$prog\n\n\n";
 	$rmt = new Remote();
 	$rmt->cmd = "sendemail";
 	$rmt->subject = "System Monitor on $hst";
 	$rmt->message = $mess;
 	send_to_master($rmt);
-
 }
 
 
@@ -687,20 +694,22 @@ function check_if_port_on($port)
 	//socket_set_nonblock($socket);
 	$ret = socket_connect($socket, "127.0.0.1", $port);
 	socket_close($socket);
-	if (!$ret) { return false; }
+	if (!$ret) {
+		return false;
+	}
 	return true;
 }
 
 
 function installAppPHP($var, $cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$domain = $var['domain'];
 	$appname = $var['appname'];
 
 	lxfile_mkdir("/home/httpd/$domain/httpdocs/__installapplog");
 	$i = 0;
-	while(1) {
+	while (1) {
 		$file = "/home/httpd/$domain/httpdocs/__installapplog/$appname$i.html";
 		if (!lxfile_exists($file)) {
 			break;
@@ -716,13 +725,12 @@ function installAppPHP($var, $cmd)
 	}
 	system($cmd);
 	dprint("\n*************************************************************************\n");
-
 }
 
 
 function validate_domain_name($name)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if ($name === 'lxlabs.com' || $name === 'key.lxlabs.com') {
 		if (!$sgbl->isDebug()) {
@@ -738,17 +746,17 @@ function validate_domain_name($name)
 		throw new lxException('add_without_www', 'nname');
 	}
 
-	if(!eregi("^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", $name)) { 
+	if (!eregi("^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", $name)) {
 		throw new lxException('invalid_domain_name', 'nname');
 	}
 }
 
 function execinstallappPhp($domain, $appname, $cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	lxfile_mkdir("/home/httpd/$domain/httpdocs/__installapplog");
 	$i = 0;
-	while(1) {
+	while (1) {
 		$file = "/home/httpd/$domain/httpdocs/__installapplog/$appname$i.html";
 		if (!lxfile_exists($file)) {
 			break;
@@ -769,7 +777,7 @@ function execinstallappPhp($domain, $appname, $cmd)
 
 function update_self()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	exec_with_all_closed("$sgbl->__path_php_path ../bin/update.php");
 }
 
@@ -784,15 +792,16 @@ function get_name_without_template($name)
 
 function check_smtp_port()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	if ($sgbl->is_this_slave()) { return; }
+	global $gbl, $sgbl, $login, $ghtml;
+	if ($sgbl->is_this_slave()) {
+		return;
+	}
 	$sq = new Sqlite(null, 'client');
 	if (!check_if_port_on(25)) {
 		$sq->rawQuery("update client set smtp_server_flag = 'off' where nname = 'admin'");
 	} else {
 		$sq->rawQuery("update client set smtp_server_flag = 'on' where nname = 'admin'");
 	}
-
 }
 
 function getRealPidlist($arg)
@@ -813,7 +822,7 @@ function getRealPidlist($arg)
 
 	$list = explode("\n", $list);
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trim($l);
 		if (!$l) {
 			continue;
@@ -833,7 +842,6 @@ function getRealPidlist($arg)
 	}
 
 	return $nlist;
-
 }
 
 
@@ -849,7 +857,7 @@ function get_double_hex($i)
 
 function merge_array_object_not_deleted($array, $object)
 {
-	foreach($array as $a) {
+	foreach ($array as $a) {
 		if ($a['nname'] === $object->nname) {
 			continue;
 		}
@@ -860,7 +868,7 @@ function merge_array_object_not_deleted($array, $object)
 		return $ret;
 	}
 
-	foreach($object as $k => $v) {
+	foreach ($object as $k => $v) {
 		if (!is_object($v)) {
 			$nl[$k] = $v;
 		}
@@ -877,7 +885,7 @@ function call_with_flag($func)
 	}
 	call_user_func($func);
 	lxfile_touch($file);
-    return true;
+	return true;
 }
 
 
@@ -896,7 +904,7 @@ function check_disable_admin($cgi_clientname)
 
 function check_if_many_server()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	//if ($sgbl->isDebug()) { return true; }
 	//$lic = $login->getObject('license');
@@ -934,7 +942,7 @@ function change_config($file, $var, $val)
 {
 	$list = lfile_trim($file);
 	$match = false;
-	foreach($list as &$__l) {
+	foreach ($list as &$__l) {
 		if (csb($__l, "$var=") || csb($__l, "$var =")) {
 			$__l = "$var=\"$val\"";
 			$match = true;
@@ -990,7 +998,9 @@ function execCom($ob, $func, $exception)
 
 function fix_vgname($vgname)
 {
-	if (csa($vgname, "lvm:")) { $vgname = strfrom($vgname, "lvm:"); }
+	if (csa($vgname, "lvm:")) {
+		$vgname = strfrom($vgname, "lvm:");
+	}
 	return $vgname;
 }
 
@@ -1009,7 +1019,7 @@ function remove_old_serve_file()
 {
 	log_log("remove_oldfile", "Removing old files");
 	$list = lscandir_without_dot("__path_serverfile/tmp");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		remove_if_older_than_a_day("__path_serverfile/tmp/$l");
 	}
 }
@@ -1018,7 +1028,6 @@ function fix_flag_variable($table, $flagvariable)
 {
 	$sq = new Sqlite(null, $table);
 	$sq->rawQuery("update $table set $flagvariable = 'done' where $flagvariable = 'doing'");
-
 }
 
 function upload_file_to_db($dbtype, $dbhost, $dbuser, $dbpassword, $dbname, $file)
@@ -1028,9 +1037,9 @@ function upload_file_to_db($dbtype, $dbhost, $dbuser, $dbpassword, $dbname, $fil
 
 function calculateRealTotal($inout)
 {
-	foreach($inout as $k => $v) {
+	foreach ($inout as $k => $v) {
 		$sum = 0;
-		foreach($v as $kk => $vv) {
+		foreach ($v as $kk => $vv) {
 			$sum += $vv;
 		}
 
@@ -1041,8 +1050,8 @@ function calculateRealTotal($inout)
 
 function mysql_upload_file_to_db($dbhost, $dbuser, $dbpassword, $dbname, $file)
 {
-    // TODO: REPLACE MYSQL_CONNECT
-	$rs = mysqli_connect($dbhost, $dbuser, $dbpassword,$dbname);
+	// TODO: REPLACE MYSQL_CONNECT
+	$rs = mysqli_connect($dbhost, $dbuser, $dbpassword, $dbname);
 
 	if (!$rs) {
 		throw new lxException('no_mysql_connection_while_uploading_file,', '');
@@ -1052,7 +1061,7 @@ function mysql_upload_file_to_db($dbhost, $dbuser, $dbpassword, $dbname, $file)
 
 	$res = lfile_get_contents($file);
 
-	$res = mysqli_query($rs,$res);
+	$res = mysqli_query($rs, $res);
 	if (!$res) {
 		throw new lxException('no_mysql_connection_while_uploading_file,', '');
 	}
@@ -1080,7 +1089,7 @@ function testAllServers()
 	$nlist = get_namelist_from_arraylist($res);
 
 	$flist = null;
-	foreach($nlist as $l) {
+	foreach ($nlist as $l) {
 		try {
 			rl_exec_get(null, $l, 'test_remote_func', null);
 		} catch (exception $e) {
@@ -1091,11 +1100,10 @@ function testAllServers()
 	if ($flist) {
 		throw new lxException($e->getMessage(), '', $flist);
 	}
-
 }
 function exec_with_all_closed($cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$string = null;
 	log_shell("Closed Exec $sgbl->__path_program_root/cexe/closeallinput '$cmd' >/dev/null 2>&1 &");
 	chmod("$sgbl->__path_program_root/cexe/closeallinput", 0755);
@@ -1105,9 +1113,9 @@ function exec_with_all_closed($cmd)
 
 function exec_with_all_closed_output($cmd)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$string = null;
-	for($i = 1; $i < 60; $i++) {
+	for ($i = 1; $i < 60; $i++) {
 		$string .= " $i</dev/null";
 	}
 	//debugBacktrace();
@@ -1122,7 +1130,7 @@ function exec_with_all_closed_output($cmd)
 // Convert Com to Php Array.
 function convertCOMarray($array)
 {
-	foreach($array as $v) {
+	foreach ($array as $v) {
 		$res[] = "$v";
 	}
 	return $res;
@@ -1132,11 +1140,10 @@ function mycount($olist)
 {
 	$i = 0;
 
-	foreach($olist as $o) {
+	foreach ($olist as $o) {
 		$i++;
 	}
 	return $i;
-
 }
 
 
@@ -1144,7 +1151,7 @@ function mycount($olist)
 function full_validate_ipaddress($ip, $variable = 'ipaddress')
 {
 	// variable is nname or ipaddress
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $global_dontlogshell;
 	$global_dontlogshell = true;
 
@@ -1155,12 +1162,12 @@ function full_validate_ipaddress($ip, $variable = 'ipaddress')
 		throw new lxException('Invalid IP address: ' . $ip, $variable);
 	}
 
-	if(isIPV6($ip))
-             $ret = lxshell_return("ping6", "-n", "-c", "1", "-w", "5", $ip);
+	if (isIPV6($ip))
+		$ret = lxshell_return("ping6", "-n", "-c", "1", "-w", "5", $ip);
 	else $ret = lxshell_return("ping", "-n", "-c", "1", "-w", "5", $ip);
-	
+
 	// If the return status is 1, the ping fail and nobody uses. But if return is 0, somebody is using the IP
-	if(intval($ret) !== 1) { 
+	if (intval($ret) !== 1) {
 		throw new lxexception('Another host is using the IP ' . $ip . ' and it is responding to the IP ping. Please you will ensure to use an available IP to add.', $variable);
 	}
 
@@ -1169,7 +1176,7 @@ function full_validate_ipaddress($ip, $variable = 'ipaddress')
 
 function do_actionlog($login, $object, $action, $subaction)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if ($subaction === 'customermode') {
 		return;
@@ -1202,7 +1209,7 @@ function do_actionlog($login, $object, $action, $subaction)
 
 function validate_email($email)
 {
-	if(!preg_match("#^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5})$#", $email)){
+	if (!preg_match("#^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5})$#", $email)) {
 		return false;
 	}
 	return true;
@@ -1219,35 +1226,35 @@ function validate_ipaddress_and_throw($ip, $variable)
 
 function validate_ipaddress($ip)
 {
-    if(strchr($ip, '.'))  // most likely IPV4
-        return validate_ipaddressV4($ip);
-    else if(strchr($ip, ':'))
-        return validate_ipaddressV6($ip);
-    
-    return 0;	//neither
+	if (strchr($ip, '.'))  // most likely IPV4
+		return validate_ipaddressV4($ip);
+	else if (strchr($ip, ':'))
+		return validate_ipaddressV6($ip);
+
+	return 0;	//neither
 }
 
 
 function validate_ipaddressV4($ip)
 {
-	$ind= explode(".",$ip);
-	$d=0;
-	$c=0;
-	foreach($ind as $in) {
+	$ind = explode(".", $ip);
+	$d = 0;
+	$c = 0;
+	foreach ($ind as $in) {
 		$c++;
-		if(is_numeric($in) && $in >= 0 && $in <= 255 ) {
+		if (is_numeric($in) && $in >= 0 && $in <= 255) {
 			$d++;
 		} else {
 			return 0;
 		}
 	}
-	if($c ===  4)   {
-		if($d === 4) {
+	if ($c ===  4) {
+		if ($d === 4) {
 			return 1;
 		} else {
 			return 0;
 		}
-	} else  {
+	} else {
 		return 0;
 	}
 }
@@ -1256,52 +1263,52 @@ function validate_ipaddressV6($ip)
 {
 	$ip = strtoupper($ip);
 	$ind = expandIP6ToArray($ip);
-	$d=0;
-	$c=0;
+	$d = 0;
+	$c = 0;
 
-	if(count($ind) >8) {
-	    throw new lxException('Invalid IP address: ' . $ip . ' Not enough parts', $variable);
+	if (count($ind) > 8) {
+		throw new lxException('Invalid IP address: ' . $ip . ' Not enough parts', $variable);
 
-	    return 0;
+		return 0;
 	}
 
-	foreach($ind as $in) {
+	foreach ($ind as $in) {
 		$valid = preg_match("/[0_9ABCDEF]*/", $in);
-		if(!$valid){
-                        throw new lxException('Invalid IP address: ' . $ip . ' Contains not hexa characters', $variable);
+		if (!$valid) {
+			throw new lxException('Invalid IP address: ' . $ip . ' Contains not hexa characters', $variable);
 			return 0;
-                    }
+		}
 	}
 	return 1;
 }
 
-function expandIP6ToArray($ip){
-        //Make sure we have 8 parts
-        while(count(explode(":",$ip)) < 8){
-                $ip = str_replace("::",":::",$ip);
-        } 
-          
-        $ipa = explode(":",$ip);
-        for($i=0;$i<8;$i++){    
-                $ipa[$i]=str_pad($ipa[$i],4,"0",STRPADLEFT);
-        } 
-        return $ipa;
-} 
+function expandIP6ToArray($ip)
+{
+	//Make sure we have 8 parts
+	while (count(explode(":", $ip)) < 8) {
+		$ip = str_replace("::", ":::", $ip);
+	}
+
+	$ipa = explode(":", $ip);
+	for ($i = 0; $i < 8; $i++) {
+		$ipa[$i] = str_pad($ipa[$i], 4, "0", STRPADLEFT);
+	}
+	return $ipa;
+}
 
 // !! we only check for . and : !!
 // NO validation done!
 function isIPV6($ip)
 {
-  if(strchr($ip, ':') && !strchr($ip, '.')) return true;
-  if(strchr($ip, '.') && !strchr($ip, ':')) return false;
-  
-  throw new lxException('Invalid IP address: ' . $ip . ' Contains both dot and colon!', $variable);
-    return false;  
+	if (strchr($ip, ':') && !strchr($ip, '.')) return true;
+	if (strchr($ip, '.') && !strchr($ip, ':')) return false;
+
+	throw new lxException('Invalid IP address: ' . $ip . ' Contains both dot and colon!', $variable);
+	return false;
 }
 
 function make_sure_directory_is_lxlabs($file)
 {
-
 }
 
 function addToUtmp($ses, $dbaction)
@@ -1349,7 +1356,6 @@ function getOneIPForLocalhost($v)
 		return $ip;
 	}
 	return getFQDNforServer('localhost');
-	
 }
 
 function getInternalNetworkIp($v)
@@ -1391,16 +1397,16 @@ function getFQDNforServer($v)
 	if ($servername) {
 		return $servername;
 	}
-    // Did not found a hostname in the database, getting a IP from the database
-    $ServerIP = getOneIPForServer($v);
-    // Try to find a hostname using the system tool host. When that fails it returns the IP
-    return getHostNameFromIP($ServerIP);
+	// Did not found a hostname in the database, getting a IP from the database
+	$ServerIP = getOneIPForServer($v);
+	// Try to find a hostname using the system tool host. When that fails it returns the IP
+	return getHostNameFromIP($ServerIP);
 }
 
 function getHostNameFromIP($ip)
 {
-    $host = `host $ip`;
-    return (($host ? end ( explode (' ', $host)) : $ip));
+	$host = `host $ip`;
+	return (($host ? end(explode(' ', $host)) : $ip));
 }
 
 function getOneIPForServer($v)
@@ -1408,13 +1414,13 @@ function getOneIPForServer($v)
 	$sql = new Sqlite(null, "pserver");
 	$ipaddr = $sql->rawQuery("select * from ipaddress where syncserver = '$v'");
 
-	foreach($ipaddr as $ip) {
+	foreach ($ipaddr as $ip) {
 		if (!csb($ip['ipaddr'], "127") && !csb($ip['ipaddr'], "172") && !csb($ip['ipaddr'], "192.168")) {
 			return $ip['ipaddr'];
 		}
 	}
 	// Try once more if no non-local ips were found...
-	foreach($ipaddr as $ip) {
+	foreach ($ipaddr as $ip) {
 		if (!csb($ip['ipaddr'], "127")) {
 			return $ip['ipaddr'];
 		}
@@ -1443,7 +1449,7 @@ function tgz_to_fileserv($dir, $fillist)
 function get_admin_license_var()
 {
 	$list = get_license_resource();
-	foreach($list as &$__l) {
+	foreach ($list as &$__l) {
 		$__l = "used_q_$__l";
 	}
 	$sq = new Sqlite(null, 'client');
@@ -1453,13 +1459,13 @@ function get_admin_license_var()
 
 function get_license_resource()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	return array("vps_num");
 }
 
 function cp_fileserv_list($root, $list)
 {
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$fp = "$root/$l";
 		$res[$fp] = cp_fileserv($fp);
 	}
@@ -1493,14 +1499,13 @@ function cp_fileserv($file)
 	//$stat = llstat("__path_serverfile/$base");
 	$res['size'] = lxfile_size($file);
 	return $res;
-
 }
 
 function do_zip_to_fileserv($type, $arg)
 {
 	lxfile_mkdir("__path_serverfile/tmp");
 	lxfile_unix_chown_rec("__path_serverfile", "lxlabs");
-	
+
 	$basebase = basename($arg[0]);
 
 	$base = basename(ltempnam("__path_serverfile/tmp", $basebase));
@@ -1532,7 +1537,6 @@ function do_zip_to_fileserv($type, $arg)
 	}
 
 	return "__path_serverfile/tmp/$base";
-	
 }
 
 
@@ -1571,7 +1575,7 @@ function exit_if_not_system_user()
 
 function getFromFileserv($serv, $filepass, $copyto)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	doRealGetFromFileServ("file", $serv, $filepass, $copyto);
 }
@@ -1581,7 +1585,7 @@ function printFromFileServ($serv, $filepass)
 {
 	doRealGetFromFileServ("fileprint", $serv, $filepass);
 }
- 
+
 function doRealGetFromFileServ($cmd, $serv, $filepass, $copyto = null)
 {
 
@@ -1611,7 +1615,6 @@ function doRealGetFromFileServ($cmd, $serv, $filepass, $copyto = null)
 		} else {
 			log_log("servfile", "is Not system user, can't access so will get $realfile through backend");
 		}
-
 	}
 
 
@@ -1630,7 +1633,9 @@ function doRealGetFromFileServ($cmd, $serv, $filepass, $copyto = null)
 
 	doGetOrPrintFromFileServ($serv, $filepass, $cmd, $fd);
 
-	if ($fd) { fclose($fd); }
+	if ($fd) {
+		fclose($fd);
+	}
 }
 
 function doGetOrPrintFromFileServ($serv, $filepass, $type, $fd)
@@ -1651,7 +1656,6 @@ function doGetOrPrintFromFileServ($serv, $filepass, $type, $fd)
 	$totalsize = send_to_some_stream_server($type, $size, $serv, $string, $fd);
 
 	log_log("servfile", "Got $serv $type $file $size (Totalsize willbe +1) $totalsize");
-
 }
 
 function trimSpaces($val)
@@ -1679,8 +1683,10 @@ function execRrdTraffic($filename, $tot, $inc, $out)
 
 function set_login_skin_to_feather()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	if (!$sgbl->isKloxo()) { return; }
+	global $gbl, $sgbl, $login, $ghtml;
+	if (!$sgbl->isKloxo()) {
+		return;
+	}
 	$obj = $login->getObject('sp_specialplay');
 	$obj->specialplay_b->skin_name = 'feather';
 	$obj->specialplay_b->skin_color = 'default';
@@ -1696,15 +1702,18 @@ function set_login_skin_to_feather()
 
 function redirect_to_https()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
-	if ($sgbl->is_this_slave()) { print("Slave Server\n"); exit; }
-include_once "htmllib/phplib/lib/generallib.php";
+	if ($sgbl->is_this_slave()) {
+		print("Slave Server\n");
+		exit;
+	}
+	include_once "htmllib/phplib/lib/generallib.php";
 
-	$port = db_get_value("general", "admin", "ser_portconfig_b"); 
+	$port = db_get_value("general", "admin", "ser_portconfig_b");
 	$port = unserialize(base64_decode($port));
 
-	if (http_is_self_ssl()){
+	if (http_is_self_ssl()) {
 		return;
 	}
 	if (!is_object($port)) {
@@ -1717,7 +1726,9 @@ include_once "htmllib/phplib/lib/generallib.php";
 
 	$sslport = $port->sslport;
 
-	if (!$sslport) { $sslport = $sgbl->__var_prog_ssl_port; }
+	if (!$sslport) {
+		$sslport = $sgbl->__var_prog_ssl_port;
+	}
 
 	$host = $_SERVER['HTTP_HOST'];
 
@@ -1806,7 +1817,7 @@ function rrd_graph_vps($type, $file, $time)
 		$grid = 'MINUTE:3:MINUTE:30:HOUR:1:0:%X';
 	}
 
-	switch($type) {
+	switch ($type) {
 		case "traffic":
 			$ret = lxshell_return('rrdtool', 'graph', $graphfile, '--start', "-$time", '-w', '600', '-h', '200', '--x-grid', $grid, '--vertical-label=Bytes/s', "DEF:dss0=$file:total:AVERAGE", "DEF:dss1=$file:incoming:AVERAGE", "DEF:dss2=$file:outgoing:AVERAGE", 'LINE1:dss0#00FF00:Total traffic', 'LINE1:dss1#FF0000:In traffic\\r', 'LINE1:dss2#0000FF:Out traffic\\r');
 			break;
@@ -1828,13 +1839,13 @@ function rrd_graph_vps($type, $file, $time)
 
 function rrd_graph_server($type, $list, $time)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $global_dontlogshell;
 	global $global_shell_error;
 	$global_dontlogshell = true;
 	$graphfile = ltempnam("/tmp", "lx_graph");
 
-	$color = array( "000000", "b54f6f", "00bb00", "a0ad00", "0090bf", "56a656", "00bbbf", "bfbfbf", "458325", "f04050", "a0b2c5", "cf0f00", "a070ad", "cf8085", "af93af", "90bb9f", "00d500", "00ff00", "aaffaa", "00ffff", "aa00ff", "ffff00", "aaff00", "faff00", "0aff00", "6aff00", "eaffa0", "abff0a", "afffaa", "deab3d", "333333", "894367", "234567", "fbdead", "fadec1", "fa3d9c", "f54398", "f278d3", "f512d3", "43f3f9", "f643f9");
+	$color = array("000000", "b54f6f", "00bb00", "a0ad00", "0090bf", "56a656", "00bbbf", "bfbfbf", "458325", "f04050", "a0b2c5", "cf0f00", "a070ad", "cf8085", "af93af", "90bb9f", "00d500", "00ff00", "aaffaa", "00ffff", "aa00ff", "ffff00", "aaff00", "faff00", "0aff00", "6aff00", "eaffa0", "abff0a", "afffaa", "deab3d", "333333", "894367", "234567", "fbdead", "fadec1", "fa3d9c", "f54398", "f278d3", "f512d3", "43f3f9", "f643f9");
 
 
 	if ($time >= 7 * 24 * 3600) {
@@ -1847,11 +1858,11 @@ function rrd_graph_server($type, $list, $time)
 
 
 
-	switch($type) {
+	switch ($type) {
 		case "traffic":
 
 			$i = 0;
-			foreach($list as $k => $file) {
+			foreach ($list as $k => $file) {
 				$i++;
 				$fullpath = "$sgbl->__path_program_root/data/$type/$file.rrd";
 				if (!lxfile_exists($fullpath)) {
@@ -1863,7 +1874,6 @@ function rrd_graph_server($type, $list, $time)
 				} else {
 					$arg[] = "LINE1:dss$i#000000:$k";
 				}
-
 			}
 			$arglist = array('rrdtool', 'graph', $graphfile, '--start', "-$time", '-w', '600', '-h', '200', '--x-grid', $grid, '--vertical-label=Bytes/s');
 
@@ -1874,7 +1884,7 @@ function rrd_graph_server($type, $list, $time)
 
 		default:
 			$i = 0;
-			foreach($list as $k => $file) {
+			foreach ($list as $k => $file) {
 				$i++;
 				$fullpath = "$sgbl->__path_program_root/data/$type/$file.rrd";
 				$arg[] = "DEF:dss$i=$fullpath:$type:AVERAGE";
@@ -1884,7 +1894,6 @@ function rrd_graph_server($type, $list, $time)
 				} else {
 					$arg[] = "LINE1:dss$i#000000:$k";
 				}
-
 			}
 			$arglist = array('rrdtool', 'graph', $graphfile, '--start', "-$time", '-w', '600', '-h', '200', '--x-grid', $grid, "--vertical-label=$type");
 			$arglist = lx_array_merge(array($arglist, $arg));
@@ -1907,7 +1916,7 @@ function slow_print($file)
 {
 	$fp = lfopen($file, "rb");
 
-	while(!feof($fp)) {
+	while (!feof($fp)) {
 		print(fread($fp, 8092));
 		flush();
 		//usleep(600 * 1000);
@@ -1943,19 +1952,19 @@ function getObjectFromFileWithThrow($file)
 function checkIfVariablesSetOr($p, &$param, $v, $list)
 {
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (isset($p[$l]) && $p[$l]) {
 			$param[$v] = $p[$l];
 			return;
 		}
 	}
 
-	throw new lxException ("need_{$list[0]}", '');
+	throw new lxException("need_{$list[0]}", '');
 }
 
 function checkIfVariablesSet($p, $list)
 {
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (!isset($p[$l]) || !$p[$l]) {
 			$n = str_replace("-", "_", $l);
 			throw new lxException("need_{$n}", '', $l);
@@ -1966,7 +1975,7 @@ function checkIfVariablesSet($p, $list)
 function get_variable($list)
 {
 	$vlist = null;
-	foreach($list as $k => $v) {
+	foreach ($list as $k => $v) {
 		if (csb($k, "v-")) {
 			$vlist[strfrom($k, "v-")] = $v;
 		}
@@ -1981,7 +1990,7 @@ function parse_opt($argv)
 	if (!$argv) {
 		return  null;
 	}
-	foreach($argv as $v) {
+	foreach ($argv as $v) {
 		if (!csb($v, "--")) {
 			$ret['final'] = $v;
 			continue;
@@ -2001,7 +2010,7 @@ function fix_rhn_sources_file()
 {
 	$os = findOperatingSystem('pointversion');
 	$list = lfile("/etc/sysconfig/rhn/sources");
-	foreach($list as $k => $l) {
+	foreach ($list as $k => $l) {
 		$l = trim($l);
 
 		if (!$l) {
@@ -2017,8 +2026,8 @@ function fix_rhn_sources_file()
 	$outlist[] = "yum lxcenter-base http://download.hypervm-ng.org/update/$os/\$ARCH/";
 
 	lfile_put_contents("/etc/sysconfig/rhn/sources", implode("\n", $outlist) . "\n");
-	$cont = lfile_get_contents( "__path_program_htmlbase/htmllib/filecore/lxcenter.repo.template");
-	
+	$cont = lfile_get_contents("__path_program_htmlbase/htmllib/filecore/lxcenter.repo.template");
+
 	$cont = str_replace("%distro%", $os, $cont);
 	lfile_put_contents("/etc/yum.repos.d/lxcenter.repo", $cont);
 }
@@ -2084,7 +2093,9 @@ function lx_core_lock($file = null)
 	$prog = basename($argv[0]);
 
 	// This is a hack.. If we can't get the arg, then that means we are in the cgi mode, and that means our process name is display.php.
-	if (!$prog) { $prog = "display.php"; }
+	if (!$prog) {
+		$prog = "display.php";
+	}
 	lxfile_mkdir("../pid");
 
 	if (!$file) {
@@ -2130,7 +2141,7 @@ function lx_core_lock_check_only($prog, $file = null)
 {
 	lxfile_mkdir("../pid");
 	if (!$file) {
-		$file = basename($prog). ".pid";
+		$file = basename($prog) . ".pid";
 	} else {
 		$file = basename($file);
 	}
@@ -2173,7 +2184,7 @@ function appvault_dbfilter($inputfile, $outputfile, $cont)
 {
 
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$val = lfile_get_contents($inputfile);
 	$fullurl = "{$cont['domain']}/{$cont['installdir']}";
 	$fullurl = trim($fullurl, "/");
@@ -2216,15 +2227,15 @@ function appvault_dbfilter($inputfile, $outputfile, $cont)
 	$val = str_replace("__lx_client_path", "/home/{$cont['customer_name']}", $val);
 	$val = str_replace("__lx_adminemail_login", $cont['admin_email_login'], $val);
 	$val = str_replace("__lx_admin_pass", $cont['adminpass'], $val);
-	$val= str_replace("__lx_md5_adminpass", md5($cont['adminpass']), $val);
+	$val = str_replace("__lx_md5_adminpass", md5($cont['adminpass']), $val);
 	$val = str_replace("__lx_db_host", $cont['realhost'], $val);
 	$val = str_replace("__lx_db_name", $cont['dbname'], $val);
 	$val = str_replace("__lx_db_pass", $cont['dbpass'], $val);
 	$val = str_replace("__lx_db_user", $cont['dbuser'], $val);
 	$val = str_replace("__lx_db_type", $cont['dbtype'], $val);
-	$val = str_replace("__lx_url",$cont['domain'], $val);
-	$val = str_replace("__lx_domain_name",$cont['domain'], $val);
-	$val = str_replace("__lx_action",$cont['action'],$val);
+	$val = str_replace("__lx_url", $cont['domain'], $val);
+	$val = str_replace("__lx_domain_name", $cont['domain'], $val);
+	$val = str_replace("__lx_action", $cont['action'], $val);
 	//dprint("Writing to file {$cont['output']}\n");
 	//dprint("{$cont['output']} : $val\n");
 	lfile_put_contents($outputfile, $val);
@@ -2232,17 +2243,22 @@ function appvault_dbfilter($inputfile, $outputfile, $cont)
 
 function lightyApacheLimit($server, $var)
 {
-	if (!$server) { return true; }
+	if (!$server) {
+		return true;
+	}
 
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	if ($var === 'frontpage_flag' || $var === 'phpfcgi_flag' || $var === 'phpfcgiprocess_num') {
 		$driverapp = $gbl->getSyncClass(null, $server, 'web');
-		if ($var === 'frontpage_flag' ) {
+		if ($var === 'frontpage_flag') {
 			$v = db_get_value("pserver",  $server, "osversion");
-			if (csa($v, " 5")) { return false; }
-			if ($driverapp === 'lighttpd') { return false; }
+			if (csa($v, " 5")) {
+				return false;
+			}
+			if ($driverapp === 'lighttpd') {
+				return false;
+			}
 			return true;
-
 		} else {
 			if ($driverapp === 'apache') {
 				return false;
@@ -2250,7 +2266,6 @@ function lightyApacheLimit($server, $var)
 				return true;
 			}
 		}
-
 	}
 	if ($var === 'dotnet_flag') {
 		$v = db_get_value("pserver", $server, "ostype");
@@ -2263,7 +2278,7 @@ function lightyApacheLimit($server, $var)
 
 function createRestartFile($servar)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 
 	$servarn = "__var_progservice_$servar";
@@ -2285,7 +2300,7 @@ function getLastFromList(&$list)
 	if (!$list) {
 		return null;
 	}
-	foreach($list as &$l) {
+	foreach ($list as &$l) {
 	}
 	return $l;
 }
@@ -2295,7 +2310,7 @@ function getFirstKeyFromList(&$list)
 	if (!$list) {
 		return null;
 	}
-	foreach($list as $k => &$l) {
+	foreach ($list as $k => &$l) {
 		return $k;
 	}
 }
@@ -2306,7 +2321,7 @@ function getFirstFromList(&$list)
 	if (!$list) {
 		return null;
 	}
-	foreach($list as &$l) {
+	foreach ($list as &$l) {
 		return $l;
 	}
 }
@@ -2321,7 +2336,7 @@ function get_best_location($list)
 	dprintr($list);
 	$lvmlist = null;
 
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (csb($l, "lvm:")) {
 			$lvmlist[] = $l;
 		} else {
@@ -2330,11 +2345,11 @@ function get_best_location($list)
 	}
 
 	if ($lvmlist) {
-		foreach($lvmlist as $l) {
+		foreach ($lvmlist as $l) {
 			$out[$l] = vg_diskfree($l);
 		}
 	} else {
-		foreach($normallist as $l) {
+		foreach ($normallist as $l) {
 			$out[$l] = lxfile_disk_free_space($l);
 		}
 	}
@@ -2342,25 +2357,29 @@ function get_best_location($list)
 	dprintr($out);
 	arsort($out);
 	dprintr($out);
-	foreach($out as $k => $v) {
+	foreach ($out as $k => $v) {
 		return array('location' => $k, 'size' => $v);
 	}
 }
 
 function vg_complete()
 {
-        if (is_centosfive()) {
-            if (!lxfile_exists("/usr/sbin/vgdisplay")) { return; }
-        } else if (is_centossix()) {
-            if (!lxfile_exists("/sbin/vgdisplay")) { return; }            
-        } else {
-            return;
-        }
-        
-        $out = exec_with_all_closed_output("vgdisplay -c");
+	if (is_centosfive()) {
+		if (!lxfile_exists("/usr/sbin/vgdisplay")) {
+			return;
+		}
+	} else if (is_centossix()) {
+		if (!lxfile_exists("/sbin/vgdisplay")) {
+			return;
+		}
+	} else {
+		return;
+	}
+
+	$out = exec_with_all_closed_output("vgdisplay -c");
 	$list = explode("\n", $out);
 	$ret = null;
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trim($l);
 		if (!$l) {
 			continue;
@@ -2370,8 +2389,8 @@ function vg_complete()
 		}
 		$nlist = explode(":", $l);
 		$res['nname'] = $nlist[0];
-		$res['total'] = ($nlist[13] * $nlist[12])/1024;
-		$res['used'] = ($nlist[14] * $nlist[12])/1024;
+		$res['total'] = ($nlist[13] * $nlist[12]) / 1024;
+		$res['used'] = ($nlist[14] * $nlist[12]) / 1024;
 		$ret[] = $res;
 	}
 	return $ret;
@@ -2379,14 +2398,18 @@ function vg_complete()
 
 function vg_diskfree($vgname)
 {
-        if (is_centosfive()) {
-            if (!lxfile_exists("/usr/sbin/vgdisplay")) { return; }
-        } else if (is_centossix()) {
-            if (!lxfile_exists("/sbin/vgdisplay")) { return; }            
-        } else {
-            return;
-        }
-        
+	if (is_centosfive()) {
+		if (!lxfile_exists("/usr/sbin/vgdisplay")) {
+			return;
+		}
+	} else if (is_centossix()) {
+		if (!lxfile_exists("/sbin/vgdisplay")) {
+			return;
+		}
+	} else {
+		return;
+	}
+
 	$vgname = fix_vgname($vgname);
 	$out = exec_with_all_closed_output("vgdisplay -c $vgname");
 	$out = trim($out);
@@ -2396,7 +2419,7 @@ function vg_diskfree($vgname)
 	$per = $list[12];
 	$num = $list[15];
 
-	return ($per * $num)/1024;
+	return ($per * $num) / 1024;
 }
 
 function lvm_disksize($lvmpath)
@@ -2407,9 +2430,7 @@ function lvm_disksize($lvmpath)
 
 	$out = exec_with_all_closed_output("lvs --nosuffix --units b --noheadings -o lv_size $lvmpath");
 	$out = trim($out);
-	return $out/ (1024 * 1024);
-
-
+	return $out / (1024 * 1024);
 }
 
 function lo_remove($loop)
@@ -2431,7 +2452,7 @@ function lvm_create($vgname, $lvmname, $size)
 
 function lvm_extend($lvpath, $size)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	global $global_shell_error;
 
 	$cursize = lvm_disksize($lvpath);
@@ -2484,23 +2505,22 @@ function install_if_package_not_exist($package)
 	if ($ret) {
 		lxshell_return("yum", "-y", "install", $package);
 	}
-    return $ret;
+	return $ret;
 }
 
 // New function since HyperVM 2.1.0
-function replace_rpm_package($replace,$replacewith)
+function replace_rpm_package($replace, $replacewith)
 {
-    $ret = lxshell_return("rpm", "-q", "yum-plugin-replace");
-    if ($ret)
-    {
-        lxshell_return("yum", "-y", "install", "yum-plugin-replace");
-    }
+	$ret = lxshell_return("rpm", "-q", "yum-plugin-replace");
+	if ($ret) {
+		lxshell_return("yum", "-y", "install", "yum-plugin-replace");
+	}
 
-    $ret = lxshell_return("rpm", "-q", $replacewith);
-    if ($ret) {
-        lxshell_return("yum", "-y", "replace", $replace, "--replace-with", $replacewith);
-    }
-    return $ret;
+	$ret = lxshell_return("rpm", "-q", $replacewith);
+	if ($ret) {
+		lxshell_return("yum", "-y", "replace", $replace, "--replace-with", $replacewith);
+	}
+	return $ret;
 }
 
 
@@ -2528,7 +2548,7 @@ function curl_general_get($url)
 
 function getFullVersionList($till = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$progname = $sgbl->__var_program_name;
 	static $nlist;
 
@@ -2544,7 +2564,7 @@ function getFullVersionList($till = null)
 		throw new lxException('could_not_get_version_list', '');
 	}
 
-	foreach($res as $k => $l) {
+	foreach ($res as $k => $l) {
 		// Skip lines that do not start with progname or one that contains 'current'
 		if (!csb($l, "$progname")) {
 			continue;
@@ -2569,8 +2589,8 @@ function getFullVersionList($till = null)
 function getVersionList($till = null)
 {
 	$list = getFullVersionList($till);
-	foreach($list as $k => $l) {
-		if (preg_match("/2$/", $l) && ($k !== count($list) -1 )) {
+	foreach ($list as $k => $l) {
+		if (preg_match("/2$/", $l) && ($k !== count($list) - 1)) {
 			continue;
 		}
 		$nnlist[] = $l;
@@ -2581,7 +2601,7 @@ function getVersionList($till = null)
 
 function checkIfLatest()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$latest = getLatestVersion();
 	return ($latest === $sgbl->__ver_major_minor_release);
 }
@@ -2589,13 +2609,12 @@ function checkIfLatest()
 function getLatestVersion()
 {
 	$nlist = getVersionList();
-	return $nlist[count($nlist)- 1];
-
+	return $nlist[count($nlist) - 1];
 }
 
 function getDownloadServer()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	static $local;
 
 	$progname = $sgbl->__var_program_name;
@@ -2626,7 +2645,7 @@ function getDownloadServer()
 
 function download_source($file)
 {
-	
+
 	$server = getDownloadServer();
 	download_file("$server/$file");
 }
@@ -2692,7 +2711,7 @@ function se_submit($contact, $dom, $email)
 {
 	$tmpfile = lx_tmp_file("se_submit_$dom");
 	include "sesubmit/engines.php";
-	foreach($enginelist as $e => $k) {
+	foreach ($enginelist as $e => $k) {
 		$k = str_replace("[>URL<]", "http://$dom", $k);
 		$k = str_replace("[>EMAIL<]", $email, $k);
 		download_file($k, $tmpfile);
@@ -2706,9 +2725,11 @@ function se_submit($contact, $dom, $email)
 
 function remove_if_older_than_a_day_dir($dir, $day = 1)
 {
-	if (!lis_dir($dir)) { return; }
+	if (!lis_dir($dir)) {
+		return;
+	}
 	$list = lscandir_without_dot($dir);
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		remove_if_older_than_a_day("$dir/$l", $day);
 	}
 }
@@ -2734,7 +2755,7 @@ function remove_directory_if_older_than_a_day($dir, $day = 1)
 function remove_if_older_than_a_minute_dir($dir)
 {
 	$list = lscandir_without_dot($dir);
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		remove_if_older_than_a_minute("$dir/$l");
 	}
 }
@@ -2750,7 +2771,7 @@ function remove_if_older_than_a_minute($file)
 
 function lx_mail($from, $to, $subject, $message, $extra = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	if (!$from) {
 		$progname = $sgbl->__var_program_name;
 		$server = getFQDNforServer('localhost');
@@ -2781,7 +2802,7 @@ function download_and_print_file($server, $file)
 
 function get_title()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$gen = $login->getObject('general')->generalmisc_b;
 
@@ -2807,13 +2828,13 @@ function get_title()
 	} else {
 		$enterprise = "Single Server";
 	}
-	$title = "$host $progname $enterprise $title" ;
+	$title = "$host $progname $enterprise $title";
 	return $title;
 }
 
 function send_mail_to_admin($subject, $message)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$progname = $sgbl->__var_program_name;
 
 	$rawdb = new Sqlite(null, "client");
@@ -2874,7 +2895,7 @@ function callObjectInBackground($object, $func)
 function get_with_cache($file, $cmdarglist)
 {
 	global $global_shell_out, $global_shell_error, $global_shell_ret;
-	$stat = @ llstat($file);
+	$stat = @llstat($file);
 
 	lxfile_mkdir("__path_program_root/cache");
 	$tim = 120;
@@ -2888,7 +2909,6 @@ function get_with_cache($file, $cmdarglist)
 	}
 
 	return lfile_get_contents($file);
-
 }
 
 //
@@ -2896,18 +2916,18 @@ function get_with_cache($file, $cmdarglist)
 //
 function copy_script()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	if (!lxfile_exists("/script/")) {
-	lxfile_tmp_rm_rec("/script");
-	lxfile_mkdir("/script");
-	lxfile_mkdir("/script/filter");
+		lxfile_tmp_rm_rec("/script");
+		lxfile_mkdir("/script");
+		lxfile_mkdir("/script/filter");
 	}
 	lxfile_cp_content_file("htmllib/script/", "/script/");
 	lxfile_cp_content_file("../pscript", "/script/");
 
 	if (lxfile_exists("../pscript/vps/")) {
 		if (lxfile_exists("/script/vps/")) {
-		lxfile_mkdir("/script/vps");
+			lxfile_mkdir("/script/vps");
 		}
 		lxfile_cp_content_file("../pscript/vps/", "/script/vps/");
 	}
@@ -2930,7 +2950,7 @@ function getAdminDbPass()
 function change_underscore($var)
 {
 	$var = str_replace("_", " ", $var);
-	
+
 	if (csa($var, ":")) {
 		$n = strpos($var, ":");
 		$var[$n + 1] = strtoupper($var[$n + 1]);
@@ -2945,7 +2965,7 @@ function getIpaddressList($master, $servername)
 		$servername = 'localhost';
 	}
 	$list = $sql->getRowsWhere("syncserver = '$servername'");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$ret[] = $l['ipaddr'];
 	}
 	return $ret;
@@ -2954,14 +2974,14 @@ function getIpaddressList($master, $servername)
 
 function if_customer_complain_and_exit()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	if ($login->isLte('reseller')) {
 		return;
 	}
 
 	$progname = $sgbl->__var_program_name;
-		
+
 	print("You are trying to access Protected Area. This incident will be reported\n <br> ");
 
 	$message = "At " . lxgettime(time()) . " $login->nname tried to Access a region that is prohibited for Normal Users\n. Click here to See what this means. http://lxlabs.com/software/$progname/docs/security/unauthorized-access/\n";
@@ -2969,7 +2989,6 @@ function if_customer_complain_and_exit()
 	send_mail_to_admin("$progname Warning: Unauthorized Access by $login->nname", $message);
 
 	exit(0);
-
 }
 
 function getClassAndName($name)
@@ -2984,7 +3003,11 @@ function getParentNameAndClass($pclname)
 
 function dogetParentNameAndClass($pclname)
 {
-	if (csa($pclname, "-")) { $string = "-"; } else { $string = "_s_vv_p_"; }
+	if (csa($pclname, "-")) {
+		$string = "-";
+	} else {
+		$string = "_s_vv_p_";
+	}
 
 	//$vlist = explode("_s_vv_p_", $pclname);
 	$vlist = explode($string, $pclname);
@@ -2995,12 +3018,15 @@ function dogetParentNameAndClass($pclname)
 	//dprint($pclass);
 
 	return array($pclass, $pname);
-
 }
 
 function doOldgetParentNameAndClass($pclname)
 {
-	if (csa($pclname, "_s_vv_p_")) { $string = "_s_vv_p_"; } else { $string = "-"; }
+	if (csa($pclname, "_s_vv_p_")) {
+		$string = "_s_vv_p_";
+	} else {
+		$string = "-";
+	}
 
 	//$vlist = explode("_s_vv_p_", $pclname);
 	$vlist = explode($string, $pclname);
@@ -3011,18 +3037,17 @@ function doOldgetParentNameAndClass($pclname)
 	//dprint($pclass);
 
 	return array($pclass, $pname);
-
 }
 
 function if_not_admin_complain_and_exit()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$progname = $sgbl->__var_program_name;
 	if ($login->isLteAdmin()) {
 		return;
 	}
-		
+
 	print("You are trying to access Protected Area. This incident will be reported\n <br> ");
 	debugBacktrace();
 
@@ -3031,7 +3056,6 @@ function if_not_admin_complain_and_exit()
 	send_mail_to_admin("$progname Warning: Unauthorized Access by $login->nname", $message);
 
 	exit(0);
-
 }
 
 
@@ -3039,23 +3063,23 @@ function if_not_admin_complain_and_exit()
 function initProgram($ctype = NULL)
 {
 	global $gbl, $sgbl, $login, $ghtml;
-    initProgramlib($ctype);
+	initProgramlib($ctype);
 }
 
 
 function getKBOrMB($val)
 {
 	if ($val > 1014) {
-		return round($val/1024, 2) . " MB";
-	} 
+		return round($val / 1024, 2) . " MB";
+	}
 	return "$val KB";
 }
 
 function getGBOrMB($val)
 {
 	if ($val > 1014) {
-		return round($val/1024, 2) . " GB";
-	} 
+		return round($val / 1024, 2) . " GB";
+	}
 	return "$val MB";
 }
 
@@ -3079,7 +3103,7 @@ function exists_in_coma($cmlist, $name)
 
 function exit_program()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	print_time('full', "Page Generation Took: ");
 
@@ -3101,45 +3125,44 @@ function readlastline($fp, $pos, $size)
 
 	$t = " ";
 	while ($t != "\n") {
-		fseek($fp , $pos, SEEK_END);
+		fseek($fp, $pos, SEEK_END);
 		$t = fgetc($fp);
 		$pos = $pos - 1;
-		if($pos === -$size) {
+		if ($pos === -$size) {
 			$pos = null;
 			break;
 		}
-	
 	}
 	$t = fgets($fp);
-	return $t ;
+	return $t;
 }
 
 function getMainQuotaVar($vlist)
 {
-	$vlist['disk_usage'] = "";      
-	$vlist['traffic_usage'] = "";   
-	$vlist['mailaccount_num'] = ""; 
-	$vlist['subweb_a_num'] = ""; 
-	$vlist['ftpuser_num'] = ""; 
-	$vlist['ddatabase_num'] = "";    
-	$vlist['subweb_a_num'] = "";    
-	$vlist['ssl_flag'] = "";    
-	$vlist['inc_flag'] = "";    
-	$vlist['php_flag'] = "";    
-	$vlist['modperl_flag'] = "";    
-	$vlist['cgi_flag'] = "";    
-    $vlist['frontpage_flag'] = "";    
-    $vlist['dns_manage_flag'] = "";    
+	$vlist['disk_usage'] = "";
+	$vlist['traffic_usage'] = "";
+	$vlist['mailaccount_num'] = "";
+	$vlist['subweb_a_num'] = "";
+	$vlist['ftpuser_num'] = "";
+	$vlist['ddatabase_num'] = "";
+	$vlist['subweb_a_num'] = "";
+	$vlist['ssl_flag'] = "";
+	$vlist['inc_flag'] = "";
+	$vlist['php_flag'] = "";
+	$vlist['modperl_flag'] = "";
+	$vlist['cgi_flag'] = "";
+	$vlist['frontpage_flag'] = "";
+	$vlist['dns_manage_flag'] = "";
 	$vlist['maildisk_usage'] = "";
 	return $vlist;
 }
 
 function get_domain_client_temp_list($class)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	$temp=Array();
-	$list= $login->getList($class);
-	foreach($list as $d) {
+	global $gbl, $sgbl, $login, $ghtml;
+	$temp = array();
+	$list = $login->getList($class);
+	foreach ($list as $d) {
 		$temp[$d->nname] = $d;
 	}
 	return $temp;
@@ -3147,7 +3170,7 @@ function get_domain_client_temp_list($class)
 
 function manage_service($service, $state)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	print("Sending $state to $service\n");
 	$servicename = "__var_programname_$service";
 	$program = $gbl->$servicename;
@@ -3164,7 +3187,6 @@ function recursively_remove($directory)
 		return;
 	}
 	lxfile_rm_rec($directory);
-
 }
 function checkIfRightTime($time, $first, $second)
 {
@@ -3186,7 +3208,7 @@ function is_ip($ipf, $ip)
 {
 	$if = explode(".", $ipf);
 	$ii = explode(".", $ip);
-	foreach($if as $k => $v) {
+	foreach ($if as $k => $v) {
 		if ($v === '*') {
 			continue;
 		}
@@ -3209,9 +3231,9 @@ function is_star_password($pass)
 
 
 
-function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func) 
+function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func)
 {
-	$cur = $fsize/2;
+	$cur = $fsize / 2;
 	$beg = 0;
 	$end = $fsize;
 
@@ -3222,7 +3244,7 @@ function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func)
 
 	if ($newtime < $begtime) {
 		dprint("ENd time $newtime < $begtime Less than Beginning. \n");
-		print("Date: " .@ date('Y-m-d: H:i:s', $newtime) . " " . @ date('Y-m-d: h:i:s', $begtime). "\n");
+		print("Date: " . @date('Y-m-d: H:i:s', $newtime) . " " . @date('Y-m-d: h:i:s', $begtime) . "\n");
 		return -1;
 	}
 
@@ -3239,7 +3261,7 @@ function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func)
 
 	$endtime = call_user_func($func, $string);
 	if ($oldtime > $endtime) {
-		$ot = @ date("Y-m-d:h-i", $oldtime);
+		$ot = @date("Y-m-d:h-i", $oldtime);
 		dprint(" $ot $oldtime $string More than End. \n");
 		return -1;
 	}
@@ -3250,7 +3272,7 @@ function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func)
 	}
 
 	$count = 0;
-	while(true) {
+	while (true) {
 		$count++;
 		if ($count > 1000) {
 			return -1;
@@ -3279,12 +3301,12 @@ function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func)
 		} else if ($ret < 0) {
 			dprint("Going Up\n");
 			$end = $cur;
-			$cur = $cur - ($cur - $beg)/2;
+			$cur = $cur - ($cur - $beg) / 2;
 			$cur = round($cur);
 		} else {
 			dprint("Going Down\n");
 			$beg = $cur;
-			$cur = $cur + ($end - $cur)/2;
+			$cur = $cur + ($end - $cur) / 2;
 			$cur = round($cur);
 		}
 	}
@@ -3292,8 +3314,8 @@ function FindRightPosition($fp, $fsize, $oldtime, $newtime, $func)
 
 function lxlabs_marker_fgets($fp)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	while(!feof($fp)) {
+	global $gbl, $sgbl, $login, $ghtml;
+	while (!feof($fp)) {
 		$s = fgets($fp);
 		if (csa($s, $sgbl->__var_lxlabs_marker)) {
 			dprint("found marker\n");
@@ -3312,9 +3334,11 @@ function lxlabs_marker_getime($string)
 
 function lxlabs_marker_firstofline($fp)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	while(!feof($fp)) {
-		if (ftell($fp) <= 2) { return; }
+	global $gbl, $sgbl, $login, $ghtml;
+	while (!feof($fp)) {
+		if (ftell($fp) <= 2) {
+			return;
+		}
 		takeToStartOfLine($fp);
 		takeToStartOfLine($fp);
 		$string = fgets($fp);
@@ -3328,7 +3352,7 @@ function lxlabs_marker_firstofline($fp)
 
 function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 {
-	$cur = $fsize/2;
+	$cur = $fsize / 2;
 	$beg = 0;
 	$end = $fsize;
 
@@ -3338,14 +3362,14 @@ function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 
 	if (!$string) {
 		dprint("Got nothing\n");
-		return -1; 
+		return -1;
 	}
 
 	$begtime = lxlabs_marker_getime($string);
 
 	if ($newtime < $begtime) {
 		dprint("ENd time $newtime < $begtime Less than Beginning. \n");
-		print("Date: " .@ date('Y-m-d: H:i:s', $newtime) . " " . @ date('Y-m-d: h:i:s', $begtime). "\n");
+		print("Date: " . @date('Y-m-d: H:i:s', $newtime) . " " . @date('Y-m-d: h:i:s', $begtime) . "\n");
 		return -1;
 	}
 
@@ -3363,7 +3387,7 @@ function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 
 	$endtime = lxlabs_marker_getime($string);
 	if ($oldtime > $endtime) {
-		$ot = @ date("Y-m-d:h-i", $oldtime);
+		$ot = @date("Y-m-d:h-i", $oldtime);
 		dprint(" $ot $oldtime $string More than End. \n");
 		return -1;
 	}
@@ -3375,11 +3399,13 @@ function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 	}
 
 	$count = 0;
-	while(true) {
+	while (true) {
 
 		$count++;
 
-		if ($count > 1000) { return -1; }
+		if ($count > 1000) {
+			return -1;
+		}
 
 		dprint("At position $cur: \n");
 		fseek($fp, $cur);
@@ -3392,7 +3418,7 @@ function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 		$readtime2 = lxlabs_marker_getime($string2);
 
 		dprint("Position: $oldtime $readtime1 $readtime2\n");
-		if ($readtime2 - $readtime1 >= 10*300) {
+		if ($readtime2 - $readtime1 >= 10 * 300) {
 			dprint("Somethings wrong $string1 $string2 \n");
 		}
 
@@ -3405,12 +3431,12 @@ function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 		} else if ($ret < 0) {
 			dprint("Going Up\n");
 			$end = $cur;
-			$cur = $cur - ($cur - $beg)/2;
+			$cur = $cur - ($cur - $beg) / 2;
 			$cur = round($cur);
 		} else {
 			dprint("Going Down\n");
 			$beg = $cur;
-			$cur = $cur + ($end - $cur)/2;
+			$cur = $cur + ($end - $cur) / 2;
 			$cur = round($cur);
 		}
 	}
@@ -3418,119 +3444,129 @@ function lxlabsFindRightPosition($fp, $fsize, $oldtime, $newtime)
 
 
 
-function monthToInt($month) 
- {
-	 $t ="";
+function monthToInt($month)
+{
+	$t = "";
 
-	 switch($month) {
-	
- 	 case "Jan": $t = 1;
-	             break;
-	 case "Feb": $t = 2;
-	             break;
-	 case "Mar": $t = 3;
-	             break;
-	 case "Apr": $t = 4;
-	             break;
-	 case "May": $t = 5;
-	             break;
-	 case "Jun": $t = 6;
-	             break;
-	 case "Jul": $t = 7;
-	             break;
-	 case "Aug": $t = 8;
-	             break;
-	 case "Sep": $t = 9;
-	             break;
-	 case "Oct": $t = 10;
-	             break;
-	 case "Nov": $t = 11;
-	             break;
-	 case "Dec": $t = 12;
-	             break;
-	 }
+	switch ($month) {
 
-	 return str_pad($t , 2, 0 , STR_PAD_LEFT);
- }
+		case "Jan":
+			$t = 1;
+			break;
+		case "Feb":
+			$t = 2;
+			break;
+		case "Mar":
+			$t = 3;
+			break;
+		case "Apr":
+			$t = 4;
+			break;
+		case "May":
+			$t = 5;
+			break;
+		case "Jun":
+			$t = 6;
+			break;
+		case "Jul":
+			$t = 7;
+			break;
+		case "Aug":
+			$t = 8;
+			break;
+		case "Sep":
+			$t = 9;
+			break;
+		case "Oct":
+			$t = 10;
+			break;
+		case "Nov":
+			$t = 11;
+			break;
+		case "Dec":
+			$t = 12;
+			break;
+	}
 
-
- function intToMonth($month) 
- {
-
-	 $mon = 0;
-	 switch($month) {
-
-		 case "01":
-			 $mon = "Jan";
-			 break;
-
-	    case "02":
-				 $mon = "Feb";
-	  		 break;
-
-	     case "03":
-			 $mon = "Mar";
-			 break;
-
-		 case "04":
-			 $mon = "Apr";
-			 break;
-
-		 case "05":
-			 $mon = "May";
-			 break;
-
-	     case "06":
-		  	$mon = "Jun";
-		   	break;
-  
-	      case "07":
-		     $mon = "Jul";
-			 break;
-
-		 case "08":
-			 $mon = "Aug";
-			 break;
-
-		 case "09":
-			 $mon = "Sep";
-			 break;
-
-		 case "10":
-			 $mon = "Oct";
-			 break;
-
-		 case "11":
-			 $mon = "Nov";
-			 break;
-
-		 case "12":
-			 $mon = "Dec";
-	 		 break;
-
-	 }
-
-   return $mon;
-
- } 
+	return str_pad($t, 2, 0, STR_PAD_LEFT);
+}
 
 
-function readfirstline($file){
-	 $firstline   = fgets($file);
-	 fclose($fp);
-	 return $firstline;
- }
+function intToMonth($month)
+{
+
+	$mon = 0;
+	switch ($month) {
+
+		case "01":
+			$mon = "Jan";
+			break;
+
+		case "02":
+			$mon = "Feb";
+			break;
+
+		case "03":
+			$mon = "Mar";
+			break;
+
+		case "04":
+			$mon = "Apr";
+			break;
+
+		case "05":
+			$mon = "May";
+			break;
+
+		case "06":
+			$mon = "Jun";
+			break;
+
+		case "07":
+			$mon = "Jul";
+			break;
+
+		case "08":
+			$mon = "Aug";
+			break;
+
+		case "09":
+			$mon = "Sep";
+			break;
+
+		case "10":
+			$mon = "Oct";
+			break;
+
+		case "11":
+			$mon = "Nov";
+			break;
+
+		case "12":
+			$mon = "Dec";
+			break;
+	}
+
+	return $mon;
+}
+
+
+function readfirstline($file)
+{
+	$firstline   = fgets($file);
+	fclose($fp);
+	return $firstline;
+}
 
 
 function getNotexistingFile($dir, $file)
 {
-	foreach(range(1, 100) as $i) {
-		if (!lxfile_exists($dir . "/" . $file . "-" . $i))  {
+	foreach (range(1, 100) as $i) {
+		if (!lxfile_exists($dir . "/" . $file . "-" . $i)) {
 			return $dir . "/" . $file . "-" . $i;
 		}
 	}
 	return $dir . "/" . $file . "-" . $i;
-
 }
 
 
@@ -3561,13 +3597,13 @@ function initDbLoginPre()
 
 function fixResourcePlan()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$login->loadAllObjects('resourceplan');
 	$list = $login->getList('resourceplan');
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$qv = getQuotaListForClass('client');
 		$write = false;
-		foreach($qv as $k => $v) {
+		foreach ($qv as $k => $v) {
 
 			if ($k === 'centralbackup_flag') {
 				if (!isset($l->priv->centralbackup_flag)) {
@@ -3644,7 +3680,7 @@ function updateTableProperly($__db, $table, $rr, $content)
 {
 
 
-	foreach($content as $column) {
+	foreach ($content as $column) {
 		if (isset($rr[$column])) {
 			//dprint("Column $column Already exists in table $table\n");
 			continue;
@@ -3677,7 +3713,7 @@ function getAllIpaddress()
 	$mydb = new Sqlite(null, 'ipaddress');
 	$res = $mydb->getTable(array('ipaddr', 'nname'));
 
-	foreach($res as $r) {
+	foreach ($res as $r) {
 		$list[] = $r['ipaddr'];
 	}
 	return $list;
@@ -3688,7 +3724,7 @@ function updateDatabaseProperly()
 {
 	$var = parse_sql_data();
 
-	foreach($var as $table => $content) {
+	foreach ($var as $table => $content) {
 		$__db = new Sqlite(null, $table);
 		$res = $__db->getColumnTypes();
 		if ($res) {
@@ -3699,15 +3735,13 @@ function updateDatabaseProperly()
 			create_table($__db, $table, $var[$table]);
 		}
 	}
-
-
 }
 
 function dofixParentClname()
 {
 	$var = parse_sql_data();
 
-	foreach($var as $table => $content) {
+	foreach ($var as $table => $content) {
 		$__db = new Sqlite(null, $table);
 		if ($table === 'ticket') {
 			$list = array("parent_clname", "made_by", "sent_to");
@@ -3723,12 +3757,16 @@ function dofixParentClname()
 		$get = lx_array_merge(array(array('nname'), $list));
 		$res = $__db->getTable($get);
 
-		if (!$res) { continue;} 
-		foreach($res as $r) {
+		if (!$res) {
+			continue;
+		}
+		foreach ($res as $r) {
 
-			foreach($list as $l) {
+			foreach ($list as $l) {
 				$v = fix_getParentNameAndClass($r[$l]);
-				if (!$v) { continue; }
+				if (!$v) {
+					continue;
+				}
 				list($parentclass, $parentname) = $v;
 				$npcl = "$parentclass-$parentname";
 				$__db->rawQuery("update $table set $l = '$npcl' where nname = '{$r['nname']}'");
@@ -3737,7 +3775,9 @@ function dofixParentClname()
 			$spl = array('notification', 'serverweb', 'lxbackup', 'phpini');
 			if (csb($table, "sp_") || array_search_bool($table, $spl)) {
 				$v = fix_getParentNameAndClass($r['nname']);
-				if (!$v) { continue; }
+				if (!$v) {
+					continue;
+				}
 				list($parentclass, $parentname) = $v;
 				$npcl = "$parentclass-$parentname";
 				$__db->rawQuery("update $table set nname = '$npcl' where nname = '{$r['nname']}'");
@@ -3762,7 +3802,6 @@ function fix_getParentNameAndClass($v)
 			return doOldgetParentNameAndClass($v);
 		}
 	}
-
 }
 
 function get_table_from_class($class)
@@ -3784,35 +3823,35 @@ function get_class_for_table($table)
 
 function is_centosfive()
 {
-        $find = find_os_pointversion();
-        $check = strpos($find, 'centos-5');
+	$find = find_os_pointversion();
+	$check = strpos($find, 'centos-5');
 
-        if ($check !== false) {
-                return true;
-        }
-        else {
-                return false;
-        }
+	if ($check !== false) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function is_centossix()
 {
-        $find = find_os_pointversion();
-        $check = strpos($find, 'centos-6');
+	$find = find_os_pointversion();
+	$check = strpos($find, 'centos-6');
 
-        if ($check !== false) {
-                return true;
-        }
-        else {
-                return false;
-        }
+	if ($check !== false) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function migrateResourceplan($class)
 {
 	$ss = new Sqlite(null, "resourceplan");
 	$r = $ss->getTable();
-	if ($r) { return; }
+	if ($r) {
+		return;
+	}
 
 	$sq = new Sqlite(null, 'clienttemplate');
 	$cres = $sq->getTable();
@@ -3825,7 +3864,7 @@ function migrateResourceplan($class)
 		$total = $cres;
 	}
 
-	foreach($total as $t) {
+	foreach ($total as $t) {
 		$string = $ss->createQueryStringAdd($t);
 		$addstring = "insert into resourceplan $string;";
 		$ss->rawQuery($addstring);
@@ -3834,12 +3873,12 @@ function migrateResourceplan($class)
 
 function fprint($var, $type = 0)
 {
-	global $sgbl ;
+	global $sgbl;
 	if ($type > $sgbl->dbg) {
 		return;
 	}
 	$string = var_export($var, true);
-	file_put_contents("file.txt", $string ."\n", FILE_APPEND);
+	file_put_contents("file.txt", $string . "\n", FILE_APPEND);
 }
 
 
@@ -3868,7 +3907,7 @@ function getOsForServer($servername)
 
 function rl_exec_in_driver($parent, $class, $function, $arglist)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$syncserver = $parent->getSyncServerForChild($class);
 	$driverapp = $gbl->getSyncClass($parent->__masterserver, $syncserver, $class);
 	$res = rl_exec_get($parent->__masterserver, $syncserver,  array("{$class}__$driverapp", $function), $arglist);
@@ -3884,21 +3923,20 @@ function addLineIfNotExistPattern($filename, $searchpattern, $pattern)
 {
 	$cont = lfile_get_contents($filename);
 
-	if(!preg_match("+$searchpattern+i", $cont)) {
+	if (!preg_match("+$searchpattern+i", $cont)) {
 		lfile_put_contents($filename, "\n", FILE_APPEND);
 		lfile_put_contents($filename, $pattern, FILE_APPEND);
 		lfile_put_contents($filename, "\n\n\n", FILE_APPEND);
 	} else {
 		dprint("Pattern '$searchpattern' Already present in $filename\n");
 	}
-
 }
 
 function remove_line($filename, $pattern)
 {
 	$list = lfile($filename);
 
-	foreach($list as $k => $l) {
+	foreach ($list as $k => $l) {
 		if (csa($l, $pattern)) {
 			unset($list[$k]);
 		}
@@ -3915,7 +3953,7 @@ function addLineIfNotExistInside($filename, $pattern, $comment)
 {
 	$cont = lfile_get_contents($filename);
 
-	if(!csa(strtolower($cont), strtolower($pattern))) {
+	if (!csa(strtolower($cont), strtolower($pattern))) {
 		if ($comment) {
 			lfile_put_contents($filename, "\n$comment \n\n", FILE_APPEND);
 		}
@@ -3926,20 +3964,19 @@ function addLineIfNotExistInside($filename, $pattern, $comment)
 	} else {
 		//dprint("Pattern '$pattern' Already present in $filename\n");
 	}
-
 }
 
 function fix_all_mysql_root_password()
 {
 	$rs = get_all_pserver();
-	foreach($rs as $r) {
+	foreach ($rs as $r) {
 		fix_mysql_root_password($r);
 	}
 }
 
 function fix_mysql_root_password($server)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$pass = $login->password;
 	$pass = fix_nname_to_be_variable($pass);
@@ -3998,11 +4035,11 @@ function securityBlanketExec($table, $nname, $variable, $func, $arglist)
 
 function checkClusterDiskQuota()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 	$maclist = $login->getList('pserver');
 
 	$mess = null;
-	foreach($maclist as $mc) {
+	foreach ($maclist as $mc) {
 		try {
 			rl_exec_get(null, $mc->nname, "remove_old_serve_file", null);
 		} catch (exception $e) {
@@ -4016,8 +4053,8 @@ function checkClusterDiskQuota()
 			continue;
 		}
 
-		foreach($list as $l) {
-            // Set warn level from 85% usage (was 87)
+		foreach ($list as $l) {
+			// Set warn level from 85% usage (was 87)
 			if (intval($l['pused']) >= 85) {
 				$mess .= "\nFilesystem  {$l['mountedon']} ({$l['nname']}) on {$mc->nname} is using {$l['pused']}% space.\n";
 			}
@@ -4028,7 +4065,7 @@ function checkClusterDiskQuota()
 	dprint($mess);
 	dprint("\n");
 	if ($mess) {
-		lx_mail(null, $login->contactemail, "Filesystem Warning on {$mc->nname}" , $mess);
+		lx_mail(null, $login->contactemail, "Filesystem Warning on {$mc->nname}", $mess);
 	}
 
 	lxfile_generic_chown("..", "lxlabs");
@@ -4037,30 +4074,33 @@ function checkClusterDiskQuota()
 function find_closest_mirror()
 {
 
-    //TODO: Function is not called.. remove?
+	//TODO: Function is not called.. remove?
 	$v = curl_general_get("lxlabs.com/mirrorlist/");
 	$v = trim($v);
 	$vv = explode("\n", $v);
 	$out = null;
-	foreach($vv as $k => $l) {
+	foreach ($vv as $k => $l) {
 		$l = trim($l);
-		if (!$l) { continue; }
+		if (!$l) {
+			continue;
+		}
 		$verify = curl_general_get("$l/verify.txt");
 		$verify = trim($verify);
 		if (csa($verify, "lxlabs_mirror_verify")) {
 			$out[] = $l;
 		}
 	}
-	if (!$out) { return null; }
+	if (!$out) {
+		return null;
+	}
 
-	foreach($out as $l) {
+	foreach ($out as $l) {
 		$hop[$l] = find_hop($l);
 	}
 
 	asort($hop);
 	$v = getFirstKeyFromList($hop);
 	return $v;
-
 }
 
 function find_hop($l)
@@ -4069,9 +4109,11 @@ function find_hop($l)
 	$global_dontlogshell = true;
 	$out = lxshell_output("ping -c 1 $l");
 	$list = explode("\n", $out);
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trim($l);
-		if (csb($l, "rtt")) { continue; }
+		if (csb($l, "rtt")) {
+			continue;
+		}
 		$l = trimSpaces($l);
 		$ll = explode(" ", $l);
 		$lll = explode("/", $ll[3]);
@@ -4164,7 +4206,7 @@ function do_serve_file($fd, $rem)
 
 	print_or_write($fd, "s");
 
-	while(!feof($fpr)) {
+	while (!feof($fpr)) {
 		$written = print_or_write($fd, fread($fpr, 8092));
 		if ($written <= 0) {
 			break;
@@ -4179,7 +4221,6 @@ function do_serve_file($fd, $rem)
 	fileserv_unlink_if_tmp($realfile);
 
 	return true;
-
 }
 
 
@@ -4201,22 +4242,22 @@ function notify_admin($action, $parent, $child)
 }
 
 
-function trafficGetIndividualObjectTotal($list, $firstofmonth, $today, $name) 
+function trafficGetIndividualObjectTotal($list, $firstofmonth, $today, $name)
 {
-	
+
 	$tot = 0;
 
-	foreach((array) $list as $t) {
+	foreach ((array) $list as $t) {
 
 		//if (!(csa($t->timestamp, "Aug") && csa($t->timestamp, "2007"))) {
-			//continue;
+		//continue;
 		//}
 
 		list($nname, $oldtime, $newtime) = explode(":", $t->nname);
 		//dprint("$oldtime:$newtime: $firstofmonth: $t->timestamp $today\n");
 
-		if($oldtime >= $firstofmonth && $oldtime < $today) {
-			dprint(@ strftime("%c" , "$oldtime"). ": ");
+		if ($oldtime >= $firstofmonth && $oldtime < $today) {
+			dprint(@strftime("%c", "$oldtime") . ": ");
 			dprint($t->traffic_usage);
 			dprint("\n");
 			$tot +=  $t->traffic_usage;
@@ -4228,11 +4269,11 @@ function trafficGetIndividualObjectTotal($list, $firstofmonth, $today, $name)
 
 function get_last_month_and_year()
 {
-	$month = @ date("n");
-	$year = @ date("Y");
+	$month = @date("n");
+	$year = @date("Y");
 	if ($month == 1) {
 		$month = 12;
-		$year = $year - 1; 
+		$year = $year - 1;
 	} else {
 		$month = $month - 1;
 	}
@@ -4243,22 +4284,22 @@ function get_last_month_and_year()
 function add_to_log($file)
 {
 	$string = time();
-	$d = @ date("Y-M-d H:i");
+	$d = @date("Y-M-d H:i");
 	$string = "$string $d __lxlabs_marker\n";
 	lfile_put_contents($file, $string, FILE_APPEND);
 }
 
 function findServerTraffic()
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+	global $gbl, $sgbl, $login, $ghtml;
 
 	$sq = new Sqlite(null, 'vps');
 	$list = $login->getList('pserver');
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$res = $sq->getRowsWhere("syncserver = '$l->nname'", array('used_q_traffic_usage', 'used_q_traffic_last_usage'));
 		$tusage = 0;
 		$tlastusage = 0;
-		foreach($res as $r) {
+		foreach ($res as $r) {
 			$tusage += $r['used_q_traffic_usage'];
 			$tlastusage += $r['used_q_traffic_last_usage'];
 		}
@@ -4267,7 +4308,6 @@ function findServerTraffic()
 		$l->setUpdateSubaction();
 		$l->write();
 	}
-
 }
 
 function createMultipLeVps($param)
@@ -4307,7 +4347,7 @@ function exec_vzmigrate($vpsid, $newserver, $ssh_port)
 
 	$ssh_port = trim($ssh_port);
 	$ssh_string = null;
-	if ($ssh_port !== "22")  {
+	if ($ssh_port !== "22") {
 		$ssh_string = "--ssh=\"-p $ssh_port\"";
 	}
 	//do_exec_system($username, null, "vzmigrate --online $ssh_string -r yes $newserver $vpsid", $out, $err, $ret, null);
@@ -4366,7 +4406,7 @@ function remove_scpid($cont)
 	$home = os_get_home_dir("root");
 	$file = "$home/.ssh/authorized_keys2";
 	$list = lfile_trim($file);
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		if (!$l) continue;
 		if ($l === $cont) {
 			continue;
@@ -4379,13 +4419,12 @@ function remove_scpid($cont)
 
 function lxguard_clear($list)
 {
-
 }
 
 function lxguard_main($clearflag = false)
 {
 
-include_once "htmllib/lib/lxguardincludelib.php";
+	include_once "htmllib/lib/lxguardincludelib.php";
 	lxfile_mkdir("__path_home_root/lxguard");
 	$lxgpath = "__path_home_root/lxguard";
 
@@ -4396,12 +4435,14 @@ include_once "htmllib/lib/lxguardincludelib.php";
 	$newtime = time();
 	$oldtime = time() - 60 * 10;
 	$rmt = lfile_get_unserialize("$lxgpath/hitlist.info");
-	if ($rmt) { $oldtime =  max((int) $oldtime, (int) $rmt->ddate); }
+	if ($rmt) {
+		$oldtime =  max((int) $oldtime, (int) $rmt->ddate);
+	}
 	$ret = FindRightPosition($fp, $fsize, $oldtime, $newtime, "getTimeFromSysLogString");
 
 	$list = lfile_get_unserialize("$lxgpath/access.info");
 
-	if ($ret) { 
+	if ($ret) {
 		parse_sshd_and_ftpd($fp, $list);
 		lfile_put_serialize("$lxgpath/access.info", $list);
 	}
@@ -4416,7 +4457,7 @@ include_once "htmllib/lib/lxguardincludelib.php";
 	$hdn = lfile_get_unserialize("$lxgpath/hostdeny.info");
 	$deny = lx_array_merge(array($deny, $hdn));
 	$string = null;
-	foreach($deny as $k => $v) {
+	foreach ($deny as $k => $v) {
 		if (csb($k, "127")) {
 			continue;
 		}
@@ -4447,12 +4488,11 @@ include_once "htmllib/lib/lxguardincludelib.php";
 		lfile_put_serialize("$lxgpath/hitlist.info", $rmt);
 	}
 	return $list;
-	
 }
 
 function lxguard_save_hitlist($hl)
 {
-include_once "htmllib/lib/lxguardincludelib.php";
+	include_once "htmllib/lib/lxguardincludelib.php";
 	lxfile_mkdir("__path_home_root/lxguard");
 	$lxgpath = "__path_home_root/lxguard";
 	$rmt = new Remote();
@@ -4464,12 +4504,12 @@ include_once "htmllib/lib/lxguardincludelib.php";
 
 function getHIBversion()
 {
-   $string = file_get_contents("http://download.hypervm-ng.org/download/version/hib");
-    if ($string != "") {
-        $string = trim($string);
-        $string = str_replace("\n", "", $string);
-        $ver = str_replace("\r", "", $string);
+	$string = file_get_contents("http://download.hypervm-ng.org/download/version/hib");
+	if ($string != "") {
+		$string = trim($string);
+		$string = str_replace("\n", "", $string);
+		$ver = str_replace("\r", "", $string);
 		return $ver;
-    }
+	}
 	return false;
 }

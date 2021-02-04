@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "htmllib/lib/include.php";
 
 if ($sgbl->isHyperVm()) {
@@ -8,7 +8,7 @@ if ($sgbl->isHyperVm()) {
 
 if (lxfile_exists("/proc/user_beancounters")) {
 	$list = lfile("/proc/user_beancounters");
-	foreach($list as $l) {
+	foreach ($list as $l) {
 		$l = trimSpaces($l);
 		if (!csb($l, "privvmpages")) {
 			continue;
@@ -16,11 +16,11 @@ if (lxfile_exists("/proc/user_beancounters")) {
 
 		$d = explode(" ", $l);
 
-		$mem = $d[3]/ 256;
+		$mem = $d[3] / 256;
 	}
 	exit(11);
 } else if (lxfile_exists("/proc/xen")) {
-	exit (11);
+	exit(11);
 } else {
 	$mem = pserver__linux::getTotalMemory();
 	$mem += 200;

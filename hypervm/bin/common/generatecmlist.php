@@ -1,11 +1,11 @@
-<?php 
+<?php
 
-include_once "htmllib/lib/include.php"; 
+include_once "htmllib/lib/include.php";
 
 initProgram('admin');
 $list = $login->getlist('client');
 
-foreach($list as $l) {
+foreach ($list as $l) {
 	if (!$l->isAdmin()) {
 		process_client($l);
 	}
@@ -15,7 +15,7 @@ foreach($list as $l) {
 function process_client($l)
 {
 	$clist = $l->getList('client');
-	foreach($clist as $c) {
+	foreach ($clist as $c) {
 		process_client($c);
 		process_domain($c);
 	}
@@ -24,10 +24,9 @@ function process_client($l)
 function process_domain($l)
 {
 	$dlist = $l->getList('domain');
-	foreach($dlist as $d) {
+	foreach ($dlist as $d) {
 		$d->generateCMList();
 		$d->setUpdateSubaction();
 		$d->write();
 	}
 }
-

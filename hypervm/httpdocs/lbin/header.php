@@ -103,109 +103,108 @@ function print_header()
     print("</div> </body>\n");
     return;
 
-    ?>
-<body topmargin=0 bottommargin=0 leftmargin=0 rightmargin=0 class="bdy1" onload="foc()">
-<!-- httpdocs/lbin/header.php -->
-<table id="tab1" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td class="top2">
-            <div class="menuover" style="margin-top:2px;margin-left:0%">
+?>
+
+    <body topmargin=0 bottommargin=0 leftmargin=0 rightmargin=0 class="bdy1" onload="foc()">
+        <!-- httpdocs/lbin/header.php -->
+        <table id="tab1" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="top2">
+                    <div class="menuover" style="margin-top:2px;margin-left:0%">
 
 
-<?php 
+                    <?php
 
-	$list[] = "a=show";
-	if ($login->isLte('reseller')) {
-        $list[] = "a=list&c=all_vps";
-        $list[] = "a=list&c=client";
-    }
-	$list[] = "k[class]=ffile&k[nname]=/&a=show";
-	$list[] = "a=list&c=ticket";
+                    $list[] = "a=show";
+                    if ($login->isLte('reseller')) {
+                        $list[] = "a=list&c=all_vps";
+                        $list[] = "a=list&c=client";
+                    }
+                    $list[] = "k[class]=ffile&k[nname]=/&a=show";
+                    $list[] = "a=list&c=ticket";
 
-	$list = null;
-	$list[] = "home";
-	$list[] = "ffile";
-	$list[] = "ticket";
+                    $list = null;
+                    $list[] = "home";
+                    $list[] = "ffile";
+                    $list[] = "ticket";
 
-	foreach ($list as $k) {
-        print_one_link($k);
-    }
+                    foreach ($list as $k) {
+                        print_one_link($k);
+                    }
 
-	print("<span style='margin-left:39%;'> </span> \n");
+                    print("<span style='margin-left:39%;'> </span> \n");
 
-	foreach (array("ssession", "help", "logout") as $k) {
-        print_one_link($k);
-    }
-	print("</div></td></tr>\n");
-	print("</table>\n");
+                    foreach (array("ssession", "help", "logout") as $k) {
+                        print_one_link($k);
+                    }
+                    print("</div></td></tr>\n");
+                    print("</table>\n");
+                }
 
-}
+                function CreateHeaderData()
+                {
+                    global $gbl, $sgbl, $login, $ghtml, $gdata;
 
-function CreateHeaderData()
-{
-    global $gbl, $sgbl, $login, $ghtml, $gdata;
+                    $homedesc = $login->getKeywordUc('home');
+                    $deskdesc = $login->getKeywordUc('desktop');
+                    $aboutdesc = $login->getKeywordUc('about');
+                    $domaindesc = get_plural(get_description('vps'));
+                    $clientdesc = get_plural(get_description('client'));
+                    $slavedesc = get_description('pserver');
+                    $ticketdesc = get_plural(get_description('ticket'));
+                    $ssessiondesc = get_description('ssession');
+                    $systemdesc = $login->getKeywordUc('system');
+                    $logoutdesc = $login->getKeywordUc('logout');
+                    $helpdesc = $login->getKeywordUc('help');
+                    $ffiledesc = get_plural(get_description("ffile"));
+                    $alldesc = $login->getKeywordUc('all');
 
-    $homedesc = $login->getKeywordUc('home');
-    $deskdesc = $login->getKeywordUc('desktop');
-    $aboutdesc = $login->getKeywordUc('about');
-    $domaindesc = get_plural(get_description('vps'));
-    $clientdesc = get_plural(get_description('client'));
-    $slavedesc = get_description('pserver');
-    $ticketdesc = get_plural(get_description('ticket'));
-    $ssessiondesc = get_description('ssession');
-    $systemdesc = $login->getKeywordUc('system');
-    $logoutdesc = $login->getKeywordUc('logout');
-    $helpdesc = $login->getKeywordUc('help');
-    $ffiledesc = get_plural(get_description("ffile"));
-    $alldesc = $login->getKeywordUc('all');
+                    if ($login->isAdmin()) {
+                        $domainclass = "vps";
+                    } else {
+                        $domainclass = "vps";
+                    }
 
-    if ($login->isAdmin()) {
-        $domainclass = "vps";
-    } else  {
-        $domainclass = "vps";
-    }
+                    if (check_if_many_server()) {
+                        $serverurl = $ghtml->getFullUrl('a=list&c=pserver');
+                        $slavedesc = get_plural($slavedesc);
+                    } else {
+                        $serverurl = $ghtml->getFullUrl('k[class]=pserver&k[nname]=localhost&a=show');
+                    }
 
-    if (check_if_many_server()) {
-        $serverurl = $ghtml->getFullUrl('a=list&c=pserver');
-        $slavedesc = get_plural($slavedesc);
-    } else {
-        $serverurl = $ghtml->getFullUrl('k[class]=pserver&k[nname]=localhost&a=show');
-    }
+                    if ($login->is__table('client')) {
+                        $ffileurl = $ghtml->getFullUrl('k[class]=ffile&k[nname]=/&a=show');
+                    } else {
+                        $ffileurl = $ghtml->getFullUrl('n=web&k[class]=ffile&k[nname]=/&a=show');
+                    }
 
-    if ($login->is__table('client')) {
-        $ffileurl = $ghtml->getFullUrl('k[class]=ffile&k[nname]=/&a=show');
-    } else {
-        $ffileurl = $ghtml->getFullUrl('n=web&k[class]=ffile&k[nname]=/&a=show');
-    }
+                    $gob = $login->getObject('general')->generalmisc_b;
 
-    $gob = $login->getObject('general')->generalmisc_b;
+                    if (isset($gob->ticket_url) && $gob->ticket_url) {
+                        $url = $gob->ticket_url;
+                        $url = add_http_if_not_exist($url);
+                        $ticket_url = "javascript:window.open('$url')";
+                    } else {
+                        $ticket_url = "/display.php?frm_action=list&frm_o_cname=ticket";
+                    }
 
-    if (isset($gob->ticket_url) && $gob->ticket_url) {
-        $url = $gob->ticket_url;
-        $url = add_http_if_not_exist($url);
-        $ticket_url = "javascript:window.open('$url')";
-    } else {
-        $ticket_url = "/display.php?frm_action=list&frm_o_cname=ticket";
-    }
+                    $helpurl = $sgbl->__url_help;
 
-    $helpurl = $sgbl->__url_help;
+                    $gdata = array(
+                        "desktop" => array($deskdesc, "/display.php?frm_action=desktop", "client_list.gif"),
+                        "home" => array($homedesc, "/display.php?frm_action=show", "client_list.gif"),
+                        "all" => array($alldesc, "/display.php?frm_action=list&frm_o_cname=all_vps", "client_list.gif"),
+                        "domain" => array($domaindesc, "/display.php?frm_action=list&frm_o_cname=$domainclass", "domain_list.gif"),
+                        "system" => array($systemdesc, "/display.php?frm_action=show&frm_o_o[0][class]=pserver&frm_o_o[0][nname]=localhost", "pserver_list.gif"),
+                        "client" => array($clientdesc, "/display.php?frm_action=list&frm_o_cname=client", "client_list.gif"),
+                        "ffile" => array($ffiledesc, $ffileurl, "client_list.gif"),
+                        "pserver" => array($slavedesc, $serverurl, "pserver_list.gif"),
+                        "ticket" => array($ticketdesc, $ticket_url, "ticket_list.gif"),
+                        "ssession" => array($ssessiondesc, "/display.php?frm_action=list&frm_o_cname=ssessionlist", "ssession_list.gif"),
+                        "about" => array($aboutdesc, "/display.php?frm_action=about", "ssession_list.gif"),
+                        "help" => array($helpdesc, "javascript:window.open('$helpurl')", "ssession_list.gif"),
+                        "logout" => array($logoutdesc, "javascript:top.mainframe.logOut();", "delete.gif")
+                    );
+                }
 
-    $gdata = array(
-        "desktop" => array($deskdesc, "/display.php?frm_action=desktop", "client_list.gif"),
-        "home" => array($homedesc, "/display.php?frm_action=show", "client_list.gif"),
-        "all" => array($alldesc, "/display.php?frm_action=list&frm_o_cname=all_vps", "client_list.gif"),
-        "domain" => array($domaindesc, "/display.php?frm_action=list&frm_o_cname=$domainclass", "domain_list.gif"),
-        "system" => array($systemdesc, "/display.php?frm_action=show&frm_o_o[0][class]=pserver&frm_o_o[0][nname]=localhost", "pserver_list.gif"),
-        "client" => array($clientdesc, "/display.php?frm_action=list&frm_o_cname=client", "client_list.gif"),
-        "ffile" => array($ffiledesc, $ffileurl, "client_list.gif"),
-        "pserver" => array($slavedesc, $serverurl, "pserver_list.gif"),
-        "ticket" => array($ticketdesc, $ticket_url, "ticket_list.gif"),
-        "ssession" => array($ssessiondesc, "/display.php?frm_action=list&frm_o_cname=ssessionlist", "ssession_list.gif"),
-        "about" => array($aboutdesc, "/display.php?frm_action=about", "ssession_list.gif"),
-        "help" => array($helpdesc, "javascript:window.open('$helpurl')", "ssession_list.gif"),
-        "logout" => array($logoutdesc, "javascript:top.mainframe.logOut();", "delete.gif")
-    );
-}
-
-header_main();
-
+                header_main();

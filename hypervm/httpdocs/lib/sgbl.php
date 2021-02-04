@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include_once "htmllib/phplib/lib/sgbllib.php";
 
@@ -132,7 +132,7 @@ class Sgbl extends Sgbllib
         // Make help url user configurable if needed (see $conffile above for overriding settings)
         $this->__url_help = 'http://wiki.lxcenter.org/';
 
-/*
+        /*
  * Turned off as its usage is useless for one supported OS.
  *       if (!file_exists($conffile)) {
  *
@@ -198,5 +198,4 @@ class Sgbl extends Sgbllib
 
         $this->__var_ticket_subcategory = null;
     }
-
 }

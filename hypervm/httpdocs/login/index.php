@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 chdir("..");
 include_once "htmllib/lib/displayinclude.php";
@@ -13,4 +13,3 @@ $cgi_classname = 'client';
 
 ob_start();
 include_once "login/indexcontent.php";
-

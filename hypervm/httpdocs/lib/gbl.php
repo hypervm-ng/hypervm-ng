@@ -1,7 +1,7 @@
-<?php 
+<?php
 
 include_once "htmllib/phplib/lib/gbllib.php";
 
-class Gbl extends Gbllib {
-
+class Gbl extends Gbllib
+{
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 $__keyword['under'] = 'under';
 $__keyword['filtered'] = 'filtered';
 $__keyword['no'] = 'No';
@@ -38,4 +38,3 @@ $__keyword['search_note'] = 'Search is on, and thats why this list is nill. To s
 $__keyword['deprecated'] = 'deprecated in Reseller and Admin.';
 
 $__keyword['console_message'] = "You are actually logging into a user (%username%) on the HOST machine, which will automatically drop you into the vps. The password is your Control Panel password for the vps. You can also login to this user %username%  using your favorite ssh client, and there too on a successful login, you will be dropped into the vps. Note that you don't need an ipaddress to be configured on the vps to use this facility. You are basically connecting to the HOST as user, which will automatically transfer you to the vps.";
-

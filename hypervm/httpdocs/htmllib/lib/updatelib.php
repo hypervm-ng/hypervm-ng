@@ -38,8 +38,7 @@ function updatecleanup_main()
             print("Update database (if needed)\n");
             updateDatabaseProperly();
 
-            if (call_with_flag("fixExtraDB"))
-            {
+            if (call_with_flag("fixExtraDB")) {
                 print("- Fixed\n");
             }
 
@@ -62,8 +61,7 @@ function updatecleanup_main()
         cleanupUpdate();
     }
 
-    if (!lxfile_exists($flg))
-    {
+    if (!lxfile_exists($flg)) {
         lxfile_touch($flg);
     }
 }
@@ -86,15 +84,13 @@ function doBeforeUpdate()
 
     // Install yum-plugin-replace (New since HyperVM 2.1.0)
     $ret =  install_if_package_not_exist("yum-plugin-replace");
-    if ($ret)
-    {
+    if ($ret) {
         print("Installed RPM package yum-plugin-replace\n");
     }
 
     // Replace lxphp package (New since HyperVM 2.1.0)
     $ret =  replace_rpm_package("lxphp", "hypervm-core-php");
-    if ($ret)
-    {
+    if ($ret) {
         print("Replaced RPM package lxphp with hypervm-core-php\n");
     }
 
@@ -120,54 +116,53 @@ function cp_dbfile()
 
 function update_main()
 {
-	global $argc, $argv;
-	global $gbl, $sgbl, $login, $ghtml; 
+    global $argc, $argv;
+    global $gbl, $sgbl, $login, $ghtml;
 
-	debug_for_backend();
-	$prognameNice = $sgbl->__var_program_name_nice;
-	$login = new Client(null, null, 'upgrade');
+    debug_for_backend();
+    $prognameNice = $sgbl->__var_program_name_nice;
+    $login = new Client(null, null, 'upgrade');
 
 
-	$opt = parse_opt($argv);
+    $opt = parse_opt($argv);
 
-	print("Getting Version Info from the Server...\n");
+    print("Getting Version Info from the Server...\n");
     print("Connecting... Please wait....\n");
 
     if ((isset($opt['till-version']) && $opt['till-version']) || lxfile_exists("__path_slave_db")) {
-		$sgbl->slave = true;
-		$upversion = findNextVersion($opt['till-version']);
-		$type = 'slave';
-	} else {
-		$sgbl->slave = false;
-		$upversion = findNextVersion();
-		$type = 'master';
-	}
+        $sgbl->slave = true;
+        $upversion = findNextVersion($opt['till-version']);
+        $type = 'slave';
+    } else {
+        $sgbl->slave = false;
+        $upversion = findNextVersion();
+        $type = 'master';
+    }
 
     $thisversion = $sgbl->__ver_major_minor_release;
 
-	if ($upversion) {
-		do_upgrade($upversion);
-		print("Upgrade Done!\nStarting the Cleanup.\n");
-		flush();
-		} else {
-		print("$prognameNice is the latest version ($thisversion)\n");
+    if ($upversion) {
+        do_upgrade($upversion);
+        print("Upgrade Done!\nStarting the Cleanup.\n");
+        flush();
+    } else {
+        print("$prognameNice is the latest version ($thisversion)\n");
         print("Run 'sh /script/cleanup' if you want restore/fix possible issues.\n");
         exit;
-	}
+    }
 
 
-	if (is_running_secondary()) {
-		print("Not running the Update Cleanup, because this server is a secondary.\n");
-		exit;
-	}
+    if (is_running_secondary()) {
+        print("Not running the Update Cleanup, because this server is a secondary.\n");
+        exit;
+    }
 
     // Needs to be here. So any php.ini change takes immediately effect.
     print("Copy Core PHP.ini\n");
     lxfile_cp("htmllib/filecore/php.ini", "/usr/local/lxlabs/ext/php/etc/php.ini");
 
-	pcntl_exec("/bin/sh", array("../bin/common/updatecleanup-core.sh", "--type=$type"));
-	print("$prognameNice is Ready!\n\n");
-
+    pcntl_exec("/bin/sh", array("../bin/common/updatecleanup-core.sh", "--type=$type"));
+    print("$prognameNice is Ready!\n\n");
 }
 
 
@@ -178,98 +173,96 @@ function cleanupUpdate()
 
     $prognameNice = $sgbl->__var_program_name_nice;
 
-	print("Checking $prognameNice service\n");
-	os_create_program_service();
+    print("Checking $prognameNice service\n");
+    os_create_program_service();
 
-	print("Checking $prognameNice permissions\n");
-	os_fix_lxlabs_permission();
+    print("Checking $prognameNice permissions\n");
+    os_fix_lxlabs_permission();
 
-	print("Restart $prognameNice\n");
-	os_restart_program();
+    print("Restart $prognameNice\n");
+    os_restart_program();
 
-	print("Start $prognameNice cleanups\n");
-	cleanupProcess();
+    print("Start $prognameNice cleanups\n");
+    cleanupProcess();
 }
 
 function update_all_slave()
 {
-	$db = new Sqlite(null, "pserver");
+    $db = new Sqlite(null, "pserver");
 
-	$list = $db->getTable(array("nname"));
+    $list = $db->getTable(array("nname"));
 
-	foreach($list as $l) {
-		if ($l['nname'] === 'localhost') {
-			continue;
-		}
-		try {
-			print("Upgrading Slave {$l['nname']}...\n");
-			rl_exec_get(null, $l['nname'], 'remotetestfunc', null);
-		} catch (exception $e) {
-			print($e->getMessage());
-			print("\n");
-		}
-	}
-
+    foreach ($list as $l) {
+        if ($l['nname'] === 'localhost') {
+            continue;
+        }
+        try {
+            print("Upgrading Slave {$l['nname']}...\n");
+            rl_exec_get(null, $l['nname'], 'remotetestfunc', null);
+        } catch (exception $e) {
+            print($e->getMessage());
+            print("\n");
+        }
+    }
 }
 
 function findNextVersion($lastversion = null)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
+    global $gbl, $sgbl, $login, $ghtml;
 
-	$thisversion = $sgbl->__ver_major_minor_release;
+    $thisversion = $sgbl->__ver_major_minor_release;
 
-	$upgrade = null;
-	$nlist = getVersionList($lastversion);
-	dprintr($nlist);
-	$k = 0;
-	foreach($nlist as $l) {
-		if (version_cmp($thisversion, $l) === -1) {
-			$upgrade = $l;
-			break;
-		}
-		$k++;
-	}
-	if (!$upgrade) {
-		return 0;
-	}
+    $upgrade = null;
+    $nlist = getVersionList($lastversion);
+    dprintr($nlist);
+    $k = 0;
+    foreach ($nlist as $l) {
+        if (version_cmp($thisversion, $l) === -1) {
+            $upgrade = $l;
+            break;
+        }
+        $k++;
+    }
+    if (!$upgrade) {
+        return 0;
+    }
 
-	print("Updating from $thisversion to $upgrade\n");
-	return $upgrade;
-
+    print("Updating from $thisversion to $upgrade\n");
+    return $upgrade;
 }
 
 function do_upgrade($upversion)
 {
-	global $gbl, $sgbl, $login, $ghtml; 
-	if (file_exists("/usr/local/lxlabs/.git")) {
-		print("Development system.. Not upgrading --> exit!...\n");
-		exit;
-	}
+    global $gbl, $sgbl, $login, $ghtml;
+    if (file_exists("/usr/local/lxlabs/.git")) {
+        print("Development system.. Not upgrading --> exit!...\n");
+        exit;
+    }
 
-	$program = $sgbl->__var_program_name;
+    $program = $sgbl->__var_program_name;
 
-	$programfile = "$program-" . $upversion . ".zip";
+    $programfile = "$program-" . $upversion . ".zip";
 
-	lxfile_rm_rec("__path_program_htmlbase/htmllib/script");
-	lxfile_rm_rec("__path_program_root/pscript");
+    lxfile_rm_rec("__path_program_htmlbase/htmllib/script");
+    lxfile_rm_rec("__path_program_root/pscript");
 
-	$saveddir = getcwd();
-	lxfile_rm_rec("__path_program_htmlbase/download");
-	lxfile_mkdir("download");
-	chdir("download");
-	print("Downloading $programfile.....\n");
-	download_source("/$program/$programfile");
-	print("Download Done....\n");
-	lxshell_unzip("../..", $programfile);
-	chdir($saveddir);
+    $saveddir = getcwd();
+    lxfile_rm_rec("__path_program_htmlbase/download");
+    lxfile_mkdir("download");
+    chdir("download");
+    print("Downloading $programfile.....\n");
+    download_source("/$program/$programfile");
+    print("Download Done....\n");
+    lxshell_unzip("../..", $programfile);
+    chdir($saveddir);
 }
 
 function move_clients_to_client()
 {
-	if (lxfile_exists("__path_program_home/client")) {
-		return false;
-	}
-	lxfile_mv_rec("__path_program_home/clients", "__path_program_home/client");
+    if (lxfile_exists("__path_program_home/client")) {
+        return false;
+    }
+    lxfile_mv_rec("__path_program_home/clients", "__path_program_home/client");
     return true;
 }
 
@@ -366,7 +359,6 @@ function fixExtraDB()
     call_with_flag("convert_favorite");
 
     lxfile_touch($file);
-
 }
 
 
@@ -388,20 +380,16 @@ function doUpdateExtraStuff()
     print("Check the core database\n");
     parse_sql_data();
 
-    if (call_with_flag("convertIpaddressToComa"))
-    {
+    if (call_with_flag("convertIpaddressToComa")) {
         print("Converted IP addresses in database\n");
-
     }
 
-    if (call_with_flag("fixExtraDB"))
-    {
+    if (call_with_flag("fixExtraDB")) {
         print("- Fixed\n");
     }
 
     print("Set OS template permissions\n");
-    if (is_openvz())
-    {
+    if (is_openvz()) {
         lxfile_unix_chmod_rec("/vz/template/cache/", "0755");
     } else {
         lxfile_unix_chmod_rec("/home/hypervm/xen/template/", "0755");
@@ -415,8 +403,7 @@ function doUpdateExtraStuff()
 
     if (is_openvz()) {
         print("Check OpenVZ resources\n");
-        if (call_with_flag("fixOpenVZResource"))
-        {
+        if (call_with_flag("fixOpenVZResource")) {
             print("- Fixed\n");
         }
     }
@@ -426,9 +413,8 @@ function doUpdateExtraStuff()
     }
 
     print("Checking backup dirs\n");
-    if (!add_vps_backup_dir())
-    {
-        print ("- Everything is fine.\n");
+    if (!add_vps_backup_dir()) {
+        print("- Everything is fine.\n");
     }
 
     print("Fix IP POOL\n");
@@ -445,8 +431,7 @@ function doUpdateExtraStuff()
     print("Checking HIB template\n");
     get_kloxo_ostemplate();
 
-    if (db_get_value("client", "admin", "contactemail"))
-    {
+    if (db_get_value("client", "admin", "contactemail")) {
         print("Set admin email\n");
         save_admin_email();
     }
@@ -469,13 +454,11 @@ function doUpdateExtraStuff()
         $defaultOSTemplate = "centos-6-x86.tar.gz";
         $defaultOSTemplateName = "centos-6-x86";
 
-        if (!lxfile_exists($OSTemplateDir))
-        {
+        if (!lxfile_exists($OSTemplateDir)) {
             lxfile_mkdir($OSTemplateDir);
         }
 
-        if (!lxfile_real("$OSTemplateDir/$defaultOSTemplate"))
-        {
+        if (!lxfile_real("$OSTemplateDir/$defaultOSTemplate")) {
             lxfile_rm("$OSTemplateDir/$defaultOSTemplate");
             system("cd $OSTemplateDir/ ; wget http://download.hypervm-ng.org/download/openvztemplates/base/$defaultOSTemplate");
             system("rm $OSTemplateDir/index.html* 2>/dev/null");
@@ -483,13 +466,11 @@ function doUpdateExtraStuff()
         }
 
         // Added in HyperVM 2.1.0
-        if (lxfile_exists("/usr/sbin/vztmpl-dl"))
-        {
-        print("Checking for latest version of $defaultOSTemplateName at OpenVZ.org website\n");
-        $res = system("/usr/sbin/vztmpl-dl --update $defaultOSTemplateName 2>/dev/null");
-        dprint("res: $res\n");
+        if (lxfile_exists("/usr/sbin/vztmpl-dl")) {
+            print("Checking for latest version of $defaultOSTemplateName at OpenVZ.org website\n");
+            $res = system("/usr/sbin/vztmpl-dl --update $defaultOSTemplateName 2>/dev/null");
+            dprint("res: $res\n");
         }
-
     } else {
         if (!lxfile_real("/home/hypervm/xen/template/centos-6-x86-pygrub-sda-latest.tar.gz")) {
             system("mkdir -p /home/hypervm/xen/template ; cd /home/hypervm/xen/template/ ; rm centos-6-i386.tar.gz; rm centos-5-i386.tar.gz; rm centos-5-i386-afull.tar.gz; rm centos-6-x86-pygrub-sda-latest.tar.gz; wget http://download.hypervm-ng.org/download/xentemplates/base/centos-6-x86-pygrub-sda-latest.tar.gz");
@@ -508,7 +489,7 @@ function doUpdateExtraStuff()
 
     if (lxfile_exists("/etc/yum.repos.d/lxlabs.repo")) {
         print("Delete old repo's\n");
-        lxfile_mv("/etc/yum.repos.d/lxlabs.repo","/etc/yum.repos.d/lxlabs.repo.lxsave");
+        lxfile_mv("/etc/yum.repos.d/lxlabs.repo", "/etc/yum.repos.d/lxlabs.repo.lxsave");
         system("rm -f /etc/yum.repos.d/lxlabs.repo");
         print("Removed lxlabs.repo\n");
     }
@@ -543,14 +524,12 @@ function get_kloxo_ostemplate()
             }
         }
     }
-
 }
 
 function fix_ipconntrack()
 {
     addLineIfNotExistInside("/etc/sysctl.conf", "net.ipv4.ip_conntrack_max=32760", null);
     lxshell_return("sysctl", "-p");
-
 }
 
 function fixOpenVZResource()
@@ -560,7 +539,7 @@ function fixOpenVZResource()
     $login->loadAllVps();
     $list = $login->getList('vps');
 
-    foreach($list as $l) {
+    foreach ($list as $l) {
         if ($l->isXen()) {
             continue;
         }
@@ -578,7 +557,7 @@ function fix_vmipaddress()
 
     $sq = new Sqlite(null, "vps");
     $res = $sq->getTable(array('nname', 'coma_vmipaddress_a'));
-    foreach($res as $r) {
+    foreach ($res as $r) {
         $ip = $r['coma_vmipaddress_a'];
         $ip = trim($ip);
         if (!$ip) {
@@ -586,7 +565,7 @@ function fix_vmipaddress()
         }
         $iplist = explode(",", $ip);
 
-        foreach($iplist as &$__ip) {
+        foreach ($iplist as &$__ip) {
             $__ip = trim($__ip);
         }
 
@@ -604,9 +583,11 @@ function convertIpaddressToComa()
     $login->loadAllObjects('vps');
     $VPSList = $login->getList('vps');
 
-    if (!isset($VPSList)) { return false; };
+    if (!isset($VPSList)) {
+        return false;
+    };
 
-    foreach($VPSList as $Convert) {
+    foreach ($VPSList as $Convert) {
 
         $vpsiplist = $Convert->getList('vpsipaddress_a');
         if (!$vpsiplist) {
@@ -614,7 +595,7 @@ function convertIpaddressToComa()
             return null;
         }
         $vmlist = null;
-        foreach($vpsiplist as $vpsip) {
+        foreach ($vpsiplist as $vpsip) {
             $vmip = new vmipaddress_a(null, null, $vpsip->nname);
             $vmlist[$ip->nname] = $vmip;
         }
@@ -636,12 +617,11 @@ function our_file_get_contents($file)
     }
 
 
-    while(!feof($fp)) {
+    while (!feof($fp)) {
         $string .= fread($fp, 8192);
     }
     fclose($fp);
     return $string;
-
 }
 
 function our_file_put_contents($file, $contents, $appendflag = false)
@@ -681,9 +661,9 @@ function find_os_version()
     if (file_exists("/etc/redhat-release")) {
         $release = trim(file_get_contents("/etc/redhat-release"));
         $osv = explode(" ", $release);
-        if(isset($osv[6])) {
+        if (isset($osv[6])) {
             $osversion = "rhel-" . $osv[6];
-        } elseif (isset($osv[3]) && $osv[3] != "(Final)" )  {
+        } elseif (isset($osv[3]) && $osv[3] != "(Final)") {
             $oss = explode(".", $osv[3]);
             if (($osv[0]) == "CentOS") {
                 $osversion = "centos-" . $oss[0];
@@ -699,7 +679,6 @@ function find_os_version()
 
     print("This Operating System is Currently Not supported.\n");
     exit;
-
 }
 
 function cleanupProcess()
@@ -711,15 +690,13 @@ function cleanupProcess()
     download_thirdparty();
 
     print("Installing binaries\n");
-    if (is_openvz())
-    {
+    if (is_openvz()) {
         lxfile_cp("__path_program_root/cexe/lxopenvz", "/usr/bin");
     } else {
         lxfile_cp("__path_program_root/cexe/lxxen", "/usr/bin");
     }
     print("Fixing binaries permissions\n");
-    if (is_openvz())
-    {
+    if (is_openvz()) {
         lxfile_generic_chmod("/usr/bin/lxopenvz", "6755");
     } else {
         lxfile_generic_chmod("/usr/bin/lxxen", "6755");
@@ -727,42 +704,53 @@ function cleanupProcess()
     print("Checking for missing RPM packages...\n");
 
     $ret = install_if_package_not_exist("rrdtool");
-    if ($ret) { print("- Installed rrdtool\n"); }
+    if ($ret) {
+        print("- Installed rrdtool\n");
+    }
 
-    if (!is_openvz())
-    {
+    if (!is_openvz()) {
         $ret = install_if_package_not_exist("ntfsprogs");
-        if ($ret) { print("- Installed ntfsprogs\n"); }
+        if ($ret) {
+            print("- Installed ntfsprogs\n");
+        }
         $ret = install_if_package_not_exist("parted");
-        if ($ret) { print("- Installed parted\n"); }
+        if ($ret) {
+            print("- Installed parted\n");
+        }
         $ret = install_if_package_not_exist("kpartx");
-        if ($ret) { print("- Installed kpartx\n"); }
+        if ($ret) {
+            print("- Installed kpartx\n");
+        }
     }
 
     $ret = install_if_package_not_exist("openssl");
-    if ($ret) { print("- Installed openssl\n"); }
+    if ($ret) {
+        print("- Installed openssl\n");
+    }
 
     $ret = install_if_package_not_exist("openssl-devel");
-    if ($ret) { print("- Installed openssl-devel\n"); }
+    if ($ret) {
+        print("- Installed openssl-devel\n");
+    }
 
-    if (!is_openvz())
-    {
+    if (!is_openvz()) {
         $ret = install_if_package_not_exist("dhcp");
-        if ($ret) { print("- Installed dhcp\n"); }
+        if ($ret) {
+            print("- Installed dhcp\n");
+        }
         system("chkconfig dhcpd on");
         print("Enabled dhcpd at system startup\n");
     }
 
-    if (!is_openvz())
-    {
-      if (lxfile_exists("/etc/xen")) {
+    if (!is_openvz()) {
+        if (lxfile_exists("/etc/xen")) {
             lxfile_mkdir("/etc/xen/hypervm");
             if (!lxfile_exists("/boot/hypervm-xen-vmlinuz")) {
                 system("cd /boot ; ln -sf vmlinuz-2.6-xen hypervm-xen-vmlinuz; ln -sf initrd-2.6-xen.img hypervm-xen-initrd.img");
             }
 
             $list = lscandir_without_dot("/etc/xen/auto");
-            foreach($list as $l) {
+            foreach ($list as $l) {
                 $dir = strtil($l, ".cfg");
                 lunlink("/etc/xen/auto/$l");
                 if (lxfile_exists("/home/xen/$dir/$l")) {
@@ -775,7 +763,6 @@ function cleanupProcess()
             print("Check Xen windows-lxblank.img template\n");
             system("echo hypervm-windows > /home/hypervm/xen/template/windows-lxblank.img");
         }
-
     }
     if (lxfile_exists("/var/log/loadvg.log")) {
         lunlink("/var/log/loadvg.log");
@@ -842,11 +829,11 @@ function cleanupProcess()
     if (!lxfile_exists("/var/named/chroot/etc/kloxo.named.conf")) {
         if (lxfile_exists("/var/named/chroot/etc/lxadmin.named.conf")) {
             remove_line("/var/named/chroot/etc/named.conf", "lxadmin.named.conf");
-            $pattern='include "/etc/kloxo.named.conf";';
+            $pattern = 'include "/etc/kloxo.named.conf";';
             $file = "/var/named/chroot/etc/named.conf";
             $comment = "//Kloxo";
-            @ addLineIfNotExistInside($file, $pattern, $comment);
-            @ lxfile_mv("/var/named/chroot/etc/lxadmin.named.conf", "/var/named/chroot/etc/kloxo.named.conf");
+            @addLineIfNotExistInside($file, $pattern, $comment);
+            @lxfile_mv("/var/named/chroot/etc/lxadmin.named.conf", "/var/named/chroot/etc/kloxo.named.conf");
         }
     }
 }
@@ -870,11 +857,11 @@ function add_vps_backup_dir()
 
     $res = $sq->getTable(array('nname'));
     if (isset($res)) {
-        foreach($res as $r) {
+        foreach ($res as $r) {
             if (!lxfile_exists("__path_program_home/vps/{$r['nname']}/__backup")) {
-            lxfile_mkdir("__path_program_home/vps/{$r['nname']}/__backup");
-            $vpsbackupdirname = $r['nname'];
-            print("- Backup dir created for $vpsbackupdirname \n");
+                lxfile_mkdir("__path_program_home/vps/{$r['nname']}/__backup");
+                $vpsbackupdirname = $r['nname'];
+                print("- Backup dir created for $vpsbackupdirname \n");
             }
         }
         return true;
@@ -891,7 +878,7 @@ function convert_ipaddress()
 
     $vpslist = $login->getList('vps');
 
-    foreach($vpslist as $vps) {
+    foreach ($vpslist as $vps) {
 
         if (isset($vps->vmipaddress_a) && is_array($vps->vmipaddress_a)) {
             continue;
@@ -900,7 +887,7 @@ function convert_ipaddress()
         $iplist = $vps->getList('vpsipaddress');
 
         $vpsinternalip = null;
-        foreach($iplist as $ip) {
+        foreach ($iplist as $ip) {
             $internalip = new vmipaddress_a(null, null, $ip->ipaddress);
             $vpsinternalip[$internalip->nname] = $internalip;
         }
@@ -908,5 +895,4 @@ function convert_ipaddress()
         $vps->setUpdateSubaction();
         $vps->write();
     }
-
 }
