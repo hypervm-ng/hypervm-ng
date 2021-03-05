@@ -3845,6 +3845,18 @@ function is_centossix()
 	}
 }
 
+function is_centosseven()
+{
+	$find = find_os_pointversion();
+	$check = strpos($find, 'centos-7');
+
+	if ($check !== false) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function migrateResourceplan($class)
 {
 	$ss = new Sqlite(null, "resourceplan");
