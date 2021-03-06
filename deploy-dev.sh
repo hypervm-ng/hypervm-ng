@@ -29,13 +29,59 @@
 #    Version 0.1 Initial release [ Ángel Guzmán Maeso <angel.guzman@lxcenter.org> ]
 #
 HYPERVM_PATH='/usr/local/lxlabs'
+REPO="hypervm-ng"
+BRANCH="dev"
+LOCAL=""
 
 usage(){
-    echo "Usage: $0 [BRANCH] [-h]"
-    echo 'BRANCH: master, legacy, dev or local'
-    echo 'h: shows this help.'
+    echo "Usage: $0 [BRANCH] [REPOSITORY] [-h]"
+    echo "-b : BRANCH (optional): git branch (like: $BRANCH) "
+    echo "-r : REPOSITORY (optional): the repo you want to use  (like: $REPO)"
+	echo "-l : if you want to use local installation at "$HYPERVM_PATH" path"
+    echo '-h: shows this help.'
     exit 1
 }
+
+while getopts “h:r:b:l” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+		 l)
+			LOCAL="ON" 
+			 ;;	 
+         r)
+             REPO="$OPTARG"
+             ;;
+         b)
+             BRANCH="$OPTARG"
+			 ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $LOCAL ]] 
+then
+	echo "Using as defaults REPO: $REPO BRANCH: $BRANCH " 
+else
+	echo "Using local as source the local folder:" "$HYPERVM_PATH" 
+fi
+
+read -p "Do you agree with the above selections? Y or N: " -n 1 -r
+echo    # (optional) move to a new line
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+     echo -'h: shows the commands help.'
+	exit 1
+fi
+
+
 
 install_GIT()
 {
@@ -50,12 +96,12 @@ install_GIT()
 	fi
 	
 	# @todo Try to get the lastest version from some site. LATEST file?
-	GIT_VERSION='1.8.3.4'
+	GIT_VERSION='2.30.1'
 	
 	echo "Downloading and compiling GIT ${GIT_VERSION}"
-	wget http://git-core.googlecode.com/files/git-${GIT_VERSION}.tar.gz
-	tar xvfz git-*.tar.gz; cd git-*;
-	./configure --prefix=/usr --with-curl --with-expat
+	wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz -O git.tar.gz
+	tar xvfz git.tar.gz; cd git-*;
+	./configure --prefix=/usr  --with-expat
 	make all
 	make install
 	
@@ -93,46 +139,10 @@ else
     install_GIT
 fi
 
-case $1 in 
-	master )
-		# Clone from GitHub the last version using git transport (no http or https)
-		echo "Installing branch hypervm/master"
+
+if [[ -n $LOCAL  ]] 
+		then	
 		mkdir -p ${HYPERVM_PATH}
-		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
-		cd ${HYPERVM_PATH}
-		git checkout master
-		cd ${HYPERVM_PATH}/hypervm-install
-		sh ./make-distribution.sh
-		cd ${HYPERVM_PATH}/hypervm
-		sh ./make-development.sh
-		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
-		;;
-	legacy )
-		# Clone from GitHub the last version using git transport (no http or https)
-		echo "Installing branch hypervm/legacy"
-		mkdir -p ${HYPERVM_PATH}
-		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
-		cd ${HYPERVM_PATH}
-		git checkout legacy
-		cd ${HYPERVM_PATH}/hypervm-install
-		sh ./make-distribution.sh
-		cd ${HYPERVM_PATH}/hypervm
-		sh ./make-development.sh
-		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
-		;;
-	dev )
-		# Clone from GitHub the last version using git transport (no http or https)
-		echo "Installing branch hypervm/dev"
-		git clone https://github.com/hypervm-ng/hypervm-ng.git ${HYPERVM_PATH}
-		cd ${HYPERVM_PATH}
-		git checkout dev -f
-		cd ${HYPERVM_PATH}/hypervm-install
-		sh ./make-distribution.sh
-		cd ${HYPERVM_PATH}/hypervm
-		sh ./make-development.sh
-		printf "Done.\nInstall HyperVM-NG:\ncd ${HYPERVM_PATH}/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
-		;;
-	local )
 		# Clone from GitHub the last version using git transport (no http or https)
 		echo "Installing local branch of hypervm"
         if [ ! -f ${HYPERVM_PATH}/.git ]
@@ -144,10 +154,27 @@ case $1 in
 		cd ..//hypervm
 		sh ./make-development.sh
 		cp hypervm-current.zip ${HYPERVM_PATH}/hypervm
-		printf "Done.\nInstall HyperVM-NG:\ncd hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
-		;;
+		printf "Done.\nInstall HyperVM-NG:\n cd hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
+fi		
 
-	*   )
-		usage
-		return 1 ;;
-esac
+if [[ -z $LOCAL ]] 
+then
+# Clone from GitHub the last version using git transport (no http or https)
+echo "Cleaning up old insmake-development.shtalls"
+rm -Rf /usr/local/lxlabs.bak
+mv /usr/local/lxlabs /usr/local/lxlabs.bak
+
+echo "Installing branch $BRANCH from $REPO repository"
+git clone -b $BRANCH --single-branch git://github.com/$REPO/hypervm-ng.git  ${HYPERVM_PATH}
+
+if [ $? -ne 0 ]; then
+  echo "Git checkout failed. Exiting."
+  exit 1;
+fi
+
+cd ${HYPERVM_PATH}/hypervm-install
+sh ./make-distribution.sh
+cd ${HYPERVM_PATH}/hypervm
+sh ./make-development.sh
+printf "Done.\nInstall HyperVM-NG:\n cd "${HYPERVM_PATH}"/hypervm-install/hypervm-linux/\nsh hypervm-install-[master|slave].sh with args\n"
+fi
