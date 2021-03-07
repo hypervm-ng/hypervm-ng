@@ -21,6 +21,7 @@
 #
 #    Install and deploy a develoment version on a local enviroment
 #
+#    Version 1.0 remake the script with preset options and more funtionality [ Dionysis Kladis <dkladis@hotmail.com> ]
 #    Version 0.6 Added local [ Krzysztof Taraszka <krzysztof.taraszka@hypervm-ng.org> ]
 #    Version 0.5 Added legacy & NG [ Krzysztof Taraszka <krzysztof.taraszka@hypervm-ng.org> ]
 #    Version 0.4 Added which, zip and unzip as requirement [ Danny Terweij <d.terweij@lxcenter.org> ]
@@ -88,20 +89,35 @@ install_GIT()
 	# Redhat based
 	if [ -f /etc/redhat-release ] ; then
 		# Install git with curl and expat support to enable support on github cloning
-		yum install -y gcc gettext-devel expat-devel curl-devel zlib-devel openssl-devel perl-ExtUtils-MakeMaker
+		yum install -y lynx gcc gettext-devel expat-devel curl-devel zlib-devel openssl-devel perl-ExtUtils-MakeMaker
 	# Debian based
 	elif [ -f /etc/debian_version ] ; then
 		# No tested
-		apt-get install gcc
+		apt-get install gcc lynx
 	fi
-	
-	# @todo Try to get the lastest version from some site. LATEST file?
-	GIT_VERSION='2.30.1'
+	# Try to get the lastest version from some site. LATEST file?
+	# https://github.com/git/git/blob/maint/RelNotes
+	# we are reading a file from the git repo that contains the version
+	vCONTENT=$(lynx -dump  https://raw.githubusercontent.com/git/git/maint/RelNotes)
+	# slicing with seperator
+	delimeter=$(echo $vCONTENT | tr "/" "\n")
+	# using a loop to take the last part we need
+	for word in $delimeter
+	do
+  	    part=$word
+        done
+	# we need to slice the last part we dont need, with the seperator txt
+	fin=$(echo $part | tr "txt" "\n")
+	#We need to remove the last character 
+	version=$(echo $fin |cut -c1-6)
+
+	#assigning the version
+	GIT_VERSION=$version
 	
 	echo "Downloading and compiling GIT ${GIT_VERSION}"
 	wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz -O git.tar.gz
 	tar xvfz git.tar.gz; cd git-*;
-	./configure --prefix=/usr  --with-expat
+	./configure --prefix=/usr
 	make all
 	make install
 	
@@ -139,17 +155,17 @@ else
     install_GIT
 fi
 
-
+mkdir -p ${HYPERVM_PATH}
 if [[ -n $LOCAL  ]] 
 		then	
-		mkdir -p ${HYPERVM_PATH}
+		
 		# Clone from GitHub the last version using git transport (no http or https)
-		echo "Installing local branch of hypervm"
+		echo "Preparing for install the local branch of hypervm" "${HYPERVM_PATH}"
         if [ ! -f ${HYPERVM_PATH}/.git ]
         then
     		touch ${HYPERVM_PATH}/.git
     	fi
-		cd hypervm-install
+		cd ${HYPERVM_PATH}/hypervm-install
 		sh ./make-distribution.sh
 		cd ..//hypervm
 		sh ./make-development.sh
