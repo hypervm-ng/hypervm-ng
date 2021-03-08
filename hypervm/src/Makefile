@@ -17,10 +17,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 PREFIX=lx
-LIBS=-I/usr/include -lssl
+LIBS=-I/usr/include -lssl -lcrypto
 CC=gcc
 DEBUG = -g
-CFLAGS = -Wall -O2 -std=c99 -ansi -pedantic -Wextra -Werror -Wunused \
+CFLAGS = -Wall -O2 -std=c99 -ansi -pedantic -Wextra -Wunused \
 -Wimplicit -Wshadow -Wformat=2 -Wmissing-declarations   \
 -Wno-missing-prototypes -Wwrite-strings                 \
 -Wbad-function-cast -Wnested-externs -Wcomment -Winline \

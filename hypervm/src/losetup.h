@@ -31,6 +31,7 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <sys/types.h>
 
 /* Avoid error "specifier-qualifier-list" on 2.6.18 kernels (Centos) */
 #define __u64 int
