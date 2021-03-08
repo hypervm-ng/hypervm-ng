@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    Copyright (C) 2000-2009	LxLabs
@@ -30,6 +30,12 @@
 # - create tar.gz package (not yet in use)
 # - create 7z package (not yet in use)
 ######
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 echo "################################"
 echo "### Start packaging"
 
@@ -71,7 +77,7 @@ else
     file=hypervm-$version.$build.zip
 fi
 
-zip -r9 $file ./src ./bin ./cexe ./file ./httpdocs ./pscript ./sbin ./RELEASEINFO -x \
+zip -q -r9 $file ./src ./bin ./cexe ./file ./httpdocs ./pscript ./sbin ./RELEASEINFO -x \
     "*/CVS/*" \
     "*/.git/*" \
     "*/.svn/*"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    Copyright (C) 2000-2009	LxLabs
@@ -32,6 +32,11 @@
 # httpdocs/htmllib/yui-dragdrop
 #
 ###############################
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
 
 	echo "################################"
 	echo "### Start packaging HyperVM Thirdparty tools."

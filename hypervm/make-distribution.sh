@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    Copyright (C) 2000-2009	LxLabs
@@ -26,6 +26,12 @@
 # - compile c files
 # - create zip package
 ######
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 echo "################################"
 echo "### Start packaging"
 echo "### read version..."
@@ -50,7 +56,7 @@ cd ../
 #
 echo "### Create zip package..."
 # Package part
-zip -r9 hypervm-$version.zip ./src ./bin ./cexe ./file ./httpdocs ./pscript ./sbin ./RELEASEINFO -x \
+zip -q -r9 hypervm-$version.zip ./src ./bin ./cexe ./file ./httpdocs ./pscript ./sbin ./RELEASEINFO -x \
 "*/CVS/*" \
 "*/.git/*" \
 "*/.svn/*"

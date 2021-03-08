@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
@@ -24,6 +24,12 @@
 # update them on download server too.
 #
 ####
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 echo "##########################################"
 echo "### Creating hypervm-install.zip"
 ###

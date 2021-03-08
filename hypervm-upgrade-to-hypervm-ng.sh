@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 function pause(){
    read -p "$*"
 }
