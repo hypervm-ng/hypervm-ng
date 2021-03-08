@@ -62,6 +62,9 @@ else
 	rm -f hypervm-$version.zip
 fi
 
+# Install build deps
+yum -y install gcc openssl-devel openssl-libs
+
 echo "### Compile c files..."
 # Compile C files
 cd src
