@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
@@ -28,6 +28,12 @@
 #       * switched from lxcenter to hypervm-ng
 #
 ######
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 clear
 echo "--------------------------------------------"
 

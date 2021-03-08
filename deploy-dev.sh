@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    Copyright (C) 2000-2009	LxLabs
@@ -29,6 +29,12 @@
 #    Version 0.2 Changed git version [ Danny Terweij <d.terweij@lxcenter.org> ]
 #    Version 0.1 Initial release [ Ángel Guzmán Maeso <angel.guzman@lxcenter.org> ]
 #
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 HYPERVM_PATH='/usr/local/lxlabs'
 REPO="hypervm-ng"
 BRANCH="dev"
