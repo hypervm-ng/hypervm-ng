@@ -162,7 +162,8 @@ else
     install_GIT
 fi
 
-mkdir -p ${HYPERVM_PATH}
+ 
+
 if [[ -n $LOCAL  ]] 
 		then	
 		
@@ -183,16 +184,51 @@ fi
 if [[ -z $LOCAL ]] 
 then
 # Clone from GitHub the last version using git transport (no http or https)
-echo "Cleaning up old insmake-development.shtalls"
-rm -Rf /usr/local/lxlabs.bak
-mv /usr/local/lxlabs /usr/local/lxlabs.bak
+echo "Cleaning up old insmake-development.installs"
+rm -Rf /usr/local/lxlabs.bak-old
+		if [  -d ${HYPERVM_PATH}.bak ]
+		then
+		mv /usr/local/lxlabs.bak /usr/local/lxlabs.bak-old
+		fi
 
-echo "Installing branch $BRANCH from $REPO repository"
-git clone -b $BRANCH --single-branch git://github.com/$REPO/hypervm-ng.git  ${HYPERVM_PATH}
 
-if [ $? -ne 0 ]; then
-  echo "Git checkout failed. Exiting."
-  exit 1;
+	if [  -d ${HYPERVM_PATH}/hypervm ]
+	then
+		read -p "Do you want the existing installation as a development version of REPO: $REPO and BRANCH: $BRANCH  ? Y or N: " -n 1 -r
+		echo    # (optional) move to a new line
+
+		if [[  $REPLY =~ ^[Yy]$ ]]
+		then
+     			if [  ! -f ${HYPERVM_PATH}/.git ]
+				then
+		
+					cd ${HYPERVM_PATH}
+					git init
+					git remote add origin git://github.com/$REPO/hypervm-ng.git
+					git fetch origin
+					git checkout origin/$BRANCH -ft
+		
+				fi
+		fi
+	else
+	
+
+	if [  -d ${HYPERVM_PATH} ]
+	then
+		mv /usr/local/lxlabs /usr/local/lxlabs.bak
+	fi	
+
+	if [ ! -d ${HYPERVM_PATH} ]
+	then
+		mkdir -p ${HYPERVM_PATH}
+	fi
+	echo "Installing branch $BRANCH from $REPO repository"
+	git clone -b $BRANCH --single-branch git://github.com/$REPO/hypervm-ng.git  ${HYPERVM_PATH}
+
+	if [ $? -ne 0 ]; then
+		echo "Git checkout failed. Exiting."
+	exit 1;
+	fi
 fi
 
 cd ${HYPERVM_PATH}/hypervm-install
