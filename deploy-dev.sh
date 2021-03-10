@@ -129,7 +129,7 @@ install_GIT()
 	make install
 	
 	echo 'Cleaning GIT files.'
-	cd ..; rm -rf git-*
+	cd ..; rm -rf git*
 }
 
 require_root()
