@@ -169,9 +169,9 @@ function lxins_main()
     system("chown -R lxlabs:lxlabs /usr/local/lxlabs/");
     $dir_name = dirname(__FILE__);
 	
-	 $trap = null;
+	 $bstrap = null;
     if ($bootstrap) {
-        $trap = "--bootstrap=true";
+        $bstrap = "--bootstrap=true";
     }
 
     fix_network_forwarding();
@@ -182,13 +182,13 @@ function lxins_main()
     touch("/usr/local/lxlabs/hypervm/etc/install_$virtualization");
     chdir("/usr/local/lxlabs/hypervm/httpdocs/");
     system("/bin/cp /usr/local/lxlabs/hypervm/httpdocs/htmllib/filecore/php.ini /usr/local/lxlabs/ext/php/etc/php.ini");
-    system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass $trap");
+    system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass $bstrap");
 
     system("chmod 755 /etc/init.d/hypervm");
     system("/sbin/chkconfig hypervm on");
     system("/sbin/chkconfig iptables off");
 
-    $trap = null;
+    $skiparg = null;
     if ($skipostemplate) {
         $skiparg = "--skipostemplate=true";
     }
