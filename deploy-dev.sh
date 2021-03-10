@@ -207,7 +207,9 @@ rm -Rf /usr/local/lxlabs.bak-old
 					git remote add origin git://github.com/$REPO/hypervm-ng.git
 					git fetch origin
 					git checkout origin/$BRANCH -ft
-		
+				else
+					echo "This is already a development version, Updating from origin"
+					git fetch origin
 				fi
 		fi
 	else
