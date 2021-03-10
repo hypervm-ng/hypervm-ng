@@ -14,6 +14,11 @@ function create_main()
 	if (file_exists('/usr/local/lxlabs/.git')) {
 		$opt['development_found'] = '1';
 	}
+	
+	$bootstrap = false;
+	if (isset($opt['bootstrap'])) {
+		$bootsrap = true;
+	}
 
 	lxfile_mkdir("{$sgbl->__path_program_etc}/conf");
 	lxfile_mkdir("{$sgbl->__path_program_root}/pid");
@@ -30,7 +35,7 @@ function create_main()
 
 	if ($opt['install-type'] == 'master') {
 
-		if (!isset($opt['development_found'])) {
+		if (!isset($opt['development_found']) or ($bootstrap)) {
 			create_mysql_db('master', $opt, $admin_pass);
 			create_database();
 			create_general();
@@ -44,7 +49,7 @@ function create_main()
 		print("Updating the system. Will take a while\n");
 		system("/usr/local/lxlabs/ext/php/php ../bin/common/updatecleanup-main.php --type=master");
 	} else if ($opt['install-type'] == 'slave') {
-		if (!isset($opt['development_found'])) {
+		if (!isset($opt['development_found']) or ($bootstrap)) {
 			init_slave($admin_pass);
 		} else {
 			print("Development GIT version found. Skipping creation from scratch of HyperVM-NG.\n");

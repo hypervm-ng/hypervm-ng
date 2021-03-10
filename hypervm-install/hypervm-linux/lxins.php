@@ -48,6 +48,11 @@ function lxins_main()
     if (isset($opt['skip-ostemplate'])) {
         $skipostemplate = true;
     }
+	
+	 $bootstrap = false;
+    if (isset($opt['bootstrap'])) {
+        $bootstrap = true;
+    }
 
     if (array_search($virtualization, array("xen", "openvz", "NONE")) === false) {
         print("Only xen/openvz/NONE are curently supported\n");
@@ -163,6 +168,11 @@ function lxins_main()
     unlink("hypervm-current.zip");
     system("chown -R lxlabs:lxlabs /usr/local/lxlabs/");
     $dir_name = dirname(__FILE__);
+	
+	 $trap = null;
+    if ($bootstrap) {
+        $trap = "--bootstrap=true";
+    }
 
     fix_network_forwarding();
 
@@ -172,13 +182,13 @@ function lxins_main()
     touch("/usr/local/lxlabs/hypervm/etc/install_$virtualization");
     chdir("/usr/local/lxlabs/hypervm/httpdocs/");
     system("/bin/cp /usr/local/lxlabs/hypervm/httpdocs/htmllib/filecore/php.ini /usr/local/lxlabs/ext/php/etc/php.ini");
-    system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass");
+    system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass $trap");
 
     system("chmod 755 /etc/init.d/hypervm");
     system("/sbin/chkconfig hypervm on");
     system("/sbin/chkconfig iptables off");
 
-    $skiparg = null;
+    $trap = null;
     if ($skipostemplate) {
         $skiparg = "--skipostemplate=true";
     }
