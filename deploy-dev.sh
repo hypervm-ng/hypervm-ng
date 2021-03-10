@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    Copyright (C) 2000-2009	LxLabs
@@ -29,6 +29,12 @@
 #    Version 0.2 Changed git version [ Danny Terweij <d.terweij@lxcenter.org> ]
 #    Version 0.1 Initial release [ Ángel Guzmán Maeso <angel.guzman@lxcenter.org> ]
 #
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 HYPERVM_PATH='/usr/local/lxlabs'
 REPO="hypervm-ng"
 BRANCH="dev"
@@ -89,7 +95,7 @@ install_GIT()
 	# Redhat based
 	if [ -f /etc/redhat-release ] ; then
 		# Install git with curl and expat support to enable support on github cloning
-		yum install -y lynx gcc gettext-devel expat-devel curl-devel zlib-devel openssl-devel perl-ExtUtils-MakeMaker
+		yum install -y lynx gcc autoconf gettext gettext-devel expat-devel tcl tcl-devel curl expat curl-devel zlib zlib-devel openssl-devel perl-ExtUtils-MakeMaker
 	# Debian based
 	elif [ -f /etc/debian_version ] ; then
 		# No tested
@@ -117,6 +123,7 @@ install_GIT()
 	echo "Downloading and compiling GIT ${GIT_VERSION}"
 	wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz -O git.tar.gz
 	tar xvfz git.tar.gz; cd git-*;
+	make configure
 	./configure --prefix=/usr
 	make all
 	make install
