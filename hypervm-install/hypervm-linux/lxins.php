@@ -79,7 +79,7 @@ function lxins_main()
 
     if ($virtualization === 'xen') {
         if (!char_search_beg($osversion, "centos-7") && !char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "rhel-6")) {
-            print("Xen is only supported on CentOS 5 and CentOS 6 distributions with HyperVM as management system\n");
+            print("Xen is only supported on CentOS 5, CentOS 6 and CentOS 7 distributions with HyperVM as management system\n");
             exit;
         }
     }
