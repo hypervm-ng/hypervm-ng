@@ -129,7 +129,7 @@ install_GIT()
 	make install
 	
 	echo 'Cleaning GIT files.'
-	cd ..; rm -rf git-*
+	cd ..; rm -rf git*
 }
 
 require_root()
@@ -207,7 +207,9 @@ rm -Rf /usr/local/lxlabs.bak-old
 					git remote add origin git://github.com/$REPO/hypervm-ng.git
 					git fetch origin
 					git checkout origin/$BRANCH -ft
-		
+				else
+					echo "This is already a development version, Updating from origin"
+					git fetch origin
 				fi
 		fi
 	else

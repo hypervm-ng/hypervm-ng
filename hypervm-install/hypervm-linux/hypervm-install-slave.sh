@@ -95,7 +95,7 @@ case "$1" in
   *)
    	echo $"This is the HyperVM Install script"
     	echo $"The usage is:"
-    	echo $"sh $0 --virtualization-type=xen/openvz/NONE [--skipostemplate=true]"
+    	echo $"sh $0 --virtualization-type=xen/openvz/NONE [--skipostemplate=true] [--bootstrap=true]"
 	exit 1
 esac
 exit $?

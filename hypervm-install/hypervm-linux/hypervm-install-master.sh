@@ -75,7 +75,7 @@ start() {
 
 	cd hypervm-install/hypervm-linux
 	echo "Starting main installation script"
-	php lxins.php --install-type=master $1 $2 | tee hypervm_install.log
+	php lxins.php --install-type=master $1 $2 $3| tee hypervm_install.log
 }
 #
 # Check how we were called.
@@ -96,7 +96,7 @@ case "$1" in
   *)
    	echo $"This is the HyperVM Master Host Install script"
     	echo $"The usage is:"
-    	echo $"sh $0 --virtualization-type=xen/openvz/NONE [--skipostemplate=true]"
+    	echo $"sh $0 --virtualization-type=xen/openvz/NONE [--skipostemplate=true] [--bootstrap=true]"
 	exit 1
 esac
 exit $?

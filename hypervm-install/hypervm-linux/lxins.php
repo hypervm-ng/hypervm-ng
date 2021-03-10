@@ -48,6 +48,11 @@ function lxins_main()
     if (isset($opt['skip-ostemplate'])) {
         $skipostemplate = true;
     }
+	
+	 $bootstrap = false;
+    if (isset($opt['bootstrap'])) {
+        $bootstrap = true;
+    }
 
     if (array_search($virtualization, array("xen", "openvz", "NONE")) === false) {
         print("Only xen/openvz/NONE are curently supported\n");
@@ -74,7 +79,7 @@ function lxins_main()
 
     if ($virtualization === 'xen') {
         if (!char_search_beg($osversion, "centos-7") && !char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "rhel-6")) {
-            print("Xen is only supported on CentOS 5 and CentOS 6 distributions with HyperVM as management system\n");
+            print("Xen is only supported on CentOS 5, CentOS 6 and CentOS 7 distributions with HyperVM as management system\n");
             exit;
         }
     }
@@ -163,6 +168,11 @@ function lxins_main()
     unlink("hypervm-current.zip");
     system("chown -R lxlabs:lxlabs /usr/local/lxlabs/");
     $dir_name = dirname(__FILE__);
+	
+	 $bstrap = null;
+    if ($bootstrap) {
+        $bstrap = "--bootstrap=true";
+    }
 
     fix_network_forwarding();
 
@@ -172,7 +182,7 @@ function lxins_main()
     touch("/usr/local/lxlabs/hypervm/etc/install_$virtualization");
     chdir("/usr/local/lxlabs/hypervm/httpdocs/");
     system("/bin/cp /usr/local/lxlabs/hypervm/httpdocs/htmllib/filecore/php.ini /usr/local/lxlabs/ext/php/etc/php.ini");
-    system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass");
+    system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass $bstrap");
 
     system("chmod 755 /etc/init.d/hypervm");
     system("/sbin/chkconfig hypervm on");
