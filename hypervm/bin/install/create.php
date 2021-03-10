@@ -17,7 +17,7 @@ function create_main()
 	
 	$bootstrap = false;
 	if (isset($opt['bootstrap'])) {
-		$bootsrap = true;
+		$bootstrap = true;
 	}
 
 	lxfile_mkdir("{$sgbl->__path_program_etc}/conf");
