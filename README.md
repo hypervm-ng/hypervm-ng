@@ -21,6 +21,10 @@ http://wiki.hypervm-ng.org/display/DOCS/Installation
 
 # Contributing
 
+
+If you wish to talk to devs or contribute somehow, please join the Discord: https://discord.gg/jnHx9UWY
+
+
 Please have a look at HyperVM-NG's mailing lists and bug tracker. There is forum as well available at: http://community.hypervm-ng.org
 
 # Licensing - AGPLv3

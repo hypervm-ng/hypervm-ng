@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    Copyright (C) 2000-2009	LxLabs
@@ -21,6 +21,7 @@
 #
 #    Install and deploy a develoment version on a local enviroment
 #
+#    Version 1.0 remake the script with preset options and more funtionality [ Dionysis Kladis <dkladis@hotmail.com> ]
 #    Version 0.6 Added local [ Krzysztof Taraszka <krzysztof.taraszka@hypervm-ng.org> ]
 #    Version 0.5 Added legacy & NG [ Krzysztof Taraszka <krzysztof.taraszka@hypervm-ng.org> ]
 #    Version 0.4 Added which, zip and unzip as requirement [ Danny Terweij <d.terweij@lxcenter.org> ]
@@ -28,6 +29,12 @@
 #    Version 0.2 Changed git version [ Danny Terweij <d.terweij@lxcenter.org> ]
 #    Version 0.1 Initial release [ Ángel Guzmán Maeso <angel.guzman@lxcenter.org> ]
 #
+set -e
+
+if [[ -z "${DEBUG}" ]]; then
+    set -x
+fi
+
 HYPERVM_PATH='/usr/local/lxlabs'
 REPO="hypervm-ng"
 BRANCH="dev"
@@ -88,20 +95,36 @@ install_GIT()
 	# Redhat based
 	if [ -f /etc/redhat-release ] ; then
 		# Install git with curl and expat support to enable support on github cloning
-		yum install -y gcc gettext-devel expat-devel curl-devel zlib-devel openssl-devel perl-ExtUtils-MakeMaker
+		yum install -y lynx gcc autoconf gettext gettext-devel expat-devel tcl tcl-devel curl expat curl-devel zlib zlib-devel openssl-devel perl-ExtUtils-MakeMaker
 	# Debian based
 	elif [ -f /etc/debian_version ] ; then
 		# No tested
-		apt-get install gcc
+		apt-get install gcc lynx
 	fi
-	
-	# @todo Try to get the lastest version from some site. LATEST file?
-	GIT_VERSION='2.30.1'
+	# Try to get the lastest version from some site. LATEST file?
+	# https://github.com/git/git/blob/maint/RelNotes
+	# we are reading a file from the git repo that contains the version
+	vCONTENT=$(lynx -dump  https://raw.githubusercontent.com/git/git/maint/RelNotes)
+	# slicing with seperator
+	delimeter=$(echo $vCONTENT | tr "/" "\n")
+	# using a loop to take the last part we need
+	for word in $delimeter
+	do
+  	    part=$word
+        done
+	# we need to slice the last part we dont need, with the seperator txt
+	fin=$(echo $part | tr "txt" "\n")
+	#We need to remove the last character 
+	version=$(echo $fin |cut -c1-6)
+
+	#assigning the version
+	GIT_VERSION=$version
 	
 	echo "Downloading and compiling GIT ${GIT_VERSION}"
 	wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz -O git.tar.gz
 	tar xvfz git.tar.gz; cd git-*;
-	./configure --prefix=/usr  --with-expat
+	make configure
+	./configure --prefix=/usr
 	make all
 	make install
 	
@@ -139,17 +162,18 @@ else
     install_GIT
 fi
 
+ 
 
 if [[ -n $LOCAL  ]] 
 		then	
-		mkdir -p ${HYPERVM_PATH}
+		
 		# Clone from GitHub the last version using git transport (no http or https)
-		echo "Installing local branch of hypervm"
+		echo "Preparing for install the local branch of hypervm" "${HYPERVM_PATH}"
         if [ ! -f ${HYPERVM_PATH}/.git ]
         then
     		touch ${HYPERVM_PATH}/.git
     	fi
-		cd hypervm-install
+		cd ${HYPERVM_PATH}/hypervm-install
 		sh ./make-distribution.sh
 		cd ..//hypervm
 		sh ./make-development.sh
@@ -160,16 +184,51 @@ fi
 if [[ -z $LOCAL ]] 
 then
 # Clone from GitHub the last version using git transport (no http or https)
-echo "Cleaning up old insmake-development.shtalls"
-rm -Rf /usr/local/lxlabs.bak
-mv /usr/local/lxlabs /usr/local/lxlabs.bak
+echo "Cleaning up old insmake-development.installs"
+rm -Rf /usr/local/lxlabs.bak-old
+		if [  -d ${HYPERVM_PATH}.bak ]
+		then
+		mv /usr/local/lxlabs.bak /usr/local/lxlabs.bak-old
+		fi
 
-echo "Installing branch $BRANCH from $REPO repository"
-git clone -b $BRANCH --single-branch git://github.com/$REPO/hypervm-ng.git  ${HYPERVM_PATH}
 
-if [ $? -ne 0 ]; then
-  echo "Git checkout failed. Exiting."
-  exit 1;
+	if [  -d ${HYPERVM_PATH}/hypervm ]
+	then
+		read -p "Do you want the existing installation as a development version of REPO: $REPO and BRANCH: $BRANCH  ? Y or N: " -n 1 -r
+		echo    # (optional) move to a new line
+
+		if [[  $REPLY =~ ^[Yy]$ ]]
+		then
+     			if [  ! -f ${HYPERVM_PATH}/.git ]
+				then
+		
+					cd ${HYPERVM_PATH}
+					git init
+					git remote add origin git://github.com/$REPO/hypervm-ng.git
+					git fetch origin
+					git checkout origin/$BRANCH -ft
+		
+				fi
+		fi
+	else
+	
+
+	if [  -d ${HYPERVM_PATH} ]
+	then
+		mv /usr/local/lxlabs /usr/local/lxlabs.bak
+	fi	
+
+	if [ ! -d ${HYPERVM_PATH} ]
+	then
+		mkdir -p ${HYPERVM_PATH}
+	fi
+	echo "Installing branch $BRANCH from $REPO repository"
+	git clone -b $BRANCH --single-branch git://github.com/$REPO/hypervm-ng.git  ${HYPERVM_PATH}
+
+	if [ $? -ne 0 ]; then
+		echo "Git checkout failed. Exiting."
+	exit 1;
+	fi
 fi
 
 cd ${HYPERVM_PATH}/hypervm-install
