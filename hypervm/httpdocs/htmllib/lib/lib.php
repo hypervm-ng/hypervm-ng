@@ -2364,7 +2364,7 @@ function get_best_location($list)
 
 function vg_complete()
 {
-	if (is_centosfive()) {
+    if (is_centosfive() || is_centosseven()) {
 		if (!lxfile_exists("/usr/sbin/vgdisplay")) {
 			return;
 		}
@@ -2398,7 +2398,7 @@ function vg_complete()
 
 function vg_diskfree($vgname)
 {
-	if (is_centosfive()) {
+    if (is_centosfive() || is_centosseven()) {
 		if (!lxfile_exists("/usr/sbin/vgdisplay")) {
 			return;
 		}

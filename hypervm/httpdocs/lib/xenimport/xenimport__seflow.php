@@ -11,10 +11,10 @@ function __xenimport_get_data()
 	lxfile_mkdir("/home/oldxenconfig-hypervm");
 	$list = lscandir_without_dot("/etc/hypervm/");
 	foreach ($list as $l) {
-		if (!csb($l, "xm")) {
+		if (!csb($l, "xl")) {
 			continue;
 		}
-		if (csb($l, "xmexample")) {
+		if (csb($l, "xlexample")) {
 			continue;
 		}
 		$vm[] = __xenimport_parse_config("/etc/xen/$l");

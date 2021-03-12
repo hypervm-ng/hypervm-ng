@@ -41,7 +41,7 @@ function find_loadavg()
 
 function find_cpuusage()
 {
-	$out = lxshell_output("xm", "list");
+	$out = lxshell_output("xl", "list");
 	$list = explode("\n", $out);
 
 	foreach ($list as $l) {

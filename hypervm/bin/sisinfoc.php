@@ -17,7 +17,7 @@ run_mail_to_ticket();
 
 function collectdata_main()
 {
-	if (lxfile_exists("/proc/xen") && lxfile_exists("/usr/sbin/xm")) {
+	if (lxfile_exists("/proc/xen") && lxfile_exists("/usr/sbin/xl")) {
 		vps__xen::find_traffic();
 		vps__xen::find_cpuusage();
 	}
