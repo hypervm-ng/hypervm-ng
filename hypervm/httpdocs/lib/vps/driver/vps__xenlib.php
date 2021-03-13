@@ -858,7 +858,7 @@ class vps__xen extends Lxdriverclass
 		if (!stripos($pygrub_record[3], 'pygrub') !== FALSE) {
 
 			$mountpoint = $this->mount_this_guy();
-			if (is_centosfive()) {
+			if (is_centosfive() || is_centosseven()) {
 				$kernev = trim(`uname -r`);
 			} else {
 				if (char_search_beg($this->main->ostemplate, "centos-5")) {
@@ -1182,7 +1182,7 @@ class vps__xen extends Lxdriverclass
 		//Add pygrub configuration if template name contains pygrub
 		$pygrub_record = explode('-', $this->main->ostemplate);
 		if (stripos($pygrub_record[3], 'pygrub') !== FALSE) {
-			$string .= "bootloader = '/usr/bin/pygrub'\n";
+			$string .= "bootloader = 'pygrub'\n";
 		} else {
 
 			/* okay - a bit word here as well...
@@ -1192,7 +1192,7 @@ class vps__xen extends Lxdriverclass
  			 *  2a. if RHEL-5/CentOS-5 or old kloxo (hostinabox) template -> use lxkernel-domU-xen kernel
 			 *  2b. if other modern linux template -> copy existing kernel modules
 			 */
-			if (is_centosfive()) {
+		    if (is_centosfive() ||is_centosseven()) {
 				$kernev = trim(`uname -r`);
 				$string .= "kernel = '/boot/hypervm-xen-vmlinuz'\n";
 				$string .= "ramdisk = '/boot/hypervm-xen-initrd.img'\n";
