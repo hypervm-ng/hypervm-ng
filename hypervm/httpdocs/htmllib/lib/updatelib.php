@@ -428,9 +428,12 @@ function doUpdateExtraStuff()
         print("Fixed VM IP addresses in database\n");
     }
 
+/*
+ * don't download Kloxo
+ * 
     print("Checking HIB template\n");
     get_kloxo_ostemplate();
-
+*/
     if (db_get_value("client", "admin", "contactemail")) {
         print("Set admin email\n");
         save_admin_email();
