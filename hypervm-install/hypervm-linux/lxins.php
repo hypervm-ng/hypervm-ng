@@ -202,7 +202,6 @@ function lxins_main()
     //
     // call script to install base OS templates and OpenVZ repo
     //
-    print("Calling: /usr/local/lxlabs/ext/php/php ../bin/install/virt-install.php --install-type=$installtype --virtualization-type=$virtualization $skiparg");
     passthru("/usr/local/lxlabs/ext/php/php ../bin/install/virt-install.php --install-type=$installtype --virtualization-type=$virtualization $skiparg");
 
 
