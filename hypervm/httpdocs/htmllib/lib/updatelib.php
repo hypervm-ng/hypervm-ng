@@ -428,9 +428,12 @@ function doUpdateExtraStuff()
         print("Fixed VM IP addresses in database\n");
     }
 
+/*
+ * don't download Kloxo
+ * 
     print("Checking HIB template\n");
     get_kloxo_ostemplate();
-
+*/
     if (db_get_value("client", "admin", "contactemail")) {
         print("Set admin email\n");
         save_admin_email();
@@ -448,6 +451,9 @@ function doUpdateExtraStuff()
         system("chkconfig libvirtd off 2>/dev/null");
     }
 
+/*
+* disable entire section below, the template downloading is handled by virt-install.php script
+*
     if (is_openvz()) {
         print("Checking for Base default OS template\n");
         $OSTemplateDir = "/vz/template/cache";
@@ -478,7 +484,7 @@ function doUpdateExtraStuff()
             system("rm /home/hypervm/xen/template/robots.txt* 2>/dev/null");
         }
     }
-
+*/
 
     print("Check for old critical database password bug\n");
     if (critical_change_db_pass()) {

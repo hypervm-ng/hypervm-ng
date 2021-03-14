@@ -34,7 +34,7 @@
 ###############################
 set -e
 
-if [[ -z "${DEBUG}" ]]; then
+if [[ ! -z "${DEBUG}" ]]; then
     set -x
 fi
 
