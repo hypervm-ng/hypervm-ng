@@ -2006,6 +2006,7 @@ function parse_opt($argv)
 	return $ret;
 }
 
+/*
 function fix_rhn_sources_file()
 {
 	$os = findOperatingSystem('pointversion');
@@ -2031,6 +2032,7 @@ function fix_rhn_sources_file()
 	$cont = str_replace("%distro%", $os, $cont);
 	lfile_put_contents("/etc/yum.repos.d/lxcenter.repo", $cont);
 }
+*/
 
 function opt_get_single_flag($opt, $var)
 {

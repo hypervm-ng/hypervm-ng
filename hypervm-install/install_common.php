@@ -194,10 +194,13 @@ function install_rhn_sources($osversion)
 
 function install_yum_repo($osversion)
 {
+
 	if (!file_exists("/etc/yum.repos.d")) {
 		return;
 	}
+	system("/usr/bin/yum -y copr enable hypervm/hypervm-ng");
 
+/*
 	if (!file_exists("../lxcenter.repo.template")) {
 		$cont = our_file_get_contents("../hypervm-linux/lxcenter.repo.template");
 	} else {
@@ -206,6 +209,8 @@ function install_yum_repo($osversion)
 
 	$cont = str_replace("%distro%", $osversion, $cont);
 	our_file_put_contents("/etc/yum.repos.d/lxcenter.repo", $cont);
+*/
+
 }
 
 function find_os_version()

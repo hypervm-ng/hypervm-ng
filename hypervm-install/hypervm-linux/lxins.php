@@ -78,21 +78,22 @@ function lxins_main()
 
 
     if ($virtualization === 'xen') {
-        if (!char_search_beg($osversion, "centos-7") && !char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "rhel-6")) {
-            print("Xen is only supported on CentOS 5, CentOS 6 and CentOS 7 distributions with HyperVM as management system\n");
+        if (!char_search_beg($osversion, "centos-7") && !char_search_beg($osversion, "rhel-7")) {
+            print("Xen is only supported on CentOS 7 distributions with HyperVM as management system\n");
             exit;
         }
     }
 
 
     if ($virtualization === 'openvz') {
-        if (!char_search_beg($osversion, "centos-7") && !char_search_beg($osversion, "centos-6") && !char_search_beg($osversion, "centos-5") && !char_search_beg($osversion, "rhel-7") && !char_search_beg($osversion, "rhel-6") && !char_search_beg($osversion, "rhel-5") && !char_search_beg($osversion, "virtuozzo-7")) {
-            print("OpenVZ is only supported on CentOS 5, CentOS 6 and Virtuozzo 7 distributions with HyperVM as management system\n");
+        if (!char_search_beg($osversion, "virtuozzo-7")) {
+            print("OpenVZ is only Virtuozzo 7 distributions with HyperVM as management system\n");
             exit;
         }
     }
 
-    //install_rhn_sources($osversion);
+    $list = array("yum-plugin-copr");
+    run_package_installer($list);
     install_yum_repo($osversion);
 
     exec("groupadd lxlabs");
@@ -100,14 +101,6 @@ function lxins_main()
 
     // New since HyperVM 2.1.0 hypervm-core-php yum-plugin-replace
     $list = array("which", "lxlighttpd", "zip", "unzip", "hypervm-core-php", "curl", "yum-plugin-replace");
-
-    /* Because our builder is on CentOS-6 the binaries like closeallinput are linked against libssl.so.10
-     * To keep backward compatibility with RHEL-5 / CentOS-5 systems HyperVM-NG provides openssl10 package
-     */
-    if (char_search_beg($osversion, "centos-5") && char_search_beg($osversion, "rhel-5")) {
-        $libssl = array("openssl10");
-        $list = array_merge($list, $libssl);
-    }
 
     if ($installtype !== 'slave') {
         if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
@@ -184,9 +177,14 @@ function lxins_main()
     system("/bin/cp /usr/local/lxlabs/hypervm/httpdocs/htmllib/filecore/php.ini /usr/local/lxlabs/ext/php/etc/php.ini");
     system("/usr/local/lxlabs/ext/php/php ../bin/install/create.php --install-type=$installtype --db-rootuser=$dbroot --db-rootpassword=$dbpass $bstrap");
 
+    // this is so wrong... but so far let it be
     system("chmod 755 /etc/init.d/hypervm");
     system("/sbin/chkconfig hypervm on");
-    system("/sbin/chkconfig iptables off");
+    if (char_search_beg($osversion, "centos-7") || char_search_beg($osversion, "rhel-7") || char_search_beg($osversion, "virtuozzo-7")) {
+        system("/usr/bin/firewall-cmd --permanent --zone=public --add-port=8888/tcp");
+        system("/usr/bin/firewall-cmd --permanent --zone=public --add-port=8887/tcp");
+        system("/usr/bin/firewall-cmd --reload");
+    }
 
     $skiparg = null;
     if ($skipostemplate) {
