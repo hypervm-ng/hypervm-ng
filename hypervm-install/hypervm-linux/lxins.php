@@ -45,7 +45,7 @@ function lxins_main()
     }
 
     $skipostemplate = false;
-    if (isset($opt['skip-ostemplate'])) {
+    if (isset($opt['skipostemplate'])) {
         $skipostemplate = true;
     }
 	
