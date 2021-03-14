@@ -30,7 +30,7 @@
 ######
 set -e
 
-if [[ -z "${DEBUG}" ]]; then
+if [[ ! -z "${DEBUG}" ]]; then
     set -x
 fi
 
@@ -75,7 +75,7 @@ start() {
 
 	cd hypervm-install/hypervm-linux
 	echo "Starting main installation script"
-	php lxins.php --install-type=master $1 $2 $3| tee hypervm_install.log
+	php lxins.php --install-type=master $* | tee hypervm_install.log
 }
 #
 # Check how we were called.
