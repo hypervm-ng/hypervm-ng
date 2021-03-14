@@ -89,47 +89,11 @@ then
 fi
 
 
-
 install_GIT()
 {
-	# Redhat based
 	if [ -f /etc/redhat-release ] ; then
-		# Install git with curl and expat support to enable support on github cloning
-		yum install -y lynx gcc autoconf gettext gettext-devel expat-devel tcl tcl-devel curl expat curl-devel zlib zlib-devel openssl-devel perl-ExtUtils-MakeMaker
-	# Debian based
-	elif [ -f /etc/debian_version ] ; then
-		# No tested
-		apt-get install gcc lynx
+		yum install -y git
 	fi
-	# Try to get the lastest version from some site. LATEST file?
-	# https://github.com/git/git/blob/maint/RelNotes
-	# we are reading a file from the git repo that contains the version
-	vCONTENT=$(lynx -dump  https://raw.githubusercontent.com/git/git/maint/RelNotes)
-	# slicing with seperator
-	delimeter=$(echo $vCONTENT | tr "/" "\n")
-	# using a loop to take the last part we need
-	for word in $delimeter
-	do
-  	    part=$word
-        done
-	# we need to slice the last part we dont need, with the seperator txt
-	fin=$(echo $part | tr "txt" "\n")
-	#We need to remove the last character 
-	version=$(echo $fin |cut -c1-6)
-
-	#assigning the version
-	GIT_VERSION=$version
-	
-	echo "Downloading and compiling GIT ${GIT_VERSION}"
-	wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz -O git.tar.gz
-	tar xvfz git.tar.gz; cd git-*;
-	make configure
-	./configure --prefix=/usr
-	make all
-	make install
-	
-	echo 'Cleaning GIT files.'
-	cd ..; rm -rf git*
 }
 
 require_root()
