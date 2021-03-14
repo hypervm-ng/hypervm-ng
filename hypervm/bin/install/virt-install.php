@@ -30,7 +30,7 @@ function virt_install_main()
 		xen_install($installtype);
 	}
 
-	if ($installtype !== 'slave' && !$skipostemplate) {
+	if ($installtype !== 'slave' && $skipostemplate === false ) {
 		installOstemplates($virtualization);
 	}
 
