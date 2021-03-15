@@ -198,9 +198,18 @@ function install_yum_repo($osversion)
 	if (!file_exists("/etc/yum.repos.d")) {
 		return;
 	}
-	system("/usr/bin/yum -y copr enable hypervm/hypervm-ng");
 
-/*
+	$i=0;
+	while(true) {
+		system("/usr/bin/yum -y copr enable hypervm/hypervm-ng", $retval);
+		if($retval == 0 || $i == 5){
+			break;
+		}
+		$i++;
+		sleep(2);
+	}
+
+	/*
 	if (!file_exists("../lxcenter.repo.template")) {
 		$cont = our_file_get_contents("../hypervm-linux/lxcenter.repo.template");
 	} else {
