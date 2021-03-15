@@ -29,7 +29,7 @@
 #include <pwd.h>
 
 #define OPENVZ_BINARY "vzctl"
-#define XEN_BINARY    "xm"
+#define XEN_BINARY    "xl"
 #define SEARCH_PATHS  "PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin"
 
 /* Avoid Debian warnings "implicit-function-declaration" */

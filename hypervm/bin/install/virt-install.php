@@ -110,6 +110,14 @@ function xen_install($installtype)
 			system("chkconfig xend on");
 		}
 	}
+	
+	// first we need to call centos-bridge-setup and afterwards to call
+	// the centos-setup-static-ip for static ips to setup to the assigned bridge
+	// and if everything is ok we will restart the interfaces.
+	if (is_centosseven()) {
+	    system("../bin/centos-bridge-setup.sh");
+	    system("../bin/centos-bridge-setup-static-ip.sh");
+	}
 
 	if (is_centossix()) {
 		system("../bin/grub-bootxen.sh");

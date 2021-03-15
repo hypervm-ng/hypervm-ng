@@ -12,7 +12,7 @@ function isXencfgSkip($l)
 	if (csb($l, "xend-")) {
 		return true;
 	}
-	if (csb($l, "xmexample")) {
+	if (csb($l, "xlexample")) {
 		return true;
 	}
 	if (csb($l, "qemu-")) {

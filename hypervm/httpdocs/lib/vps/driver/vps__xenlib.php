@@ -26,21 +26,21 @@
  * @copyright 2012, (c) LxCenter.
  * @license AGPLv3 http://www.gnu.org/licenses/agpl-3.0.en.html
  * @author Anonymous <anonymous@lxcenter.org>
- * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+ * @author Angel Guzman Maeso <angel.guzman@lxcenter.org>
  * @version v1.0 20120218 build
  */
 class vps__xen extends Lxdriverclass
 {
 
 	/**
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @const XEN_HOME The home path for Xen virtual machines
 	 */
 	const XEN_HOME = '/home/xen';
 
 	/**
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @const XEN_CONSOLE_BINARY The home path for Xen virtual machine console binary
 	 */
@@ -49,16 +49,16 @@ class vps__xen extends Lxdriverclass
 	/**
 	 * Finds the cpu usage on every xen machine.
 	 * 
-	 * It check the list returned by "xm list" command.
+	 * It check the list returned by "xl list" command.
 	 * 
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @return void
 	 */
 	public static function find_cpuusage()
 	{
-		$xen_list_output = lxshell_output('xm', 'list');
+		$xen_list_output = lxshell_output('xl', 'list');
 		$xen_list_lines = explode(PHP_EOL, $xen_list_output);
 
 		if (!empty($xen_list_lines)) {
@@ -82,7 +82,7 @@ class vps__xen extends Lxdriverclass
 	 * all the xen interfaces.
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @return void
 	 */
@@ -156,7 +156,7 @@ class vps__xen extends Lxdriverclass
 	 * the file /proc/net/dev for a given interface on a machine.
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @param string $interface The interface name. NULL by default.
 	 * @return array[integer] total, incoming, outgoing
@@ -204,7 +204,7 @@ class vps__xen extends Lxdriverclass
 	 * @todo Check the behaviour of this fuction, maybe is @deprecated
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @param $vpsid
 	 * @param $command
@@ -223,7 +223,7 @@ class vps__xen extends Lxdriverclass
 	 * calculate the size of each template on a list.
 	 * 
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @param string $type the template list to fetch. Available add|img|tar.gz by default add
 	 * @return array[string] size of each template indexed by template name
@@ -277,7 +277,7 @@ class vps__xen extends Lxdriverclass
 	 * Check if exists /proc/xen 
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @throws lxException
 	 * @return void
@@ -296,10 +296,10 @@ class vps__xen extends Lxdriverclass
 	 * could have the create, createfailed or deleted.
 	 * 
 	 * If not is running, it returns on or off searching
-	 * by name on xm list command.
+	 * by name on xl list command.
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @param string $virtual_machine_name The name of xen virtual machine
 	 * @param string $rootdir The root folder fot the virtual machine
@@ -337,7 +337,7 @@ class vps__xen extends Lxdriverclass
 		*/
 
 		// List info about the virtual machine
-		exec('xm list ' . $virtual_machine_name, $output, $status);
+		exec('xl list ' . $virtual_machine_name, $output, $status);
 
 		if (empty($status)) {
 			return 'on';
@@ -355,7 +355,7 @@ class vps__xen extends Lxdriverclass
 	 * Calculate the total disk space and total disk space used.
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @param string $disk The disk on a xen virtual machine. Default NULL.
 	 * @param string $root_path The location for root path needed for windows based Xen virtual machine.
@@ -425,7 +425,7 @@ class vps__xen extends Lxdriverclass
 	 * Calculate the total disk space and total disk space used.
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @param string $disk The disk on a xen virtual machine. Default NULL.
 	 * @param boolean $is_windows TRUE if the Xen virtual machine is windows based.
@@ -496,7 +496,7 @@ class vps__xen extends Lxdriverclass
 	 * It check if a LVM is found for change the normal paths.
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @return void
 	 */
@@ -522,7 +522,7 @@ class vps__xen extends Lxdriverclass
 	 * @todo UNDOCUMENTED
 	 *
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @return void
 	 */
@@ -547,7 +547,7 @@ class vps__xen extends Lxdriverclass
 	 * @see lxDriverClass::dosyncToSystemPost()
 	 * 
 	 * @author Anonymous <anonymous@lxcenter.org>
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 *
 	 * @return void
 	 */
@@ -572,7 +572,7 @@ class vps__xen extends Lxdriverclass
 	 * 
 	 * @see $this->isUnlimited() lxlib.php
 	 * 
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @access private
 	 * @param string $resource The name resource property to check
@@ -588,7 +588,7 @@ class vps__xen extends Lxdriverclass
 	 * 
 	 * Checks if it is LVM based.
 	 * 
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @access private
 	 * @return integer Free disk space on MB (no bytes included via backend)
@@ -615,7 +615,7 @@ class vps__xen extends Lxdriverclass
 	 * 
 	 * It only create for non LVM based Xen Virtual machines.
 	 * 
-	 * @author Ángel Guzmán Maeso <angel.guzman@lxcenter.org>
+	 * @author Angel Guzman Maeso Maeso <angel.guzman@lxcenter.org>
 	 * 
 	 * @access private
 	 * @return void
@@ -637,7 +637,7 @@ class vps__xen extends Lxdriverclass
 
 		self::checkIfXenOK();
 
-		$ret = lxshell_return('xm', '--help');
+		$ret = lxshell_return('xl', 'help');
 
 		if ($ret == 127) {
 			throw new lxException('no_xen_at_all');
@@ -858,7 +858,7 @@ class vps__xen extends Lxdriverclass
 		if (!stripos($pygrub_record[3], 'pygrub') !== FALSE) {
 
 			$mountpoint = $this->mount_this_guy();
-			if (is_centosfive()) {
+			if (is_centosfive() || is_centosseven()) {
 				$kernev = trim(`uname -r`);
 			} else {
 				if (char_search_beg($this->main->ostemplate, "centos-5")) {
@@ -1182,7 +1182,7 @@ class vps__xen extends Lxdriverclass
 		//Add pygrub configuration if template name contains pygrub
 		$pygrub_record = explode('-', $this->main->ostemplate);
 		if (stripos($pygrub_record[3], 'pygrub') !== FALSE) {
-			$string .= "bootloader = '/usr/bin/pygrub'\n";
+			$string .= "bootloader = 'pygrub'\n";
 		} else {
 
 			/* okay - a bit word here as well...
@@ -1192,7 +1192,7 @@ class vps__xen extends Lxdriverclass
  			 *  2a. if RHEL-5/CentOS-5 or old kloxo (hostinabox) template -> use lxkernel-domU-xen kernel
 			 *  2b. if other modern linux template -> copy existing kernel modules
 			 */
-			if (is_centosfive()) {
+		    if (is_centosfive() ||is_centosseven()) {
 				$kernev = trim(`uname -r`);
 				$string .= "kernel = '/boot/hypervm-xen-vmlinuz'\n";
 				$string .= "ramdisk = '/boot/hypervm-xen-initrd.img'\n";
@@ -1561,7 +1561,7 @@ class vps__xen extends Lxdriverclass
 			return null;
 		}
 		$tmp = lx_tmp_file("{$this->main->nname}_ram");
-		lxshell_return("xm", "save", $this->main->nname, $tmp);
+		lxshell_return("xl", "save", $this->main->nname, $tmp);
 		return $tmp;
 	}
 
@@ -1570,7 +1570,7 @@ class vps__xen extends Lxdriverclass
 		if (!$file) {
 			return;
 		}
-		lxshell_return("xm", "restore", $file);
+		lxshell_return("xl", "restore", $file);
 	}
 
 	public function do_backup()
@@ -1746,7 +1746,7 @@ class vps__xen extends Lxdriverclass
 		} else {
 			$cpu = $this->main->priv->cpu_usage;
 		}
-		lxshell_return("xm", "sched-credit", "-d", $this->main->nname, "-c", $cpu);
+		lxshell_return("xl", "sched-credit", "-d", $this->main->nname, "-c", $cpu);
 	}
 
 	public function setMemoryUsage()
@@ -1758,7 +1758,7 @@ class vps__xen extends Lxdriverclass
 		}
 
 		$this->createConfig();
-		lxshell_return("xm", "mem-set", $this->main->nname, $memory);
+		lxshell_return("xl", "mem-set", $this->main->nname, $memory);
 		lfile_put_contents("{$this->main->configrootdir}/memory.value", $memory);
 	}
 
@@ -1932,14 +1932,14 @@ class vps__xen extends Lxdriverclass
 			return;
 		}
 
-		lxshell_return("xm", "shutdown", $this->main->nname);
+		lxshell_return("xl", "shutdown", $this->main->nname);
 
 		$count = 0;
 		while (self::getStatus($this->main->nname, self::XEN_HOME) === 'on') {
 			$count++;
 			sleep(5);
 			if ($count === 3) {
-				lxshell_return("xm", "destroy", $this->main->nname);
+				lxshell_return("xl", "destroy", $this->main->nname);
 				break;
 			}
 		}
@@ -1959,12 +1959,12 @@ class vps__xen extends Lxdriverclass
 			return;
 		}
 
-		lxshell_return("xm", "shutdown", $this->main->nname);
+		lxshell_return("xl", "shutdown", $this->main->nname);
 
 		sleep(40);
 
 		if (self::getStatus($this->main->nname, self::XEN_HOME) === 'on') {
-			lxshell_return("xm", "destroy", $this->main->nname);
+			lxshell_return("xl", "destroy", $this->main->nname);
 		}
 
 
@@ -2053,7 +2053,7 @@ class vps__xen extends Lxdriverclass
 			$this->umountThis();
 		}
 
-		return lxshell_return("xm", "create", "{$this->main->configrootdir}/{$this->main->nname}.cfg");
+		return lxshell_return("xl", "create", "{$this->main->configrootdir}/{$this->main->nname}.cfg");
 	}
 
 	public function setInternalParam($mountpoint)
