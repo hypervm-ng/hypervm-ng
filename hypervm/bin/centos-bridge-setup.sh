@@ -1,4 +1,12 @@
 #!/bin/bash
+#
+# (c) Dionysis Kladis, 2021 dkladis@hotmail.com
+# 
+#
+# This file come from xen project
+# https://wiki.xenproject.org/wiki/Scripts/centos-bridge-setup.sh
+# 
+
 
 default_netdev="NONE"
 netdevs=()
@@ -19,6 +27,7 @@ function os-get-network-devices()
     done < <(ip route show)
 }
 
+# This function is not used at this moment nmcli some times does not give correct output 
 function centos-host-setup-bridge-c7-tgt() {
     local dev
     local default_con_uuid
@@ -109,6 +118,6 @@ for netdev in ${netdevs[@]} ; do
 done
 
 if $changed ; then
-    echo "Restarting network"
-    service network restart
+    echo "Network bridge(s) created succesfully"
+ 	
 fi
