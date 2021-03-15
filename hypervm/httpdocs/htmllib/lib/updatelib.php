@@ -798,18 +798,11 @@ function cleanupProcess()
         }
     }
 
-    // Populate lxcenter repository
-    // The repository files will be updated in the future with rpm package
-    if (!lxfile_exists("/etc/yum.repos.d/lxcenter.repo")) {
-        print("Installing lxcenter repo for $osversion\n");
-        $cont = our_file_get_contents("../file/lxcenter.repo");
-        $cont = str_replace("%distro%", $osversion, $cont);
-        our_file_put_contents("/etc/yum.repos.d/lxcenter.repo", $cont);
-    }
-
+    /*
     print("Fix RHN\n");
     fix_rhn_sources_file();
-
+    */
+    
     print("Fix ipconntrack\n");
     fix_ipconntrack();
 
