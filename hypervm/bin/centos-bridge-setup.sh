@@ -96,7 +96,7 @@ os-get-network-devices
 
 # Find 'primary' interface, make xenbr0
 
-if [[ ! $default_netdev =~ xenbr* ]] ; then
+if [[ ! $default_netdev =~ xenbr* || ! $default_netdev =~ virbr* ]] ; then
     make-bridge-for-network $default_netdev xenbr0
 else
     echo $default_netdev already set up
@@ -108,7 +108,7 @@ for netdev in ${netdevs[@]} ; do
     if [[ "$netdev" = "$default_netdev" ]] ; then
 	continue
     fi
-    if [[ ! $netdev =~ xenbr* ]] ; then
+    if [[ ! $netdev =~ xenbr* || ! $netdev =~ virbr* ]] ; then
 	count=$(($count+1))
 	br="xenbr$count"
 	make-bridge-for-network $netdev $br
