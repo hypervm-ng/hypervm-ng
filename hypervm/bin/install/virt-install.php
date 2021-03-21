@@ -100,8 +100,9 @@ function xen_install($installtype)
 	if (file_exists("/etc/init.d/libvirtd")) {
 		system("chkconfig libvirtd off");
 	}
-
-	if (is_centosfive() || is_centossix() || is_centosseven()) {
+           // This is legacy code for the version we will release
+           // TODO later we need to remove it 
+	if (is_centosfive() || is_centossix()) {
 
 		if (file_exists("/etc/init.d/xendomains")) {
 			system("chkconfig xendomains on");
@@ -112,13 +113,16 @@ function xen_install($installtype)
 	}
 	
 	// first we need to call centos-bridge-setup and afterwards to call
-	// the centos-setup-static-ip for static ips to setup to the assigned bridge
+	// the centos-setup-static-ip for ips to setup to the assigned bridge
 	// and if everything is ok we will restart the interfaces.
+        // TODO ensure that the script is called later for new net interfaces
 	if (is_centosseven()) {
 	    system("../bin/centos-bridge-setup.sh");
 	    system("../bin/centos-bridge-setup-static-ip.sh");
 	}
-
+        
+        // This is legacy code for the version we will release
+        // TODO later we need to remove it 
 	if (is_centossix()) {
 		system("../bin/grub-bootxen.sh");
 		system("sh /script/fixxenkernel");
