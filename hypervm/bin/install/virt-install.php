@@ -118,7 +118,7 @@ function xen_install($installtype)
         // TODO ensure that the script is called later for new net interfaces
 	if (is_centosseven()) {
 	    system("../bin/centos-bridge-setup.sh");
-	    system("../bin/centos-bridge-setup-static-ip.sh");
+	    system("../bin/centos-bridge-setup-static-ips.sh");
 	}
         
         // This is legacy code for the version we will release
