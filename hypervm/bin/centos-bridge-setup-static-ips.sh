@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-HyperVM, Server Virtualization GUI for OpenVZ and Xen
+#
+#    HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
 #    
 #    Copyright (C) 2020-2021	HyperVM-ng
