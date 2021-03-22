@@ -1,12 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env bash
+HyperVM, Server Virtualization GUI for OpenVZ and Xen
 #
-# (c) Dionysis Kladis, 2021 dkladis@hotmail.com
-# 
+#    
+#    Copyright (C) 2020-2021	HyperVM-ng
 #
-# This file come from xen project
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#	 author: Dionysis Kladis dkstiler@gmail.com
+#
+#
+#    Version 0.1 Initial release [  Dionysis Kladis dkstiler@gmail.com ]
+#
+# TODO We may need to call this script after the addition of new net interfaces
+# We call this script after for initial bridge interface creation 
+#
+#
+# This file came from xen project
 # https://wiki.xenproject.org/wiki/Scripts/centos-bridge-setup.sh
 # 
+set -e
 
+if [[ ! -z "${DEBUG}" ]]; then
+    set -x
+fi
 
 default_netdev="NONE"
 netdevs=()
@@ -129,5 +156,9 @@ initialization-bridge-interfaces
 
 if $changed ; then
     echo "Network bridge(s) created succesfully"
- 	
+    # for now we dont need to call this script we do it from the installer
+    # bash ../centos-bridge-setup-static-ips.sh
+else
+    echo "Network bridge(s) auto configuration failed"
+    echo "Please ensure proper network configuration"
 fi

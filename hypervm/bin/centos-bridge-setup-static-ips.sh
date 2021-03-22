@@ -1,12 +1,37 @@
-#!/bin/bash
-# We need to call this script after centos-bridge-setup.sh in order to transfer the static ip adresses to the bridge interface
+#!/usr/bin/env bash
+HyperVM, Server Virtualization GUI for OpenVZ and Xen
+#
+#    
+#    Copyright (C) 2020-2021	HyperVM-ng
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#	 author: Dionysis Kladis dkstiler@gmail.com
 #
 #
-# initial version of the script by Dionydis Kladis dkladis@hotmail.com
-# for hypervm-ng 
+#    Version 0.1 Initial release [  Dionysis Kladis dkstiler@gmail.com ]
 #
+# TODO we need to add at some point support for ivp6 static ips
+# 
+# We need to call this script after centos-bridge-setup.sh in order to transfer 
+# the static ip adresses to the bridge interface
 #
+set -e
 
+if [[ ! -z "${DEBUG}" ]]; then
+    set -x
+fi
 
 default_netdev="NONE"
 netdevs=()
@@ -140,4 +165,7 @@ set-network-ips
 if $assigned ; then
     echo "Restarting network"
     service network restart
+else
+    echo "Network bridge(s) configuration failed"
+    echo "Please verify the network configuration"
 fi
