@@ -92,30 +92,40 @@ function make-bridge-for-network
     changed="true"
 }
 
+function initialization-bridge-interfaces()
+{
 os-get-network-devices
 
 # Find 'primary' interface, make xenbr0
-
-if [[ ! $default_netdev =~ xenbr* || ! $default_netdev =~ virbr* ]] ; then
-    make-bridge-for-network $default_netdev xenbr0
+if [[ ! $default_netdev =~ virbr* ]] ; then 
+    if [[ ! $default_netdev =~ xenbr* ]] ; then
+        make-bridge-for-network $default_netdev xenbr0
+    else
+        echo $default_netdev already set up
+    fi
 else
-    echo $default_netdev already set up
-fi
-
+        echo $default_netdev already set up
+    fi
 # Find other interfaces, make xenbrN
 count=0
 for netdev in ${netdevs[@]} ; do
     if [[ "$netdev" = "$default_netdev" ]] ; then
 	continue
     fi
-    if [[ ! $netdev =~ xenbr* || ! $netdev =~ virbr* ]] ; then
-	count=$(($count+1))
-	br="xenbr$count"
-	make-bridge-for-network $netdev $br
+    if [[ ! $netdev =~ virbr* ]] ; then
+        if [[ ! $netdev =~ xenbr* ]] ; then
+            count=$(($count+1))
+            br="xenbr$count"
+            make-bridge-for-network $netdev $br
+        else
+            echo $netdev already set up
+        fi
     else
-	echo $netdev already set up
+        echo $netdev already set up
     fi
 done
+}
+initialization-bridge-interfaces
 
 if $changed ; then
     echo "Network bridge(s) created succesfully"

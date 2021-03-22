@@ -38,9 +38,10 @@ os-get-network-devices
 for netdev in ${netdevs[@]} ; do
     
   	#we need to verify we are not parsing bridge files
-	if [[ ! $netdev =~ xenbr* || ! $netdev =~ virbr* ]] ; then
+    if [[ ! $netdev =~ virbr* ]] ; then
+	if [[ ! $netdev =~ xenbr* ]] ; then
 		# cheking wich interface has static ip
-		line=""
+		
 		while read line ; do
                     local reg="static"
                     if [[ $line =~ $reg  ]] ; then
@@ -53,24 +54,24 @@ for netdev in ${netdevs[@]} ; do
                             if [[ ! $line =~ $reg ]] ; then
                                 # Bellow we parse the Ip adress details and store them		
                                 local reg="IPADDR="
-                                ipaddress=""
+                                
                                 if [[ $line =~ $reg  ]] ; then
                                     ipaddress=${line[@]}		
                                 fi
                                 local reg="PREFIX="
-                                prefix=""
+                                
                                 if [[ $line =~ $reg  ]] ; then
                                     prefix=${line[@]}
                                 fi
                                 local reg="GATEWAY="
-                                gateway=""
+                                
                                 if [[ $line =~ $reg  ]] ; then
                                     gateway=${line[@]}
                                 fi
                                 local reg="DNS[0-9]="
-				dns=""
+				
                                 declare -a dn
-				dn=""
+				
                                 if [[ $line =~ $reg  ]] ; then
                                     dns=${line[@]}
                                     for val in $dns ; do
@@ -79,7 +80,7 @@ for netdev in ${netdevs[@]} ; do
                                 fi
                                 # Here we need to find where that network file which bridge was assigned
                                 local reg="BRIDGE="
-                                if [[ $line =~ $reg ]] ; then
+                            if [[ $line =~ $reg ]] ; then
                                     vbrdg=${line[@]}
                                     brdg=$(echo $vbrdg | tr "=" "\n")
                                     for i in $brdg ; do
@@ -101,7 +102,7 @@ for netdev in ${netdevs[@]} ; do
                                     done < $brdgconf_file
 				# since we are ready we process the file and write what we need if the values are not null
 				# that way we may also protect from accidental alterations 
-				if [[ -n "$ipaddress" || -n "$prefix" || -n "$gateway" ]]; then
+                                if [[ -n "$ipaddress" || -n "$prefix" || -n "$gateway" ]]; then
                                     if [[ $state =~ "dhcp" ]] ; then
                                         sed -i~ 's/BOOTPROTO=dhcp/BOOTPROTO=static/' $brdgconf_file
 					echo "$ipaddress" >>  $brdgconf_file
@@ -124,8 +125,11 @@ for netdev in ${netdevs[@]} ; do
                     fi	
 		done < <(ip route show | grep "static")
 	else
-		echo "Only bridge Network interfaces detected. Please verify network configuration"
-	fi	
+		echo "This $netdev is a bridge interface. Please verify network configuration"
+	fi
+    else
+	echo "This $netdev is a bridge interface. Please verify network configuration"
+    fi	
 done
 }
 
